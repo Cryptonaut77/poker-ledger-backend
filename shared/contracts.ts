@@ -1,0 +1,148 @@
+// contracts.ts
+// Shared API contracts (schemas and types) used by both the server and the app.
+// Import in the app as: `import { type GetSampleResponse } from "@shared/contracts"`
+// Import in the server as: `import { postSampleRequestSchema } from "@shared/contracts"`
+
+import { z } from "zod";
+
+// ============================================
+// POKER GAME CONTRACTS
+// ============================================
+
+// Game Session
+export const gameSessionSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  startedAt: z.string(),
+  endedAt: z.string().nullable(),
+  isActive: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+export type GameSession = z.infer<typeof gameSessionSchema>;
+
+// Player Transaction
+export const playerTransactionSchema = z.object({
+  id: z.string(),
+  playerName: z.string(),
+  type: z.enum(["buy-in", "cashout"]),
+  amount: z.number(),
+  paymentMethod: z.enum(["cash", "electronic", "credit"]),
+  notes: z.string().nullable(),
+  timestamp: z.string(),
+  gameSessionId: z.string(),
+});
+export type PlayerTransaction = z.infer<typeof playerTransactionSchema>;
+
+// Dealer Down
+export const dealerDownSchema = z.object({
+  id: z.string(),
+  dealerName: z.string(),
+  tips: z.number(),
+  rake: z.number(),
+  timestamp: z.string(),
+  gameSessionId: z.string(),
+});
+export type DealerDown = z.infer<typeof dealerDownSchema>;
+
+// Expense
+export const expenseSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  amount: z.number(),
+  category: z.enum(["food", "drinks", "other"]),
+  notes: z.string().nullable(),
+  timestamp: z.string(),
+  gameSessionId: z.string(),
+});
+export type Expense = z.infer<typeof expenseSchema>;
+
+// GET /api/game/active - Get or create active game session
+export const getActiveGameResponseSchema = z.object({
+  session: gameSessionSchema,
+});
+export type GetActiveGameResponse = z.infer<typeof getActiveGameResponseSchema>;
+
+// POST /api/game/end - End current game session
+export const endGameRequestSchema = z.object({
+  sessionId: z.string(),
+});
+export type EndGameRequest = z.infer<typeof endGameRequestSchema>;
+export const endGameResponseSchema = z.object({
+  success: z.boolean(),
+  session: gameSessionSchema,
+});
+export type EndGameResponse = z.infer<typeof endGameResponseSchema>;
+
+// GET /api/game/:sessionId/summary - Get game session summary
+export const gameSummarySchema = z.object({
+  session: gameSessionSchema,
+  totalBuyIns: z.number(),
+  totalCashouts: z.number(),
+  totalTips: z.number(),
+  totalRake: z.number(),
+  totalExpenses: z.number(),
+  netProfit: z.number(),
+  playerCount: z.number(),
+});
+export type GameSummary = z.infer<typeof gameSummarySchema>;
+
+// POST /api/players/transaction - Add player transaction
+export const addPlayerTransactionRequestSchema = z.object({
+  playerName: z.string().min(1),
+  type: z.enum(["buy-in", "cashout"]),
+  amount: z.number().positive(),
+  paymentMethod: z.enum(["cash", "electronic", "credit"]),
+  notes: z.string().optional(),
+  gameSessionId: z.string(),
+});
+export type AddPlayerTransactionRequest = z.infer<typeof addPlayerTransactionRequestSchema>;
+export const addPlayerTransactionResponseSchema = z.object({
+  transaction: playerTransactionSchema,
+});
+export type AddPlayerTransactionResponse = z.infer<typeof addPlayerTransactionResponseSchema>;
+
+// GET /api/players/transactions/:sessionId - Get all player transactions for a session
+export const getPlayerTransactionsResponseSchema = z.object({
+  transactions: z.array(playerTransactionSchema),
+});
+export type GetPlayerTransactionsResponse = z.infer<typeof getPlayerTransactionsResponseSchema>;
+
+// POST /api/dealers/down - Add dealer down
+export const addDealerDownRequestSchema = z.object({
+  dealerName: z.string().min(1),
+  tips: z.number().min(0),
+  rake: z.number().min(0),
+  gameSessionId: z.string(),
+});
+export type AddDealerDownRequest = z.infer<typeof addDealerDownRequestSchema>;
+export const addDealerDownResponseSchema = z.object({
+  dealerDown: dealerDownSchema,
+});
+export type AddDealerDownResponse = z.infer<typeof addDealerDownResponseSchema>;
+
+// GET /api/dealers/downs/:sessionId - Get all dealer downs for a session
+export const getDealerDownsResponseSchema = z.object({
+  downs: z.array(dealerDownSchema),
+});
+export type GetDealerDownsResponse = z.infer<typeof getDealerDownsResponseSchema>;
+
+// POST /api/expenses - Add expense
+export const addExpenseRequestSchema = z.object({
+  description: z.string().min(1),
+  amount: z.number().positive(),
+  category: z.enum(["food", "drinks", "other"]),
+  notes: z.string().optional(),
+  gameSessionId: z.string(),
+});
+export type AddExpenseRequest = z.infer<typeof addExpenseRequestSchema>;
+export const addExpenseResponseSchema = z.object({
+  expense: expenseSchema,
+});
+export type AddExpenseResponse = z.infer<typeof addExpenseResponseSchema>;
+
+// GET /api/expenses/:sessionId - Get all expenses for a session
+export const getExpensesResponseSchema = z.object({
+  expenses: z.array(expenseSchema),
+});
+export type GetExpensesResponse = z.infer<typeof getExpensesResponseSchema>;

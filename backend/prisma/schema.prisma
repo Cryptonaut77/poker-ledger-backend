@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id
+  email         String    @unique
+  name          String?
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  Profile Profile?
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  handle String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+}
+
+// Poker Game Models
+
+model GameSession {
+  id                 String              @id @default(cuid())
+  name               String              @default("Poker Game")
+  startedAt          DateTime            @default(now())
+  endedAt            DateTime?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  playerTransactions PlayerTransaction[]
+  dealerDowns        DealerDown[]
+  expenses           Expense[]
+
+  @@map("game_session")
+}
+
+model PlayerTransaction {
+  id            String      @id @default(cuid())
+  playerName    String
+  type          String // "buy-in" or "cashout"
+  amount        Float
+  paymentMethod String // "cash", "electronic", "credit"
+  notes         String?
+  timestamp     DateTime    @default(now())
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("player_transaction")
+}
+
+model DealerDown {
+  id            String      @id @default(cuid())
+  dealerName    String
+  tips          Float       @default(0)
+  rake          Float       @default(0)
+  timestamp     DateTime    @default(now())
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("dealer_down")
+}
+
+model Expense {
+  id            String      @id @default(cuid())
+  description   String
+  amount        Float
+  category      String // "food", "drinks", "other"
+  notes         String?
+  timestamp     DateTime    @default(now())
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("expense")
+}
