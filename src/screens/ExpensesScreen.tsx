@@ -141,7 +141,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
           setModalVisible(true);
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }}
-        className="absolute bottom-20 right-4 bg-violet-600 w-16 h-16 rounded-full items-center justify-center"
+        className="absolute bottom-28 right-4 bg-violet-600 w-16 h-16 rounded-full items-center justify-center"
         style={{
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },

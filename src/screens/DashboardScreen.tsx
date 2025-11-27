@@ -87,7 +87,7 @@ const DashboardScreen = ({ navigation }: Props) => {
         </LinearGradient>
 
         {/* Net Profit Card */}
-        <View className="mx-4 -mt-6 mb-6">
+        <View className="mx-4 mt-4 mb-6">
           <LinearGradient
             colors={["#1e293b", "#0f172a"]}
             style={{

@@ -132,7 +132,7 @@ const PlayersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <View className="absolute bottom-20 right-4 flex-row gap-2">
+      <View className="absolute bottom-28 right-4 flex-row gap-2">
         <Pressable
           onPress={() => {
             setTransactionType("cashout");
