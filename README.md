@@ -11,8 +11,10 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
+- Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit)
 - Track cashouts
 - View complete transaction history
+- Edit or delete transactions with intuitive modal interface
 - Add notes to transactions
 
 ### 🎲 Dealer Management
@@ -65,6 +67,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **Player Routes** (`/api/players/*`)
   - `POST /api/players/transaction` - Add buy-in or cashout
   - `GET /api/players/transactions/:sessionId` - Get all transactions
+  - `PUT /api/players/transaction/:id` - Update a transaction
   - `DELETE /api/players/transaction/:id` - Delete a transaction
 
 - **Dealer Routes** (`/api/dealers/*`)
@@ -90,7 +93,10 @@ The app features a sophisticated poker room aesthetic:
 - **Typography**: Clean, bold fonts for easy reading
 - **UI Elements**: Card-based layouts with subtle shadows and borders
 - **Interactions**: Haptic feedback for all user actions
-- **Visual Feedback**: Color-coded transactions (green for buy-ins, red for cashouts)
+- **Visual Feedback**:
+  - Color-coded transactions (green for buy-ins, red for cashouts)
+  - Payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit)
+  - Blue edit icons for transaction management
 
 ## Usage
 
@@ -103,6 +109,8 @@ The app automatically creates a game session when you first open it. All transac
 3. Tap the red "$" button to add a cashout
 4. Select payment method (cash, electronic, or credit)
 5. Add optional notes for record-keeping
+6. View payment methods at a glance with colored dots next to player names
+7. Tap the blue edit icon on any transaction to edit or delete it
 
 ### Logging Dealer Activity
 1. Navigate to the Dealers tab
@@ -130,5 +138,7 @@ The Dashboard tab provides a real-time overview of:
 - All financial calculations are done in real-time
 - Data persists across app sessions
 - Pull down to refresh data on any screen
-- Swipe to delete transactions, dealer downs, and expenses
+- Tap player names to expand and view detailed transaction history
+- Edit or delete transactions by tapping the blue edit icon
+- Payment methods are visually indicated with colored dots next to player names
 - Authentication is optional but recommended for multi-user access

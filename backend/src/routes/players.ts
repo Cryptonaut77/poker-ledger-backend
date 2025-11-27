@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import {
   addPlayerTransactionRequestSchema,
+  updatePlayerTransactionRequestSchema,
   type AddPlayerTransactionResponse,
   type GetPlayerTransactionsResponse,
+  type UpdatePlayerTransactionResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
@@ -79,5 +81,36 @@ playersRouter.delete("/transaction/:id", async (c) => {
 
   return c.json({ success: true });
 });
+
+// ============================================
+// PUT /api/players/transaction/:id - Update a transaction
+// ============================================
+playersRouter.put(
+  "/transaction/:id",
+  zValidator("json", updatePlayerTransactionRequestSchema),
+  async (c) => {
+    const id = c.req.param("id");
+    const data = c.req.valid("json");
+    console.log(`💰 [Players] Updating transaction: ${id}`);
+
+    const transaction = await db.playerTransaction.update({
+      where: { id },
+      data: {
+        amount: data.amount,
+        paymentMethod: data.paymentMethod,
+        notes: data.notes ?? null,
+      },
+    });
+
+    console.log(`💰 [Players] Transaction updated: ${transaction.id}`);
+
+    return c.json({
+      transaction: {
+        ...transaction,
+        timestamp: transaction.timestamp.toISOString(),
+      },
+    } satisfies UpdatePlayerTransactionResponse);
+  },
+);
 
 export { playersRouter };

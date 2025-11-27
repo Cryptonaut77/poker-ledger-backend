@@ -102,6 +102,18 @@ export const addPlayerTransactionResponseSchema = z.object({
 });
 export type AddPlayerTransactionResponse = z.infer<typeof addPlayerTransactionResponseSchema>;
 
+// PUT /api/players/transaction/:id - Update player transaction
+export const updatePlayerTransactionRequestSchema = z.object({
+  amount: z.number().positive(),
+  paymentMethod: z.enum(["cash", "electronic", "credit"]),
+  notes: z.string().optional(),
+});
+export type UpdatePlayerTransactionRequest = z.infer<typeof updatePlayerTransactionRequestSchema>;
+export const updatePlayerTransactionResponseSchema = z.object({
+  transaction: playerTransactionSchema,
+});
+export type UpdatePlayerTransactionResponse = z.infer<typeof updatePlayerTransactionResponseSchema>;
+
 // GET /api/players/transactions/:sessionId - Get all player transactions for a session
 export const getPlayerTransactionsResponseSchema = z.object({
   transactions: z.array(playerTransactionSchema),
