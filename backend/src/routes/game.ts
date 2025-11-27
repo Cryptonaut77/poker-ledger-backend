@@ -113,8 +113,10 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   const totalExpenses = session.expenses.reduce((sum, e) => sum + e.amount, 0);
 
-  // House profit = Rake - Expenses (tips and player transactions don't affect house profit)
-  const netProfit = totalRake - totalExpenses;
+  // Till balance = Money IN - Money OUT
+  // Money IN: Buy-ins (players buying chips) + Tips (from players) + Rake (from pots)
+  // Money OUT: Cashouts (paying players) + Expenses (food, drinks, etc.)
+  const netProfit = totalBuyIns + totalTips + totalRake - totalCashouts - totalExpenses;
 
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
