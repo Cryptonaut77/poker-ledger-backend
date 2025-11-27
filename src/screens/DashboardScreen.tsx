@@ -98,7 +98,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             }}
           >
             <View className="flex-row items-center justify-between mb-2">
-              <Text className="text-slate-400 text-sm font-medium">Net Profit</Text>
+              <Text className="text-slate-400 text-sm font-medium">House Profit</Text>
               {summary && summary.netProfit >= 0 ? (
                 <TrendingUp size={20} color="#10b981" />
               ) : (
@@ -112,6 +112,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             >
               {summary ? formatCurrency(summary.netProfit) : "$0.00"}
             </Text>
+            <Text className="text-slate-500 text-xs mt-2">Rake - Expenses</Text>
           </LinearGradient>
         </View>
 
