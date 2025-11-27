@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, X, Trash2, DollarSign } from "lucide-react-native";
+import { Plus, X, ChevronDown, ChevronRight, Trash2, DollarSign } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -24,6 +24,16 @@ import type {
 
 type Props = BottomTabScreenProps<"PlayersTab">;
 
+// Player summary type
+type PlayerSummary = {
+  name: string;
+  totalBuyIns: number;
+  totalCashouts: number;
+  netAmount: number;
+  transactionCount: number;
+  transactions: PlayerTransaction[];
+};
+
 const PlayersScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +42,7 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "electronic" | "credit">("cash");
   const [notes, setNotes] = useState("");
+  const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
 
   // Fetch active game session
   const { data: gameData } = useQuery({
@@ -71,6 +82,48 @@ const PlayersScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Group transactions by player
+  const playerSummaries: PlayerSummary[] = React.useMemo(() => {
+    if (!transactionsData?.transactions) return [];
+
+    const playerMap = new Map<string, PlayerSummary>();
+
+    transactionsData.transactions.forEach((transaction) => {
+      const existing = playerMap.get(transaction.playerName);
+
+      if (existing) {
+        existing.transactions.push(transaction);
+        existing.transactionCount++;
+        if (transaction.type === "buy-in") {
+          existing.totalBuyIns += transaction.amount;
+        } else {
+          existing.totalCashouts += transaction.amount;
+        }
+        existing.netAmount = existing.totalBuyIns - existing.totalCashouts;
+      } else {
+        playerMap.set(transaction.playerName, {
+          name: transaction.playerName,
+          totalBuyIns: transaction.type === "buy-in" ? transaction.amount : 0,
+          totalCashouts: transaction.type === "cashout" ? transaction.amount : 0,
+          netAmount:
+            transaction.type === "buy-in" ? transaction.amount : -transaction.amount,
+          transactionCount: 1,
+          transactions: [transaction],
+        });
+      }
+    });
+
+    // Sort transactions within each player by timestamp (most recent first)
+    playerMap.forEach((summary) => {
+      summary.transactions.sort(
+        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      );
+    });
+
+    // Convert to array and sort by name
+    return Array.from(playerMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [transactionsData]);
+
   const resetForm = () => {
     setPlayerName("");
     setAmount("");
@@ -94,10 +147,27 @@ const PlayersScreen = ({ navigation }: Props) => {
     });
   };
 
+  const togglePlayerExpanded = (playerName: string) => {
+    setExpandedPlayers((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(playerName)) {
+        newSet.delete(playerName);
+      } else {
+        newSet.add(playerName);
+      }
+      return newSet;
+    });
+    Haptics.selectionAsync();
+  };
+
   const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  };
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   const paymentMethodColors: Record<string, string> = {
@@ -109,20 +179,23 @@ const PlayersScreen = ({ navigation }: Props) => {
   return (
     <View className="flex-1 bg-slate-950">
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 100 }}>
-        <View className="p-4 gap-4">
-          {transactionsData?.transactions.map((transaction) => (
-            <TransactionCard
-              key={transaction.id}
-              transaction={transaction}
-              onDelete={() => deleteTransactionMutation.mutate(transaction.id)}
+        <View className="p-4 gap-3">
+          {playerSummaries.map((player) => (
+            <PlayerCard
+              key={player.name}
+              player={player}
+              isExpanded={expandedPlayers.has(player.name)}
+              onToggle={() => togglePlayerExpanded(player.name)}
+              onDeleteTransaction={(id) => deleteTransactionMutation.mutate(id)}
               formatCurrency={formatCurrency}
               formatTime={formatTime}
+              formatDate={formatDate}
               paymentMethodColors={paymentMethodColors}
             />
           ))}
-          {(!transactionsData?.transactions || transactionsData.transactions.length === 0) && (
+          {playerSummaries.length === 0 && (
             <View className="items-center justify-center py-12">
-              <Text className="text-slate-500 text-center">No transactions yet</Text>
+              <Text className="text-slate-500 text-center">No players yet</Text>
               <Text className="text-slate-600 text-center text-sm mt-1">
                 Add a buy-in or cashout to get started
               </Text>
@@ -277,81 +350,145 @@ const PlayersScreen = ({ navigation }: Props) => {
   );
 };
 
-const TransactionCard = ({
-  transaction,
-  onDelete,
+// Player Card Component with expandable details
+const PlayerCard = ({
+  player,
+  isExpanded,
+  onToggle,
+  onDeleteTransaction,
   formatCurrency,
   formatTime,
+  formatDate,
   paymentMethodColors,
 }: {
-  transaction: PlayerTransaction;
-  onDelete: () => void;
+  player: PlayerSummary;
+  isExpanded: boolean;
+  onToggle: () => void;
+  onDeleteTransaction: (id: string) => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
+  formatDate: (dateString: string) => string;
   paymentMethodColors: Record<string, string>;
 }) => {
   return (
-    <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
-      <View className="flex-row items-start justify-between mb-2">
-        <View className="flex-1">
-          <Text className="text-white text-lg font-bold">{transaction.playerName}</Text>
-          <Text className="text-slate-500 text-xs">{formatTime(transaction.timestamp)}</Text>
-        </View>
-        <Pressable
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onDelete();
-          }}
-          className="p-2"
-        >
-          <Trash2 size={18} color="#ef4444" />
-        </Pressable>
-      </View>
-
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-2">
-          <View
-            className="px-3 py-1 rounded-full"
-            style={{
-              backgroundColor:
-                transaction.type === "buy-in"
-                  ? "rgba(16, 185, 129, 0.2)"
-                  : "rgba(239, 68, 68, 0.2)",
-            }}
-          >
+    <View className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
+      {/* Player Summary (always visible) */}
+      <Pressable onPress={onToggle} className="p-4">
+        <View className="flex-row items-center justify-between mb-3">
+          <View className="flex-row items-center gap-2 flex-1">
+            {isExpanded ? (
+              <ChevronDown size={20} color="#94a3b8" />
+            ) : (
+              <ChevronRight size={20} color="#94a3b8" />
+            )}
+            <Text className="text-white text-xl font-bold">{player.name}</Text>
+          </View>
+          <View className="items-end">
+            <Text className="text-slate-400 text-xs mb-1">Net</Text>
             <Text
-              className={`text-xs font-bold ${
-                transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
+              className={`text-2xl font-bold ${
+                player.netAmount >= 0 ? "text-emerald-400" : "text-red-400"
               }`}
             >
-              {transaction.type.toUpperCase()}
-            </Text>
-          </View>
-          <View
-            className="px-3 py-1 rounded-full"
-            style={{
-              backgroundColor: `${paymentMethodColors[transaction.paymentMethod]}20`,
-            }}
-          >
-            <Text
-              className="text-xs font-medium capitalize"
-              style={{ color: paymentMethodColors[transaction.paymentMethod] }}
-            >
-              {transaction.paymentMethod}
+              {formatCurrency(Math.abs(player.netAmount))}
             </Text>
           </View>
         </View>
-        <Text
-          className={`text-2xl font-bold ${
-            transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
-          }`}
-        >
-          {formatCurrency(transaction.amount)}
-        </Text>
-      </View>
 
-      {transaction.notes && (
-        <Text className="text-slate-500 text-sm mt-2">{transaction.notes}</Text>
+        {/* Summary Stats */}
+        <View className="flex-row gap-2">
+          <View className="flex-1 bg-slate-800 rounded-lg p-3">
+            <Text className="text-slate-400 text-xs mb-1">Buy-ins</Text>
+            <Text className="text-emerald-400 text-base font-bold">
+              {formatCurrency(player.totalBuyIns)}
+            </Text>
+          </View>
+          <View className="flex-1 bg-slate-800 rounded-lg p-3">
+            <Text className="text-slate-400 text-xs mb-1">Cashouts</Text>
+            <Text className="text-red-400 text-base font-bold">
+              {formatCurrency(player.totalCashouts)}
+            </Text>
+          </View>
+          <View className="flex-1 bg-slate-800 rounded-lg p-3">
+            <Text className="text-slate-400 text-xs mb-1">Txns</Text>
+            <Text className="text-blue-400 text-base font-bold">{player.transactionCount}</Text>
+          </View>
+        </View>
+      </Pressable>
+
+      {/* Transaction Details (expandable) */}
+      {isExpanded && (
+        <View className="border-t border-slate-800 bg-slate-950/50">
+          {player.transactions.map((transaction, index) => (
+            <View
+              key={transaction.id}
+              className={`px-4 py-3 ${
+                index < player.transactions.length - 1 ? "border-b border-slate-800" : ""
+              }`}
+            >
+              <View className="flex-row items-start justify-between mb-2">
+                <View className="flex-1">
+                  <View className="flex-row items-center gap-2 mb-1">
+                    <View
+                      className="px-2 py-1 rounded"
+                      style={{
+                        backgroundColor:
+                          transaction.type === "buy-in"
+                            ? "rgba(16, 185, 129, 0.2)"
+                            : "rgba(239, 68, 68, 0.2)",
+                      }}
+                    >
+                      <Text
+                        className={`text-[10px] font-bold ${
+                          transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
+                        }`}
+                      >
+                        {transaction.type.toUpperCase()}
+                      </Text>
+                    </View>
+                    <View
+                      className="px-2 py-1 rounded"
+                      style={{
+                        backgroundColor: `${paymentMethodColors[transaction.paymentMethod]}20`,
+                      }}
+                    >
+                      <Text
+                        className="text-[10px] font-medium capitalize"
+                        style={{ color: paymentMethodColors[transaction.paymentMethod] }}
+                      >
+                        {transaction.paymentMethod}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text className="text-slate-500 text-xs">
+                    {formatDate(transaction.timestamp)} • {formatTime(transaction.timestamp)}
+                  </Text>
+                  {transaction.notes && (
+                    <Text className="text-slate-500 text-xs mt-1">{transaction.notes}</Text>
+                  )}
+                </View>
+                <View className="flex-row items-center gap-2">
+                  <Text
+                    className={`text-lg font-bold ${
+                      transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
+                    }`}
+                  >
+                    {formatCurrency(transaction.amount)}
+                  </Text>
+                  <Pressable
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      onDeleteTransaction(transaction.id);
+                    }}
+                    className="p-1"
+                  >
+                    <Trash2 size={16} color="#ef4444" />
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          ))}
+        </View>
       )}
     </View>
   );
