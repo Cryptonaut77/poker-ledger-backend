@@ -25,6 +25,7 @@
     "@prisma/adapter-better-sqlite3": "^6.17.1",
     "@prisma/client": "^6.17.1",
     "better-auth": "1.3.24",
+    "better-sqlite3": "^12.4.6",
     "hono": "4.6.0",
     "zod": "4.1.11"
   }
