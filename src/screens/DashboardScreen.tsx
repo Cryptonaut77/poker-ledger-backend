@@ -221,7 +221,7 @@ const DashboardScreen = ({ navigation }: Props) => {
           <View className="flex-row gap-4">
             <StatCard
               icon={<Dices size={24} color="#f59e0b" />}
-              label="Tips"
+              label="Dealer Tips"
               value={summary ? formatCurrency(summary.totalTips) : "$0.00"}
               bgColor="bg-slate-900"
             />
@@ -239,12 +239,6 @@ const DashboardScreen = ({ navigation }: Props) => {
               icon={<Receipt size={24} color="#8b5cf6" />}
               label="Expenses"
               value={summary ? formatCurrency(summary.totalExpenses) : "$0.00"}
-              bgColor="bg-slate-900"
-            />
-            <StatCard
-              icon={<Users size={24} color="#3b82f6" />}
-              label="Players"
-              value={summary ? summary.playerCount.toString() : "0"}
               bgColor="bg-slate-900"
             />
           </View>
