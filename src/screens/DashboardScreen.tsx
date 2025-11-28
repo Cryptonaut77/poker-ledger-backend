@@ -120,8 +120,8 @@ const DashboardScreen = ({ navigation }: Props) => {
             }}
           >
             <View className="flex-row items-center justify-between mb-2">
-              <Text className="text-slate-400 text-sm font-medium">House Profit</Text>
-              {summary && summary.netProfit >= 0 ? (
+              <Text className="text-slate-400 text-sm font-medium">Till Balance</Text>
+              {summary && summary.tillBalance >= 0 ? (
                 <TrendingUp size={20} color="#10b981" />
               ) : (
                 <TrendingDown size={20} color="#ef4444" />
@@ -129,13 +129,32 @@ const DashboardScreen = ({ navigation }: Props) => {
             </View>
             <Text
               className={`text-5xl font-bold ${
-                summary && summary.netProfit >= 0 ? "text-emerald-400" : "text-red-400"
+                summary && summary.tillBalance >= 0 ? "text-emerald-400" : "text-red-400"
               }`}
             >
-              {summary ? formatCurrency(summary.netProfit) : "$0.00"}
+              {summary ? formatCurrency(summary.tillBalance) : "$0.00"}
             </Text>
-            <Text className="text-slate-500 text-xs mt-2">Rake - Expenses</Text>
+            <Text className="text-slate-500 text-xs mt-2">Cash Buy-ins + Tips - Cashouts</Text>
           </LinearGradient>
+        </View>
+
+        {/* House Profit Card */}
+        <View className="mx-4 mb-6">
+          <View
+            className="bg-slate-900 p-4 rounded-xl border border-slate-800"
+          >
+            <View className="flex-row items-center justify-between">
+              <Text className="text-slate-400 text-sm font-medium">House Profit</Text>
+              <Text
+                className={`text-2xl font-bold ${
+                  summary && summary.netProfit >= 0 ? "text-emerald-400" : "text-red-400"
+                }`}
+              >
+                {summary ? formatCurrency(summary.netProfit) : "$0.00"}
+              </Text>
+            </View>
+            <Text className="text-slate-500 text-xs mt-1">Rake - Expenses</Text>
+          </View>
         </View>
 
         {/* Stats Grid */}

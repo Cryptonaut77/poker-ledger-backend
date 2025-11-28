@@ -117,11 +117,18 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   // Tips, buy-ins, and cashouts are player-to-player transactions and don't affect house profit
   const netProfit = totalRake - totalExpenses;
 
+  // Till balance = Physical cash in the till
+  // Cash buy-ins add money, all cashouts remove money (paying players), tips add money
+  const cashBuyIns = session.playerTransactions
+    .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const tillBalance = cashBuyIns + totalTips - totalCashouts;
+
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
   const playerCount = uniquePlayers.size;
 
-  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}`);
+  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)}`);
 
   return c.json({
     session: {
@@ -137,6 +144,7 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     totalRake,
     totalExpenses,
     netProfit,
+    tillBalance,
     playerCount,
   } satisfies GameSummary);
 });
