@@ -40,6 +40,7 @@ export const dealerDownSchema = z.object({
   dealerName: z.string(),
   tips: z.number(),
   rake: z.number(),
+  tipsPaid: z.boolean(),
   timestamp: z.string(),
   gameSessionId: z.string(),
 });
@@ -139,6 +140,12 @@ export const getDealerDownsResponseSchema = z.object({
   downs: z.array(dealerDownSchema),
 });
 export type GetDealerDownsResponse = z.infer<typeof getDealerDownsResponseSchema>;
+
+// PUT /api/dealers/down/:id/pay - Mark dealer tips as paid
+export const markDealerTipsPaidResponseSchema = z.object({
+  dealerDown: dealerDownSchema,
+});
+export type MarkDealerTipsPaidResponse = z.infer<typeof markDealerTipsPaidResponseSchema>;
 
 // POST /api/expenses - Add expense
 export const addExpenseRequestSchema = z.object({

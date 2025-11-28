@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, X, Trash2 } from "lucide-react-native";
+import { Plus, X, Trash2, CheckCircle, Circle } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -20,6 +20,7 @@ import type {
   GetDealerDownsResponse,
   AddDealerDownRequest,
   DealerDown,
+  MarkDealerTipsPaidResponse,
 } from "@/shared/contracts";
 
 type Props = BottomTabScreenProps<"DealersTab">;
@@ -68,6 +69,16 @@ const DealersScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Mark tips as paid mutation
+  const markTipsPaidMutation = useMutation({
+    mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/pay`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
   const resetForm = () => {
     setDealerName("");
     setTips("");
@@ -105,6 +116,7 @@ const DealersScreen = ({ navigation }: Props) => {
               key={down.id}
               down={down}
               onDelete={() => deleteDownMutation.mutate(down.id)}
+              onMarkPaid={() => markTipsPaidMutation.mutate(down.id)}
               formatCurrency={formatCurrency}
               formatTime={formatTime}
             />
@@ -211,24 +223,33 @@ const DealersScreen = ({ navigation }: Props) => {
   );
 };
 
-const DealerDownCard = ({
-  down,
-  onDelete,
-  formatCurrency,
-  formatTime,
-}: {
+const DealerDownCard: React.FC<{
   down: DealerDown;
   onDelete: () => void;
+  onMarkPaid: () => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
-}) => {
+}> = ({ down, onDelete, onMarkPaid, formatCurrency, formatTime }) => {
   const total = down.tips + down.rake;
 
   return (
     <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
       <View className="flex-row items-start justify-between mb-3">
         <View className="flex-1">
-          <Text className="text-white text-lg font-bold">{down.dealerName}</Text>
+          <View className="flex-row items-center gap-2 mb-1">
+            <Text className="text-white text-lg font-bold">{down.dealerName}</Text>
+            {down.tipsPaid ? (
+              <View className="flex-row items-center gap-1 bg-emerald-900/30 px-2 py-1 rounded-md border border-emerald-700/50">
+                <CheckCircle size={14} color="#10b981" />
+                <Text className="text-emerald-400 text-xs font-medium">Paid</Text>
+              </View>
+            ) : (
+              <View className="flex-row items-center gap-1 bg-amber-900/30 px-2 py-1 rounded-md border border-amber-700/50">
+                <Circle size={14} color="#f59e0b" />
+                <Text className="text-amber-400 text-xs font-medium">Unpaid</Text>
+              </View>
+            )}
+          </View>
           <Text className="text-slate-500 text-xs">{formatTime(down.timestamp)}</Text>
         </View>
         <Pressable
@@ -253,12 +274,24 @@ const DealerDownCard = ({
         </View>
       </View>
 
-      <View className="bg-amber-900/20 rounded-lg p-3 border border-amber-800/30">
+      <View className="bg-amber-900/20 rounded-lg p-3 border border-amber-800/30 mb-3">
         <View className="flex-row items-center justify-between">
           <Text className="text-amber-300 text-sm font-medium">Total</Text>
           <Text className="text-amber-300 text-xl font-bold">{formatCurrency(total)}</Text>
         </View>
       </View>
+
+      {!down.tipsPaid && (
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            onMarkPaid();
+          }}
+          className="bg-emerald-600 py-3 rounded-lg"
+        >
+          <Text className="text-white text-center font-bold">Mark Tips as Paid</Text>
+        </Pressable>
+      )}
     </View>
   );
 };

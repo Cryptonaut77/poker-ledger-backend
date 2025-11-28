@@ -20,6 +20,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### 🎲 Dealer Management
 - Track dealer tips per down
 - Log rake collected
+- Mark tips as paid with one-tap button
+- View paid/unpaid status with color-coded badges
 - View dealer performance history
 
 ### 💸 Expense Tracking
@@ -29,8 +31,10 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ### 📊 Dashboard
 - Real-time net profit display
+- Till balance showing actual cash on hand
 - Summary of all financial metrics
 - Player count tracking
+- Separate tracking for paid vs unpaid dealer tips
 - Beautiful, intuitive interface
 
 ## Tech Stack
@@ -73,6 +77,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **Dealer Routes** (`/api/dealers/*`)
   - `POST /api/dealers/down` - Add dealer down
   - `GET /api/dealers/downs/:sessionId` - Get all dealer downs
+  - `PUT /api/dealers/down/:id/pay` - Mark dealer tips as paid
   - `DELETE /api/dealers/down/:id` - Delete a dealer down
 
 - **Expense Routes** (`/api/expenses/*`)
@@ -117,6 +122,10 @@ The app automatically creates a game session when you first open it. All transac
 2. Tap the "+" button
 3. Enter dealer name, tips, and rake
 4. Submit to add the dealer down
+5. Each dealer down shows as "Unpaid" by default
+6. Tap "Mark Tips as Paid" button when you pay the dealer
+7. Paid dealer downs show a green "Paid" badge
+8. Only paid tips affect the Till Balance and House Profit calculations
 
 ### Recording Expenses
 1. Navigate to the Expenses tab
@@ -127,13 +136,15 @@ The app automatically creates a game session when you first open it. All transac
 
 ### Viewing Summary
 The Dashboard tab provides a real-time overview of:
-- **Till Balance**: Physical cash in the till (cash buy-ins - cashouts - tips paid to dealers - expenses)
-- **House Profit**: Business profit (rake - expenses)
+- **Till Balance**: Physical cash in the till (cash buy-ins - cashouts - paid tips - expenses)
+- **House Profit**: Business profit (paid rake - expenses)
 - Buy-in payment breakdown (cash in till, electronic, credit owed)
 - Total buy-ins and cashouts
-- Total tips and rake collected
+- Total tips and rake collected (including unpaid)
 - Total expenses
 - Number of unique players
+
+**Important**: Tips and rake are only included in Till Balance and House Profit calculations once marked as paid. This ensures accurate tracking of actual cash on hand.
 
 ## Notes
 

@@ -113,19 +113,29 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   const totalExpenses = session.expenses.reduce((sum, e) => sum + e.amount, 0);
 
-  // House profit = Rake - Expenses
-  // Tips, buy-ins, and cashouts are player-to-player transactions and don't affect house profit
-  const netProfit = totalRake - totalExpenses;
+  // Only count paid tips for calculations
+  const totalPaidTips = session.dealerDowns
+    .filter((d) => d.tipsPaid)
+    .reduce((sum, d) => sum + d.tips, 0);
+
+  // Only count rake from downs where tips have been paid
+  const totalPaidRake = session.dealerDowns
+    .filter((d) => d.tipsPaid)
+    .reduce((sum, d) => sum + d.rake, 0);
+
+  // House profit = Paid Rake - Expenses
+  // Only count rake that has been claimed (tips paid)
+  const netProfit = totalPaidRake - totalExpenses;
 
   // Till balance = Physical cash in the till
   // Cash buy-ins add money (money IN)
   // Cashouts remove money (paying players OUT)
-  // Tips remove money (paying dealers OUT from player buy-ins)
+  // Paid tips remove money (paying dealers OUT from player buy-ins)
   // Expenses remove money (paying for costs OUT)
   const cashBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
-  const tillBalance = cashBuyIns - totalCashouts - totalTips - totalExpenses;
+  const tillBalance = cashBuyIns - totalCashouts - totalPaidTips - totalExpenses;
 
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));

@@ -4,6 +4,7 @@ import {
   addDealerDownRequestSchema,
   type AddDealerDownResponse,
   type GetDealerDownsResponse,
+  type MarkDealerTipsPaidResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
@@ -72,6 +73,28 @@ dealersRouter.delete("/down/:id", async (c) => {
   console.log(`🎲 [Dealers] Dealer down deleted: ${id}`);
 
   return c.json({ success: true });
+});
+
+// ============================================
+// PUT /api/dealers/down/:id/pay - Mark dealer tips as paid
+// ============================================
+dealersRouter.put("/down/:id/pay", async (c) => {
+  const id = c.req.param("id");
+  console.log(`🎲 [Dealers] Marking tips as paid for dealer down: ${id}`);
+
+  const dealerDown = await db.dealerDown.update({
+    where: { id },
+    data: { tipsPaid: true },
+  });
+
+  console.log(`🎲 [Dealers] Tips marked as paid: ${id}`);
+
+  return c.json({
+    dealerDown: {
+      ...dealerDown,
+      timestamp: dealerDown.timestamp.toISOString(),
+    },
+  } satisfies MarkDealerTipsPaidResponse);
 });
 
 export { dealersRouter };

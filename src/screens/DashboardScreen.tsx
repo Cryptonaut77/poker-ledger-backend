@@ -134,7 +134,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             >
               {summary ? formatCurrency(summary.tillBalance) : "$0.00"}
             </Text>
-            <Text className="text-slate-500 text-xs mt-2">Cash Buy-ins - Cashouts - Tips - Expenses</Text>
+            <Text className="text-slate-500 text-xs mt-2">Cash Buy-ins - Cashouts - Paid Tips - Expenses</Text>
           </LinearGradient>
         </View>
 
@@ -153,7 +153,7 @@ const DashboardScreen = ({ navigation }: Props) => {
                 {summary ? formatCurrency(summary.netProfit) : "$0.00"}
               </Text>
             </View>
-            <Text className="text-slate-500 text-xs mt-1">Rake - Expenses</Text>
+            <Text className="text-slate-500 text-xs mt-1">Paid Rake - Expenses</Text>
           </View>
         </View>
 
