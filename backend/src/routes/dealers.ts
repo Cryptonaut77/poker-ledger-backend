@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import {
   addDealerDownRequestSchema,
+  updateDealerDownRequestSchema,
   type AddDealerDownResponse,
   type GetDealerDownsResponse,
+  type UpdateDealerDownResponse,
   type MarkDealerTipsPaidResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
@@ -73,6 +75,33 @@ dealersRouter.delete("/down/:id", async (c) => {
   console.log(`🎲 [Dealers] Dealer down deleted: ${id}`);
 
   return c.json({ success: true });
+});
+
+// ============================================
+// PUT /api/dealers/down/:id - Update dealer down
+// ============================================
+dealersRouter.put("/down/:id", zValidator("json", updateDealerDownRequestSchema), async (c) => {
+  const id = c.req.param("id");
+  const data = c.req.valid("json");
+  console.log(`🎲 [Dealers] Updating dealer down: ${id}`);
+
+  const dealerDown = await db.dealerDown.update({
+    where: { id },
+    data: {
+      dealerName: data.dealerName,
+      tips: data.tips,
+      rake: data.rake,
+    },
+  });
+
+  console.log(`🎲 [Dealers] Dealer down updated: ${id}`);
+
+  return c.json({
+    dealerDown: {
+      ...dealerDown,
+      timestamp: dealerDown.timestamp.toISOString(),
+    },
+  } satisfies UpdateDealerDownResponse);
 });
 
 // ============================================

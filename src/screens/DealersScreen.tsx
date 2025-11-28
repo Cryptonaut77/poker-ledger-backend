@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, X, Trash2, CheckCircle, Circle } from "lucide-react-native";
+import { Plus, X, Trash2, CheckCircle, Circle, Edit3 } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -19,6 +19,7 @@ import type {
   GetActiveGameResponse,
   GetDealerDownsResponse,
   AddDealerDownRequest,
+  UpdateDealerDownRequest,
   DealerDown,
   MarkDealerTipsPaidResponse,
 } from "@/shared/contracts";
@@ -28,6 +29,8 @@ type Props = BottomTabScreenProps<"DealersTab">;
 const DealersScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingDown, setEditingDown] = useState<DealerDown | null>(null);
   const [dealerName, setDealerName] = useState("");
   const [tips, setTips] = useState("");
   const [rake, setRake] = useState("");
@@ -59,12 +62,28 @@ const DealersScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Update dealer down mutation
+  const updateDownMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateDealerDownRequest }) =>
+      api.put(`/api/dealers/down/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setEditModalVisible(false);
+      setEditingDown(null);
+      resetForm();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
   // Delete dealer down mutation
   const deleteDownMutation = useMutation({
     mutationFn: (id: string) => api.delete(`/api/dealers/down/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setEditModalVisible(false);
+      setEditingDown(null);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
   });
@@ -85,6 +104,15 @@ const DealersScreen = ({ navigation }: Props) => {
     setRake("");
   };
 
+  const handleEdit = (down: DealerDown) => {
+    setEditingDown(down);
+    setDealerName(down.dealerName);
+    setTips(down.tips.toString());
+    setRake(down.rake.toString());
+    setEditModalVisible(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
   const handleSubmit = () => {
     if (!dealerName.trim() || !sessionId) return;
 
@@ -101,6 +129,29 @@ const DealersScreen = ({ navigation }: Props) => {
     });
   };
 
+  const handleUpdate = () => {
+    if (!dealerName.trim() || !editingDown) return;
+
+    const numTips = parseFloat(tips) || 0;
+    const numRake = parseFloat(rake) || 0;
+
+    if (numTips < 0 || numRake < 0) return;
+
+    updateDownMutation.mutate({
+      id: editingDown.id,
+      data: {
+        dealerName: dealerName.trim(),
+        tips: numTips,
+        rake: numRake,
+      },
+    });
+  };
+
+  const handleDelete = () => {
+    if (!editingDown) return;
+    deleteDownMutation.mutate(editingDown.id);
+  };
+
   const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -115,7 +166,7 @@ const DealersScreen = ({ navigation }: Props) => {
             <DealerDownCard
               key={down.id}
               down={down}
-              onDelete={() => deleteDownMutation.mutate(down.id)}
+              onEdit={() => handleEdit(down)}
               onMarkPaid={() => markTipsPaidMutation.mutate(down.id)}
               formatCurrency={formatCurrency}
               formatTime={formatTime}
@@ -156,12 +207,21 @@ const DealersScreen = ({ navigation }: Props) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1 justify-end"
         >
-          <Pressable className="flex-1 bg-black/50" onPress={() => setModalVisible(false)} />
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setModalVisible(false);
+              resetForm();
+            }}
+          />
           <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
             <View className="flex-row items-center justify-between mb-6">
               <Text className="text-white text-2xl font-bold">Dealer Down</Text>
               <Pressable
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setModalVisible(false);
+                  resetForm();
+                }}
                 className="w-10 h-10 items-center justify-center"
               >
                 <X size={24} color="#94a3b8" />
@@ -227,17 +287,118 @@ const DealersScreen = ({ navigation }: Props) => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Edit Dealer Down Modal */}
+      <Modal visible={editModalVisible} animationType="slide" transparent>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setEditModalVisible(false);
+              setEditingDown(null);
+              resetForm();
+            }}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">Edit Dealer Down</Text>
+              <Pressable
+                onPress={() => {
+                  setEditModalVisible(false);
+                  setEditingDown(null);
+                  resetForm();
+                }}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
+            </View>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
+                <TextInput
+                  value={dealerName}
+                  onChangeText={setDealerName}
+                  placeholder="Enter dealer name"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
+                <TextInput
+                  value={tips}
+                  onChangeText={setTips}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
+                <TextInput
+                  value={rake}
+                  onChangeText={setRake}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="done"
+                  onSubmitEditing={handleUpdate}
+                />
+              </View>
+
+              <Pressable
+                onPress={handleUpdate}
+                disabled={!dealerName.trim() || updateDownMutation.isPending}
+                className={`bg-blue-600 py-4 rounded-lg mt-2 ${
+                  (!dealerName.trim() || updateDownMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {updateDownMutation.isPending ? "Updating..." : "Update Down"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleDelete}
+                disabled={deleteDownMutation.isPending}
+                className={`bg-red-600 py-4 rounded-lg ${
+                  deleteDownMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {deleteDownMutation.isPending ? "Deleting..." : "Delete Down"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 };
 
 const DealerDownCard: React.FC<{
   down: DealerDown;
-  onDelete: () => void;
+  onEdit: () => void;
   onMarkPaid: () => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
-}> = ({ down, onDelete, onMarkPaid, formatCurrency, formatTime }) => {
+}> = ({ down, onEdit, onMarkPaid, formatCurrency, formatTime }) => {
   const total = down.tips + down.rake;
 
   return (
@@ -263,11 +424,11 @@ const DealerDownCard: React.FC<{
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onDelete();
+            onEdit();
           }}
           className="p-2"
         >
-          <Trash2 size={18} color="#ef4444" />
+          <Edit3 size={18} color="#3b82f6" />
         </Pressable>
       </View>
 

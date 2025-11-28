@@ -21,6 +21,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Track dealer tips per down
 - Log rake collected
 - Editable text inputs for dealer name, tips, and rake amounts
+- Edit dealer downs with blue edit icon
+- Delete dealer downs from edit modal
 - Mark tips as paid with one-tap button
 - View paid/unpaid status with color-coded badges
 - View dealer performance history

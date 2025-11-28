@@ -141,6 +141,18 @@ export const getDealerDownsResponseSchema = z.object({
 });
 export type GetDealerDownsResponse = z.infer<typeof getDealerDownsResponseSchema>;
 
+// PUT /api/dealers/down/:id - Update dealer down
+export const updateDealerDownRequestSchema = z.object({
+  dealerName: z.string().min(1),
+  tips: z.number().min(0),
+  rake: z.number().min(0),
+});
+export type UpdateDealerDownRequest = z.infer<typeof updateDealerDownRequestSchema>;
+export const updateDealerDownResponseSchema = z.object({
+  dealerDown: dealerDownSchema,
+});
+export type UpdateDealerDownResponse = z.infer<typeof updateDealerDownResponseSchema>;
+
 // PUT /api/dealers/down/:id/pay - Mark dealer tips as paid
 export const markDealerTipsPaidResponseSchema = z.object({
   dealerDown: dealerDownSchema,
