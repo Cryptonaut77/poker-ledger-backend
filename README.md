@@ -127,7 +127,8 @@ The app automatically creates a game session when you first open it. All transac
 
 ### Viewing Summary
 The Dashboard tab provides a real-time overview of:
-- Net profit (till balance: buy-ins + tips + rake - cashouts - expenses)
+- House profit (rake - expenses)
+- Buy-in payment breakdown (cash in till, electronic, credit owed)
 - Total buy-ins and cashouts
 - Total tips and rake collected
 - Total expenses
