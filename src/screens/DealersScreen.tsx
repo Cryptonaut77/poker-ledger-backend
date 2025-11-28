@@ -177,6 +177,9 @@ const DealersScreen = ({ navigation }: Props) => {
                   placeholder="Enter dealer name"
                   placeholderTextColor="#475569"
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  autoCapitalize="words"
+                  autoCorrect={false}
                 />
               </View>
 
@@ -189,6 +192,8 @@ const DealersScreen = ({ navigation }: Props) => {
                   placeholderTextColor="#475569"
                   keyboardType="decimal-pad"
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="next"
                 />
               </View>
 
@@ -201,6 +206,9 @@ const DealersScreen = ({ navigation }: Props) => {
                   placeholderTextColor="#475569"
                   keyboardType="decimal-pad"
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit}
                 />
               </View>
 
