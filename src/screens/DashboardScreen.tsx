@@ -134,7 +134,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             >
               {summary ? formatCurrency(summary.tillBalance) : "$0.00"}
             </Text>
-            <Text className="text-slate-500 text-xs mt-2">Cash Buy-ins + Tips - Cashouts</Text>
+            <Text className="text-slate-500 text-xs mt-2">Cash Buy-ins - Cashouts - Tips - Expenses</Text>
           </LinearGradient>
         </View>
 

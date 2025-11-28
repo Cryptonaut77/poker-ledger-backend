@@ -118,11 +118,14 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   const netProfit = totalRake - totalExpenses;
 
   // Till balance = Physical cash in the till
-  // Cash buy-ins add money, all cashouts remove money (paying players), tips add money
+  // Cash buy-ins add money (money IN)
+  // Cashouts remove money (paying players OUT)
+  // Tips remove money (paying dealers OUT from player buy-ins)
+  // Expenses remove money (paying for costs OUT)
   const cashBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
-  const tillBalance = cashBuyIns + totalTips - totalCashouts;
+  const tillBalance = cashBuyIns - totalCashouts - totalTips - totalExpenses;
 
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
