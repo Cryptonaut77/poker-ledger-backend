@@ -1,13 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Haptics from "expo-haptics";
-import { LayoutDashboard, Users, Dices, Receipt } from "lucide-react-native";
+import { LayoutDashboard, Users, Dices, Receipt, Archive } from "lucide-react-native";
 
 import type { BottomTabParamList, RootStackParamList } from "@/navigation/types";
 import DashboardScreen from "@/screens/DashboardScreen";
 import PlayersScreen from "@/screens/PlayersScreen";
 import DealersScreen from "@/screens/DealersScreen";
 import ExpensesScreen from "@/screens/ExpensesScreen";
+import GameHistoryScreen from "@/screens/GameHistoryScreen";
 import LoginModalScreen from "@/screens/LoginModalScreen";
 
 /**
@@ -91,6 +92,14 @@ const BottomTabNavigator = () => {
         options={{
           title: "Expenses",
           tabBarIcon: ({ color, size }) => <Receipt size={size} color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="HistoryTab"
+        component={GameHistoryScreen}
+        options={{
+          title: "History",
+          tabBarIcon: ({ color, size }) => <Archive size={size} color={color} />,
         }}
       />
     </BottomTab.Navigator>

@@ -19,6 +19,7 @@ export type BottomTabParamList = {
   PlayersTab: undefined;
   DealersTab: undefined;
   ExpensesTab: undefined;
+  HistoryTab: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> = NativeStackScreenProps<

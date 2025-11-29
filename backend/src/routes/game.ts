@@ -7,6 +7,7 @@ import {
   type GameSummary,
   type DeleteGameResponse,
   type StartNewGameResponse,
+  type GetGameHistoryResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
@@ -49,6 +50,66 @@ gameRouter.get("/active", async (c) => {
       updatedAt: session.updatedAt.toISOString(),
     },
   } satisfies GetActiveGameResponse);
+});
+
+// ============================================
+// GET /api/game/history - Get all inactive game sessions
+// ============================================
+gameRouter.get("/history", async (c) => {
+  console.log("🎮 [Game] Getting game history");
+
+  const sessions = await db.gameSession.findMany({
+    where: { isActive: false },
+    orderBy: { endedAt: "desc" },
+    include: {
+      playerTransactions: true,
+      dealerDowns: true,
+      expenses: true,
+    },
+  });
+
+  console.log(`🎮 [Game] Found ${sessions.length} inactive sessions`);
+
+  return c.json({
+    sessions: sessions.map((session) => ({
+      id: session.id,
+      name: session.name,
+      tableName: session.tableName,
+      startedAt: session.startedAt.toISOString(),
+      endedAt: session.endedAt?.toISOString() ?? null,
+      isActive: session.isActive,
+      createdAt: session.createdAt.toISOString(),
+      updatedAt: session.updatedAt.toISOString(),
+      playerTransactions: session.playerTransactions.map((t) => ({
+        id: t.id,
+        playerName: t.playerName,
+        type: t.type as "buy-in" | "cashout",
+        amount: t.amount,
+        paymentMethod: t.paymentMethod as "cash" | "electronic" | "credit",
+        notes: t.notes,
+        timestamp: t.timestamp.toISOString(),
+        gameSessionId: t.gameSessionId,
+      })),
+      dealerDowns: session.dealerDowns.map((d) => ({
+        id: d.id,
+        dealerName: d.dealerName,
+        tips: d.tips,
+        rake: d.rake,
+        tipsPaid: d.tipsPaid,
+        timestamp: d.timestamp.toISOString(),
+        gameSessionId: d.gameSessionId,
+      })),
+      expenses: session.expenses.map((e) => ({
+        id: e.id,
+        description: e.description,
+        amount: e.amount,
+        category: e.category as "food" | "drinks" | "other",
+        notes: e.notes,
+        timestamp: e.timestamp.toISOString(),
+        gameSessionId: e.gameSessionId,
+      })),
+    })),
+  } satisfies GetGameHistoryResponse);
 });
 
 // ============================================

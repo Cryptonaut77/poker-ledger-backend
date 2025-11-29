@@ -88,6 +88,19 @@ export const startNewGameResponseSchema = z.object({
 });
 export type StartNewGameResponse = z.infer<typeof startNewGameResponseSchema>;
 
+// GET /api/game/history - Get all inactive game sessions
+export const gameSessionWithDataSchema = gameSessionSchema.extend({
+  playerTransactions: z.array(playerTransactionSchema),
+  dealerDowns: z.array(dealerDownSchema),
+  expenses: z.array(expenseSchema),
+});
+export type GameSessionWithData = z.infer<typeof gameSessionWithDataSchema>;
+
+export const getGameHistoryResponseSchema = z.object({
+  sessions: z.array(gameSessionWithDataSchema),
+});
+export type GetGameHistoryResponse = z.infer<typeof getGameHistoryResponseSchema>;
+
 // GET /api/game/:sessionId/summary - Get game session summary
 export const gameSummarySchema = z.object({
   session: gameSessionSchema,

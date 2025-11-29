@@ -11,6 +11,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - End & save game for record keeping
 - Quick-start new game
 - Delete game and all associated data
+- **Game history** - View all past saved games with full statistics
+- Delete saved games from history
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
@@ -69,11 +71,13 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **PlayersScreen** (`src/screens/PlayersScreen.tsx`) - Player buy-ins and cashouts
 - **DealersScreen** (`src/screens/DealersScreen.tsx`) - Dealer tips and rake tracking
 - **ExpensesScreen** (`src/screens/ExpensesScreen.tsx`) - Expense management
+- **GameHistoryScreen** (`src/screens/GameHistoryScreen.tsx`) - View past saved games
 - **LoginModalScreen** (`src/screens/LoginModalScreen.tsx`) - Authentication
 
 ### Backend API Routes
 - **Game Routes** (`/api/game/*`)
   - `GET /api/game/active` - Get or create active game session
+  - `GET /api/game/history` - Get all inactive (saved) game sessions
   - `POST /api/game/end` - End current game session
   - `POST /api/game/new` - Start a new game session
   - `DELETE /api/game/:sessionId` - Delete a game session
@@ -167,6 +171,17 @@ The Dashboard tab provides a real-time overview of:
 - Number of unique players
 
 **Important**: Tips and rake are only included in Till Balance and House Profit calculations once marked as paid. This ensures accurate tracking of actual cash on hand.
+
+### Viewing Game History
+Access your past saved games:
+1. Navigate to the History tab
+2. View all previously ended games sorted by most recent
+3. Tap any game to expand and see:
+   - Net profit/loss
+   - Number of players
+   - Total buy-ins, cashouts, tips, rake, and expenses
+   - Transaction, dealer down, and expense counts
+4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Notes
 
