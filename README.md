@@ -184,10 +184,20 @@ Access your past saved games:
    - Transaction, dealer down, and expense counts
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
+## Recent Updates
+
+### Database Schema Fix (Nov 29, 2024)
+Fixed database schema synchronization issues that were preventing player buy-ins and other features from working:
+- Applied missing `tableName` column migration to `game_session` table
+- Applied missing `tipsPaid` column migration to `dealer_down` table
+- Regenerated Prisma Client to sync with updated schema
+
+All features including player buy-ins, cashouts, dealer tracking, and dashboard summaries are now working correctly.
+
 ## Troubleshooting
 
 ### Database Issues
-If you encounter errors related to missing database columns (e.g., "The column `main.game_session.tableName` does not exist"), the database schema may be out of sync. This has been fixed - the migration system will automatically apply any pending updates.
+If you encounter errors related to missing database columns, the database migrations have been applied and the schema is now in sync.
 
 ## Notes
 
