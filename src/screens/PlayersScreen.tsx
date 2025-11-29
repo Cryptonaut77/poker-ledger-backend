@@ -150,30 +150,36 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const handlePlayerNameChange = (text: string) => {
+    console.log('[PlayerName] Input received:', text);
+    console.log('[PlayerName] Current ref value:', playerNameRef.current);
+
     // Prevent duplicate text from voice input
-    // Check if the new text contains the current text repeated
     const currentValue = playerNameRef.current;
 
-    if (currentValue && text.startsWith(currentValue)) {
-      // If the new text starts with current value, check for duplication
-      const afterCurrent = text.slice(currentValue.length).trim();
+    // Check if text contains a duplicate pattern (e.g., "John John" or "John john")
+    const words = text.trim().split(/\s+/);
+    if (words.length >= 2) {
+      const firstWord = words[0].toLowerCase();
+      const secondWord = words[1].toLowerCase();
 
-      // If what comes after is the same as current (or empty), it's a duplicate
-      if (afterCurrent === currentValue || afterCurrent === '') {
-        // Only update if it's truly new content (afterCurrent is empty means partial update)
-        if (afterCurrent === '') {
-          return; // Ignore, it's the same value
-        }
-        // It's a duplicate, use only the first occurrence
-        playerNameRef.current = currentValue;
-        setPlayerName(currentValue);
+      // If the first two words are the same (case-insensitive), it's likely a duplicate
+      if (firstWord === secondWord && firstWord.length > 0) {
+        console.log('[PlayerName] Detected duplicate, using first word only');
+        const cleanText = words[0];
+        playerNameRef.current = cleanText;
+        setPlayerName(cleanText);
         return;
       }
     }
 
-    // Normal update
-    playerNameRef.current = text;
-    setPlayerName(text);
+    // Only update if the text is actually different
+    if (text !== currentValue) {
+      console.log('[PlayerName] Updating to:', text);
+      playerNameRef.current = text;
+      setPlayerName(text);
+    } else {
+      console.log('[PlayerName] Ignoring duplicate input');
+    }
   };
 
   const handleSubmit = () => {
