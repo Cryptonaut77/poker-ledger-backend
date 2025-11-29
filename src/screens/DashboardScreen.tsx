@@ -357,7 +357,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             />
           </View>
 
-          {/* Row 1.5 - Active Tables */}
+          {/* Row 2 */}
           <View className="flex-row gap-4">
             <StatCard
               icon={<Table size={24} color="#10b981" />}
@@ -365,9 +365,15 @@ const DashboardScreen = ({ navigation }: Props) => {
               value={tablesData?.tables.length?.toString() || "1"}
               bgColor="bg-slate-900"
             />
+            <StatCard
+              icon={<Receipt size={24} color="#8b5cf6" />}
+              label="Expenses"
+              value={summary ? formatCurrency(summary.totalExpenses) : "$0.00"}
+              bgColor="bg-slate-900"
+            />
           </View>
 
-          {/* Row 2 */}
+          {/* Row 3 */}
           <View className="flex-row gap-4">
             <StatCard
               icon={<Dices size={24} color="#f59e0b" />}
@@ -379,16 +385,6 @@ const DashboardScreen = ({ navigation }: Props) => {
               icon={<Dices size={24} color="#f59e0b" />}
               label="Rake"
               value={summary ? formatCurrency(summary.totalRake) : "$0.00"}
-              bgColor="bg-slate-900"
-            />
-          </View>
-
-          {/* Row 3 */}
-          <View className="flex-row gap-4">
-            <StatCard
-              icon={<Receipt size={24} color="#8b5cf6" />}
-              label="Expenses"
-              value={summary ? formatCurrency(summary.totalExpenses) : "$0.00"}
               bgColor="bg-slate-900"
             />
           </View>
