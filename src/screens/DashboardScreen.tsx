@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, ScrollView, RefreshControl } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert } from "react-native";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle } from "lucide-react-native";
+import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle, Power, Trash2, PlusCircle } from "lucide-react-native";
+import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
 import type { BottomTabScreenProps } from "@/navigation/types";
@@ -11,6 +12,8 @@ import type { GetActiveGameResponse, GameSummary, GetPlayerTransactionsResponse 
 type Props = BottomTabScreenProps<"DashboardTab">;
 
 const DashboardScreen = ({ navigation }: Props) => {
+  const queryClient = useQueryClient();
+  const [manageModalVisible, setManageModalVisible] = React.useState(false);
 
   // Fetch active game session
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
@@ -53,6 +56,45 @@ const DashboardScreen = ({ navigation }: Props) => {
       credit: buyIns.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0),
     };
   }, [transactionsData]);
+
+  // End game mutation
+  const endGameMutation = useMutation({
+    mutationFn: () => api.post("/api/game/end", { sessionId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setManageModalVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // Delete game mutation
+  const deleteGameMutation = useMutation({
+    mutationFn: () => api.delete(`/api/game/${sessionId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      setManageModalVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // Start new game mutation
+  const startNewGameMutation = useMutation({
+    mutationFn: () => api.post("/api/game/new", {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      setManageModalVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
 
   const isLoading = isLoadingGame || isLoadingSummary;
   const isRefreshing = isRefetching;
@@ -97,7 +139,18 @@ const DashboardScreen = ({ navigation }: Props) => {
           end={{ x: 1, y: 1 }}
           style={{ padding: 24, paddingTop: 20 }}
         >
-          <Text className="text-white text-3xl font-bold mb-2">Poker Game</Text>
+          <View className="flex-row items-center justify-between mb-2">
+            <Text className="text-white text-3xl font-bold">Poker Game</Text>
+            <Pressable
+              onPress={() => {
+                setManageModalVisible(true);
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              }}
+              className="bg-slate-800 px-4 py-2 rounded-lg"
+            >
+              <Text className="text-white font-semibold">Manage</Text>
+            </Pressable>
+          </View>
           {summary?.session && (
             <View className="flex-row items-center gap-2">
               <View className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -244,6 +297,99 @@ const DashboardScreen = ({ navigation }: Props) => {
           </View>
         </View>
       </ScrollView>
+
+      {/* Manage Game Modal */}
+      <Modal visible={manageModalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-end">
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => setManageModalVisible(false)}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <Text className="text-white text-2xl font-bold mb-6">Manage Game</Text>
+
+            <View className="gap-3">
+              {/* End & Save Game */}
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  endGameMutation.mutate();
+                }}
+                disabled={endGameMutation.isPending || !gameData?.session.isActive}
+                className={`bg-blue-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  (endGameMutation.isPending || !gameData?.session.isActive) && "opacity-50"
+                }`}
+              >
+                <Power size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">
+                  {endGameMutation.isPending ? "Ending Game..." : "End & Save Game"}
+                </Text>
+              </Pressable>
+
+              {/* Start New Game */}
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  startNewGameMutation.mutate();
+                }}
+                disabled={startNewGameMutation.isPending}
+                className={`bg-emerald-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  startNewGameMutation.isPending && "opacity-50"
+                }`}
+              >
+                <PlusCircle size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">
+                  {startNewGameMutation.isPending ? "Starting..." : "Start New Game"}
+                </Text>
+              </Pressable>
+
+              {/* Delete Game */}
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  Alert.alert(
+                    "Delete Game",
+                    "Are you sure you want to delete this game? All data will be permanently removed.",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Delete",
+                        style: "destructive",
+                        onPress: () => deleteGameMutation.mutate(),
+                      },
+                    ]
+                  );
+                }}
+                disabled={deleteGameMutation.isPending}
+                className={`bg-red-600/20 border border-red-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  deleteGameMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Trash2 size={20} color="#ef4444" />
+                <Text className="text-red-500 text-center font-bold text-lg">
+                  {deleteGameMutation.isPending ? "Deleting..." : "Delete Game"}
+                </Text>
+              </Pressable>
+
+              {/* Cancel */}
+              <Pressable
+                onPress={() => setManageModalVisible(false)}
+                className="py-4 rounded-lg"
+              >
+                <Text className="text-slate-400 text-center font-medium text-lg">Cancel</Text>
+              </Pressable>
+            </View>
+
+            <View className="mt-4 p-4 bg-slate-800 rounded-lg">
+              <Text className="text-slate-400 text-xs">
+                <Text className="font-bold">End & Save:</Text> Marks game as complete for record keeping{"\n"}
+                <Text className="font-bold">Start New:</Text> Ends current game and creates a fresh one{"\n"}
+                <Text className="font-bold">Delete:</Text> Permanently removes all game data
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

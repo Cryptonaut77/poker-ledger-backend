@@ -8,6 +8,9 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Automatic game session creation
 - Real-time game tracking
 - Comprehensive game summary with net profit calculations
+- End & save game for record keeping
+- Start new game session
+- Delete game and all associated data
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
@@ -72,6 +75,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **Game Routes** (`/api/game/*`)
   - `GET /api/game/active` - Get or create active game session
   - `POST /api/game/end` - End current game session
+  - `POST /api/game/new` - Start a new game session
+  - `DELETE /api/game/:sessionId` - Delete a game session
   - `GET /api/game/:sessionId/summary` - Get game summary with calculations
 
 - **Player Routes** (`/api/players/*`)
@@ -111,6 +116,15 @@ The app features a sophisticated poker room aesthetic:
   - Blue edit icons for transaction management
 
 ## Usage
+
+### Managing Game Sessions
+The app automatically creates a game session when you first open it. To manage your game:
+1. Navigate to the Dashboard tab
+2. Tap the "Manage" button in the top right
+3. Choose an action:
+   - **End & Save Game**: Marks the current game as complete and saves it for record keeping
+   - **Start New Game**: Ends the current game and creates a fresh session (all old data is saved)
+   - **Delete Game**: Permanently removes the current game and all associated data (cannot be undone)
 
 ### Starting a Game
 The app automatically creates a game session when you first open it. All transactions, dealer downs, and expenses are tied to the active game session.

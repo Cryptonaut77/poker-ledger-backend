@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 101ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 102ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1328.00ms]
+Checked 761 installs across 703 packages (no changes) [1392.00ms]
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
 Failed to find Response internal state key
@@ -76,10 +76,10 @@ Failed to find Response internal state key
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
 🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
---> GET /api/game/active [32m200[0m 5ms
+--> GET /api/game/active [32m200[0m 4ms
 <-- GET /api/game/cmijfilg90000m2esoerheb14/summary
 🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $-396.00, Till balance: $3804.00
+🎮 [Game] Summary calculated - Net profit: $154.00, Till balance: $3604.00
 --> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
 <-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
 💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
@@ -87,124 +87,32 @@ Failed to find Response internal state key
 --> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 2ms
 <-- GET /api/game/cmijfilg90000m2esoerheb14/summary
 🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $-396.00, Till balance: $3804.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 2ms
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
+🎮 [Game] Summary calculated - Net profit: $154.00, Till balance: $3604.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 1ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 3ms
 🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
 --> GET /api/game/active [32m200[0m 2ms
-<-- PUT /api/dealers/down/cmijhe5f70011m2hhk9k35fge/pay
-🎲 [Dealers] Marking tips as paid for dealer down: cmijhe5f70011m2hhk9k35fge
-🎲 [Dealers] Tips marked as paid: cmijhe5f70011m2hhk9k35fge
---> PUT /api/dealers/down/cmijhe5f70011m2hhk9k35fge/pay [32m200[0m 4ms
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $-346.00, Till balance: $3754.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
-<-- PUT /api/dealers/down/cmijhduad000zm2hh1exnr5re/pay
-🎲 [Dealers] Marking tips as paid for dealer down: cmijhduad000zm2hh1exnr5re
-🎲 [Dealers] Tips marked as paid: cmijhduad000zm2hh1exnr5re
---> PUT /api/dealers/down/cmijhduad000zm2hh1exnr5re/pay [32m200[0m 3ms
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 3ms
-🎮 [Game] Summary calculated - Net profit: $-296.00, Till balance: $3704.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
-<-- PUT /api/dealers/down/cmijhdfxz000xm2hhbnx2b7xg/pay
-🎲 [Dealers] Marking tips as paid for dealer down: cmijhdfxz000xm2hhbnx2b7xg
-🎲 [Dealers] Tips marked as paid: cmijhdfxz000xm2hhbnx2b7xg
---> PUT /api/dealers/down/cmijhdfxz000xm2hhbnx2b7xg/pay [32m200[0m 2ms
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 2ms
-🎮 [Game] Summary calculated - Net profit: $-246.00, Till balance: $3654.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 1ms
-<-- PUT /api/dealers/down/cmijhcnr5000vm2hhdekttsyc/pay
-🎲 [Dealers] Marking tips as paid for dealer down: cmijhcnr5000vm2hhdekttsyc
-🎲 [Dealers] Tips marked as paid: cmijhcnr5000vm2hhdekttsyc
---> PUT /api/dealers/down/cmijhcnr5000vm2hhdekttsyc/pay [32m200[0m 2ms
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $-196.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 2ms
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $-196.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 1ms
-<-- PUT /api/dealers/down/cmijhcnr5000vm2hhdekttsyc
-🎲 [Dealers] Updating dealer down: cmijhcnr5000vm2hhdekttsyc
-🎲 [Dealers] Dealer down updated: cmijhcnr5000vm2hhdekttsyc
---> PUT /api/dealers/down/cmijhcnr5000vm2hhdekttsyc [32m200[0m 7ms
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $-146.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 1ms
-<-- PUT /api/dealers/down/cmijhdfxz000xm2hhbnx2b7xg
-🎲 [Dealers] Updating dealer down: cmijhdfxz000xm2hhbnx2b7xg
-🎲 [Dealers] Dealer down updated: cmijhdfxz000xm2hhbnx2b7xg
---> PUT /api/dealers/down/cmijhdfxz000xm2hhbnx2b7xg [32m200[0m 2ms
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $-96.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
-<-- PUT /api/dealers/down/cmijhduad000zm2hh1exnr5re
-🎲 [Dealers] Updating dealer down: cmijhduad000zm2hh1exnr5re
-🎲 [Dealers] Dealer down updated: cmijhduad000zm2hh1exnr5re
---> PUT /api/dealers/down/cmijhduad000zm2hh1exnr5re [32m200[0m 2ms
-<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
-🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-<-- GET /api/dealers/downs/cmijfilg90000m2esoerheb14
-🎲 [Dealers] Getting downs for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $154.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
-🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
 <-- GET /api/expenses/cmijfilg90000m2esoerheb14
 💸 [Expenses] Getting expenses for session: cmijfilg90000m2esoerheb14
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
 💸 [Expenses] Found 1 expenses
---> GET /api/expenses/cmijfilg90000m2esoerheb14 [32m200[0m 3ms
-🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
---> GET /api/game/active [32m200[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
---> GET /api/game/active [32m200[0m 2ms
-<-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
-💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
-💰 [Players] Found 12 transactions
---> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 2ms
+--> GET /api/expenses/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
+<-- PUT /api/expenses/cmijhqwhq0013m2hhs84vg5r4
+💸 [Expenses] Updating expense: cmijhqwhq0013m2hhs84vg5r4
+💸 [Expenses] Expense updated: cmijhqwhq0013m2hhs84vg5r4
+--> PUT /api/expenses/cmijhqwhq0013m2hhs84vg5r4 [32m200[0m 7ms
+<-- GET /api/expenses/cmijfilg90000m2esoerheb14
+💸 [Expenses] Getting expenses for session: cmijfilg90000m2esoerheb14
+💸 [Expenses] Found 1 expenses
+--> GET /api/expenses/cmijfilg90000m2esoerheb14 [32m200[0m 1ms
 <-- GET /api/game/cmijfilg90000m2esoerheb14/summary
 🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $154.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 1ms
+<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
+🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 2ms
 Failed to find Response internal state key
 ✅ Environment variables validated successfully
 🔐 [Auth] Initializing Better Auth...
@@ -233,19 +141,91 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1 | (function (entry, fetcher)
-              ^
-SyntaxError: Export named 'updateExpenseRequestSchema' not found in module '/home/user/workspace/shared/contracts.ts'.
-      at loadAndEvaluateModule (1:11)
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-whjxltxnjtvq.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-whjxltxnjtvq.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
+🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
+<-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
+💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 12ms
+💰 [Players] Found 12 transactions
+--> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 9ms
+🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
+--> GET /api/game/active [32m200[0m 6ms
+<-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
+💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
+<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
+🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
+💰 [Players] Found 12 transactions
+--> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 10ms
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 13ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
 🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
---> GET /api/game/active [32m200[0m 7ms
+--> GET /api/game/active [32m200[0m 8ms
+<-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
+💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
+💰 [Players] Found 12 transactions
+--> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 5ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
+--> GET /api/game/active [32m200[0m 3ms
+<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
+🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 7ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
+--> GET /api/game/active [32m200[0m 3ms
 <-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
 💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
 💰 [Players] Found 12 transactions
 --> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 4ms
 <-- GET /api/game/cmijfilg90000m2esoerheb14/summary
 🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
-🎮 [Game] Summary calculated - Net profit: $154.00, Till balance: $3604.00
---> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 11ms
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 4ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found active session: cmijfilg90000m2esoerheb14
+--> GET /api/game/active [32m200[0m 3ms
+<-- GET /api/game/cmijfilg90000m2esoerheb14/summary
+🎮 [Game] Getting summary for session: cmijfilg90000m2esoerheb14
+🎮 [Game] Summary calculated - Net profit: $450.00, Till balance: $3900.00
+--> GET /api/game/cmijfilg90000m2esoerheb14/summary [32m200[0m 3ms
+<-- GET /api/players/transactions/cmijfilg90000m2esoerheb14
+💰 [Players] Getting transactions for session: cmijfilg90000m2esoerheb14
+💰 [Players] Found 12 transactions
+--> GET /api/players/transactions/cmijfilg90000m2esoerheb14 [32m200[0m 2ms

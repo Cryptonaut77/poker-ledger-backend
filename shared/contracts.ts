@@ -75,6 +75,18 @@ export const endGameResponseSchema = z.object({
 });
 export type EndGameResponse = z.infer<typeof endGameResponseSchema>;
 
+// DELETE /api/game/:sessionId - Delete a game session
+export const deleteGameResponseSchema = z.object({
+  success: z.boolean(),
+});
+export type DeleteGameResponse = z.infer<typeof deleteGameResponseSchema>;
+
+// POST /api/game/new - Start a new game session
+export const startNewGameResponseSchema = z.object({
+  session: gameSessionSchema,
+});
+export type StartNewGameResponse = z.infer<typeof startNewGameResponseSchema>;
+
 // GET /api/game/:sessionId/summary - Get game session summary
 export const gameSummarySchema = z.object({
   session: gameSessionSchema,

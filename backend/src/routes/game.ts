@@ -5,6 +5,8 @@ import {
   endGameRequestSchema,
   type EndGameResponse,
   type GameSummary,
+  type DeleteGameResponse,
+  type StartNewGameResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
@@ -75,6 +77,58 @@ gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
       updatedAt: session.updatedAt.toISOString(),
     },
   } satisfies EndGameResponse);
+});
+
+// ============================================
+// DELETE /api/game/:sessionId - Delete a game session
+// ============================================
+gameRouter.delete("/:sessionId", async (c) => {
+  const sessionId = c.req.param("sessionId");
+  console.log(`🎮 [Game] Deleting session: ${sessionId}`);
+
+  await db.gameSession.delete({
+    where: { id: sessionId },
+  });
+
+  console.log(`🎮 [Game] Session deleted: ${sessionId}`);
+
+  return c.json({ success: true } satisfies DeleteGameResponse);
+});
+
+// ============================================
+// POST /api/game/new - Start a new game session
+// ============================================
+gameRouter.post("/new", async (c) => {
+  console.log("🎮 [Game] Creating new game session");
+
+  // First, end any active sessions
+  await db.gameSession.updateMany({
+    where: { isActive: true },
+    data: {
+      isActive: false,
+      endedAt: new Date(),
+    },
+  });
+
+  // Create new session
+  const session = await db.gameSession.create({
+    data: {
+      name: "Poker Game",
+      isActive: true,
+    },
+  });
+
+  console.log(`🎮 [Game] New session created: ${session.id}`);
+
+  return c.json({
+    session: {
+      ...session,
+      startedAt: session.startedAt.toISOString(),
+      endedAt: session.endedAt?.toISOString() ?? null,
+      createdAt: session.createdAt.toISOString(),
+      updatedAt: session.updatedAt.toISOString(),
+    },
+  } satisfies StartNewGameResponse);
 });
 
 // ============================================
