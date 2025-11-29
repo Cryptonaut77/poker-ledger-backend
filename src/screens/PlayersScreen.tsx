@@ -183,11 +183,25 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    if (!playerName.trim() || !amount || !sessionId) return;
+    console.log('[Submit] Attempting to submit transaction');
+    console.log('[Submit] playerName:', playerName);
+    console.log('[Submit] amount:', amount);
+    console.log('[Submit] sessionId:', sessionId);
+
+    if (!playerName.trim() || !amount || !sessionId) {
+      console.log('[Submit] Validation failed - missing required fields');
+      return;
+    }
 
     const numAmount = parseFloat(amount);
-    if (isNaN(numAmount) || numAmount <= 0) return;
+    console.log('[Submit] Parsed amount:', numAmount);
 
+    if (isNaN(numAmount) || numAmount <= 0) {
+      console.log('[Submit] Validation failed - invalid amount');
+      return;
+    }
+
+    console.log('[Submit] Submitting transaction');
     addTransactionMutation.mutate({
       playerName: playerName.trim(),
       type: transactionType,
