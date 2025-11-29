@@ -32,6 +32,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Log comped food, drinks, and other expenses
 - Categorize expenses for easy reporting
 - Add notes for detailed record-keeping
+- Edit expenses with blue edit icon
+- Delete expenses from edit modal
 
 ### 📊 Dashboard
 - Real-time net profit display
@@ -87,6 +89,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **Expense Routes** (`/api/expenses/*`)
   - `POST /api/expenses` - Add expense
   - `GET /api/expenses/:sessionId` - Get all expenses
+  - `PUT /api/expenses/:id` - Update an expense
   - `DELETE /api/expenses/:id` - Delete an expense
 
 ### Database Schema
@@ -137,6 +140,7 @@ The app automatically creates a game session when you first open it. All transac
 3. Enter description, amount, and category
 4. Add optional notes
 5. Submit to log the expense
+6. Tap the blue edit icon on any expense to edit or delete it
 
 ### Viewing Summary
 The Dashboard tab provides a real-time overview of:

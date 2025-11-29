@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import {
   addExpenseRequestSchema,
+  updateExpenseRequestSchema,
   type AddExpenseResponse,
   type GetExpensesResponse,
+  type UpdateExpenseResponse,
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
@@ -73,6 +75,34 @@ expensesRouter.delete("/:id", async (c) => {
   console.log(`💸 [Expenses] Expense deleted: ${id}`);
 
   return c.json({ success: true });
+});
+
+// ============================================
+// PUT /api/expenses/:id - Update an expense
+// ============================================
+expensesRouter.put("/:id", zValidator("json", updateExpenseRequestSchema), async (c) => {
+  const id = c.req.param("id");
+  const data = c.req.valid("json");
+  console.log(`💸 [Expenses] Updating expense: ${id}`);
+
+  const expense = await db.expense.update({
+    where: { id },
+    data: {
+      description: data.description,
+      amount: data.amount,
+      category: data.category,
+      notes: data.notes ?? null,
+    },
+  });
+
+  console.log(`💸 [Expenses] Expense updated: ${expense.id}`);
+
+  return c.json({
+    expense: {
+      ...expense,
+      timestamp: expense.timestamp.toISOString(),
+    },
+  } satisfies UpdateExpenseResponse);
 });
 
 export { expensesRouter };

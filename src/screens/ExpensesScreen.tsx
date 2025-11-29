@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, X, Trash2 } from "lucide-react-native";
+import { Plus, X, Trash2, Edit2 } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -19,6 +19,7 @@ import type {
   GetActiveGameResponse,
   GetExpensesResponse,
   AddExpenseRequest,
+  UpdateExpenseRequest,
   Expense,
 } from "@/shared/contracts";
 
@@ -27,6 +28,8 @@ type Props = BottomTabScreenProps<"ExpensesTab">;
 const ExpensesScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<"food" | "drinks" | "other">("food");
@@ -59,12 +62,29 @@ const ExpensesScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Update expense mutation
+  const updateExpenseMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateExpenseRequest }) =>
+      api.put(`/api/expenses/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setEditModalVisible(false);
+      setEditingExpense(null);
+      resetForm();
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
   // Delete expense mutation
   const deleteExpenseMutation = useMutation({
     mutationFn: (id: string) => api.delete(`/api/expenses/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setEditModalVisible(false);
+      setEditingExpense(null);
+      resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
   });
@@ -89,6 +109,33 @@ const ExpensesScreen = ({ navigation }: Props) => {
       notes: notes.trim() || undefined,
       gameSessionId: sessionId,
     });
+  };
+
+  const handleUpdate = () => {
+    if (!description.trim() || !amount || !editingExpense) return;
+
+    const numAmount = parseFloat(amount);
+    if (isNaN(numAmount) || numAmount <= 0) return;
+
+    updateExpenseMutation.mutate({
+      id: editingExpense.id,
+      data: {
+        description: description.trim(),
+        amount: numAmount,
+        category,
+        notes: notes.trim() || undefined,
+      },
+    });
+  };
+
+  const openEditModal = (expense: Expense) => {
+    setEditingExpense(expense);
+    setDescription(expense.description);
+    setAmount(expense.amount.toString());
+    setCategory(expense.category);
+    setNotes(expense.notes || "");
+    setEditModalVisible(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`;
@@ -117,7 +164,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
             <ExpenseCard
               key={expense.id}
               expense={expense}
-              onDelete={() => deleteExpenseMutation.mutate(expense.id)}
+              onEdit={() => openEditModal(expense)}
               formatCurrency={formatCurrency}
               formatTime={formatTime}
               categoryColors={categoryColors}
@@ -251,20 +298,146 @@ const ExpensesScreen = ({ navigation }: Props) => {
           </View>
         </KeyboardAvoidingView>
       </Modal>
+
+      {/* Edit Expense Modal */}
+      <Modal visible={editModalVisible} animationType="slide" transparent>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setEditModalVisible(false);
+              setEditingExpense(null);
+              resetForm();
+            }}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">Edit Expense</Text>
+              <Pressable
+                onPress={() => {
+                  setEditModalVisible(false);
+                  setEditingExpense(null);
+                  resetForm();
+                }}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
+            </View>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Description</Text>
+                <TextInput
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="e.g., Pizza, Beer, Supplies"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Amount</Text>
+                <TextInput
+                  value={amount}
+                  onChangeText={setAmount}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Category</Text>
+                <View className="flex-row gap-2">
+                  {(["food", "drinks", "other"] as const).map((cat) => (
+                    <Pressable
+                      key={cat}
+                      onPress={() => {
+                        setCategory(cat);
+                        Haptics.selectionAsync();
+                      }}
+                      className={`flex-1 py-3 rounded-lg border ${
+                        category === cat
+                          ? "bg-violet-600 border-violet-500"
+                          : "bg-slate-800 border-slate-700"
+                      }`}
+                    >
+                      <Text
+                        className={`text-center font-medium capitalize ${
+                          category === cat ? "text-white" : "text-slate-400"
+                        }`}
+                      >
+                        {categoryEmoji[cat]} {cat}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Notes (Optional)</Text>
+                <TextInput
+                  value={notes}
+                  onChangeText={setNotes}
+                  placeholder="Add notes..."
+                  placeholderTextColor="#475569"
+                  multiline
+                  numberOfLines={2}
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
+              </View>
+
+              <Pressable
+                onPress={handleUpdate}
+                disabled={!description.trim() || !amount || updateExpenseMutation.isPending}
+                className={`bg-blue-600 py-4 rounded-lg mt-2 ${
+                  (!description.trim() || !amount || updateExpenseMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {updateExpenseMutation.isPending ? "Updating..." : "Update Expense"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  if (editingExpense) {
+                    deleteExpenseMutation.mutate(editingExpense.id);
+                  }
+                }}
+                disabled={deleteExpenseMutation.isPending}
+                className={`bg-red-600/20 border border-red-600 py-4 rounded-lg ${
+                  deleteExpenseMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Text className="text-red-500 text-center font-bold text-lg">
+                  {deleteExpenseMutation.isPending ? "Deleting..." : "Delete Expense"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 };
 
 const ExpenseCard = ({
   expense,
-  onDelete,
+  onEdit,
   formatCurrency,
   formatTime,
   categoryColors,
   categoryEmoji,
 }: {
   expense: Expense;
-  onDelete: () => void;
+  onEdit: () => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
   categoryColors: Record<string, string>;
@@ -280,11 +453,11 @@ const ExpenseCard = ({
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            onDelete();
+            onEdit();
           }}
           className="p-2"
         >
-          <Trash2 size={18} color="#ef4444" />
+          <Edit2 size={18} color="#3b82f6" />
         </Pressable>
       </View>
 

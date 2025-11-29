@@ -178,3 +178,16 @@ export const getExpensesResponseSchema = z.object({
   expenses: z.array(expenseSchema),
 });
 export type GetExpensesResponse = z.infer<typeof getExpensesResponseSchema>;
+
+// PUT /api/expenses/:id - Update an expense
+export const updateExpenseRequestSchema = z.object({
+  description: z.string().min(1),
+  amount: z.number().positive(),
+  category: z.enum(["food", "drinks", "other"]),
+  notes: z.string().optional(),
+});
+export type UpdateExpenseRequest = z.infer<typeof updateExpenseRequestSchema>;
+export const updateExpenseResponseSchema = z.object({
+  expense: expenseSchema,
+});
+export type UpdateExpenseResponse = z.infer<typeof updateExpenseResponseSchema>;
