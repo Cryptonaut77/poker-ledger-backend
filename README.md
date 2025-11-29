@@ -184,6 +184,11 @@ Access your past saved games:
    - Transaction, dealer down, and expense counts
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
+## Troubleshooting
+
+### Database Issues
+If you encounter errors related to missing database columns (e.g., "The column `main.game_session.tableName` does not exist"), the database schema may be out of sync. This has been fixed - the migration system will automatically apply any pending updates.
+
 ## Notes
 
 - All financial calculations are done in real-time
