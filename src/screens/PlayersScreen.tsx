@@ -45,6 +45,7 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<PlayerTransaction | null>(null);
+  const playerNameRef = React.useRef("");
 
   // Fetch active game session
   const { data: gameData } = useQuery({
@@ -142,9 +143,18 @@ const PlayersScreen = ({ navigation }: Props) => {
 
   const resetForm = () => {
     setPlayerName("");
+    playerNameRef.current = "";
     setAmount("");
     setPaymentMethod("cash");
     setNotes("");
+  };
+
+  const handlePlayerNameChange = (text: string) => {
+    // Prevent duplicate text from voice input by checking if the text is actually different
+    if (text !== playerNameRef.current) {
+      playerNameRef.current = text;
+      setPlayerName(text);
+    }
   };
 
   const handleSubmit = () => {
@@ -312,7 +322,7 @@ const PlayersScreen = ({ navigation }: Props) => {
                 <Text className="text-slate-400 text-sm mb-2 font-medium">Player Name</Text>
                 <TextInput
                   value={playerName}
-                  onChangeText={setPlayerName}
+                  onChangeText={handlePlayerNameChange}
                   placeholder="Enter player name"
                   placeholderTextColor="#475569"
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
