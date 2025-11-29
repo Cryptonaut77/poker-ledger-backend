@@ -51,6 +51,7 @@ const PlayersScreen = ({ navigation }: Props) => {
   const { data: gameData } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
+    retry: 3,
   });
 
   const sessionId = gameData?.session.id;
@@ -150,9 +151,6 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const handlePlayerNameChange = (text: string) => {
-    console.log('[PlayerName] Input received:', text);
-    console.log('[PlayerName] Current ref value:', playerNameRef.current);
-
     // Prevent duplicate text from voice input
     const currentValue = playerNameRef.current;
 
@@ -164,7 +162,6 @@ const PlayersScreen = ({ navigation }: Props) => {
 
       // If the first two words are the same (case-insensitive), it's likely a duplicate
       if (firstWord === secondWord && firstWord.length > 0) {
-        console.log('[PlayerName] Detected duplicate, using first word only');
         const cleanText = words[0];
         playerNameRef.current = cleanText;
         setPlayerName(cleanText);
@@ -174,34 +171,17 @@ const PlayersScreen = ({ navigation }: Props) => {
 
     // Only update if the text is actually different
     if (text !== currentValue) {
-      console.log('[PlayerName] Updating to:', text);
       playerNameRef.current = text;
       setPlayerName(text);
-    } else {
-      console.log('[PlayerName] Ignoring duplicate input');
     }
   };
 
   const handleSubmit = () => {
-    console.log('[Submit] Attempting to submit transaction');
-    console.log('[Submit] playerName:', playerName);
-    console.log('[Submit] amount:', amount);
-    console.log('[Submit] sessionId:', sessionId);
-
-    if (!playerName.trim() || !amount || !sessionId) {
-      console.log('[Submit] Validation failed - missing required fields');
-      return;
-    }
+    if (!playerName.trim() || !amount || !sessionId) return;
 
     const numAmount = parseFloat(amount);
-    console.log('[Submit] Parsed amount:', numAmount);
+    if (isNaN(numAmount) || numAmount <= 0) return;
 
-    if (isNaN(numAmount) || numAmount <= 0) {
-      console.log('[Submit] Validation failed - invalid amount');
-      return;
-    }
-
-    console.log('[Submit] Submitting transaction');
     addTransactionMutation.mutate({
       playerName: playerName.trim(),
       type: transactionType,

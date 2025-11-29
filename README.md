@@ -18,6 +18,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
 - Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit)
 - Track cashouts
+- Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
 - Edit or delete transactions with intuitive modal interface
 - Add notes to transactions

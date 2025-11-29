@@ -20,36 +20,41 @@ const gameRouter = new Hono<AppType>();
 gameRouter.get("/active", async (c) => {
   console.log("🎮 [Game] Getting active game session");
 
-  // Find active game session
-  let session = await db.gameSession.findFirst({
-    where: { isActive: true },
-    orderBy: { startedAt: "desc" },
-  });
-
-  // Create new session if none exists
-  if (!session) {
-    console.log("🎮 [Game] No active session found, creating new one");
-    session = await db.gameSession.create({
-      data: {
-        name: "Poker Game",
-        tableName: "Main Table",
-        isActive: true,
-      },
+  try {
+    // Find active game session
+    let session = await db.gameSession.findFirst({
+      where: { isActive: true },
+      orderBy: { startedAt: "desc" },
     });
-    console.log(`🎮 [Game] Created new session: ${session.id}`);
-  } else {
-    console.log(`🎮 [Game] Found active session: ${session.id}`);
-  }
 
-  return c.json({
-    session: {
-      ...session,
-      startedAt: session.startedAt.toISOString(),
-      endedAt: session.endedAt?.toISOString() ?? null,
-      createdAt: session.createdAt.toISOString(),
-      updatedAt: session.updatedAt.toISOString(),
-    },
-  } satisfies GetActiveGameResponse);
+    // Create new session if none exists
+    if (!session) {
+      console.log("🎮 [Game] No active session found, creating new one");
+      session = await db.gameSession.create({
+        data: {
+          name: "Poker Game",
+          tableName: "Main Table",
+          isActive: true,
+        },
+      });
+      console.log(`🎮 [Game] Created new session: ${session.id}`);
+    } else {
+      console.log(`🎮 [Game] Found active session: ${session.id}`);
+    }
+
+    return c.json({
+      session: {
+        ...session,
+        startedAt: session.startedAt.toISOString(),
+        endedAt: session.endedAt?.toISOString() ?? null,
+        createdAt: session.createdAt.toISOString(),
+        updatedAt: session.updatedAt.toISOString(),
+      },
+    } satisfies GetActiveGameResponse);
+  } catch (error: any) {
+    console.error("❌ [Game] Error getting active game:", error);
+    return c.json({ error: "Failed to get active game session", details: error.message }, 500);
+  }
 });
 
 // ============================================
