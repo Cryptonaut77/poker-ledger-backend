@@ -92,6 +92,16 @@ export const endGameResponseSchema = z.object({
 });
 export type EndGameResponse = z.infer<typeof endGameResponseSchema>;
 
+// PUT /api/game/:sessionId/name - Update table name
+export const updateTableNameRequestSchema = z.object({
+  tableName: z.string().min(1),
+});
+export type UpdateTableNameRequest = z.infer<typeof updateTableNameRequestSchema>;
+export const updateTableNameResponseSchema = z.object({
+  session: gameSessionSchema,
+});
+export type UpdateTableNameResponse = z.infer<typeof updateTableNameResponseSchema>;
+
 // DELETE /api/game/:sessionId - Delete a game session
 export const deleteGameResponseSchema = z.object({
   success: z.boolean(),

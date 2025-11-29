@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 122ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 105ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1436.00ms]
+Checked 761 installs across 703 packages (no changes) [1387.00ms]
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
 Failed to find Response internal state key
@@ -73,933 +73,186 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Failed to find Response internal state key
-✅ Environment variables validated successfully
-🔐 [Auth] Initializing Better Auth...
-✅ [Auth] Better Auth initialized
-🔗 [Auth] Base URL: https://preview-whjxltxnjtvq.share.sandbox.dev
-🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-whjxltxnjtvq.share.sandbox.dev
-🔧 Initializing Hono application...
-🔐 Mounting Better Auth handler at /api/auth/*
-🎮 Mounting game routes at /api/game
-💰 Mounting player routes at /api/players
-🎲 Mounting dealer routes at /api/dealers
-💸 Mounting expense routes at /api/expenses
-⚙️  Starting server...
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Environment: development
-🚀 Server is running on port 3000
-🔗 Base URL: http://localhost:3000
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📚 Available endpoints:
-  🔐 Auth:     /api/auth/*
-  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
-  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
-  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
-  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
-  💚 Health:   GET /health
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 <-- GET /api/game/tables
 🎮 [Game] Getting all active tables
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 7ms
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 6ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 2ms
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 4ms
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 2ms
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 3ms
+💰 [Players] Found 1 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 2ms
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 3ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 2ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 2ms
+💰 [Players] Found 1 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 2ms
+<-- POST /api/players/transaction
+💰 [Players] Adding buy-in for Tt: $500
+💰 [Players] Transaction created: cmijl5d6i0001m2uluyafxj74
+--> POST /api/players/transaction [32m200[0m 11ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 4ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 3ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
+<-- GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Getting downs for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 3ms
+🎲 [Dealers] Found 0 dealer downs
+--> GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk [32m200[0m 2ms
+<-- POST /api/dealers/down
+🎲 [Dealers] Adding down for Zb: Tips $50, Rake $100
+🎲 [Dealers] Dealer down created: cmijl5s3q0003m2ulxcnaw8vz
+--> POST /api/dealers/down [32m200[0m 4ms
+<-- GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Getting downs for session: cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Found 1 dealer downs
+--> GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 3ms
 <-- POST /api/game/new
 🎮 [Game] Creating new game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.create()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:166:40
-
-  163 
-  164 // Don't end other active sessions - allow multiple tables
-  165 // Just create a new session
-→ 166 const session = await db.gameSession.create(
-The column `tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> POST /api/game/new [31m500[0m 6ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 3ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 3ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
+🎮 [Game] New session created: cmijl63bb0004m2ulo3d1ajx9
+--> POST /api/game/new [32m200[0m 4ms
 <-- GET /api/game/tables
 🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 2ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 3ms
+🎮 [Game] Found 2 active table(s)
+--> GET /api/game/tables [32m200[0m 2ms
+🎮 [Game] Found 2 active session(s)
+--> GET /api/game/active [32m200[0m 2ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 1ms
+<-- GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Getting downs for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+🎲 [Dealers] Found 1 dealer downs
+--> GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [32m200[0m 1ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 0ms
+<-- GET /api/dealers/downs/cmijl63bb0004m2ulo3d1ajx9
+🎲 [Dealers] Getting downs for session: cmijl63bb0004m2ulo3d1ajx9
+🎲 [Dealers] Found 0 dealer downs
+--> GET /api/dealers/downs/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 1ms
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 1ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 2ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [32m200[0m 2ms
+<-- DELETE /api/game/cmijl63bb0004m2ulo3d1ajx9
+🎮 [Game] Deleting session: cmijl63bb0004m2ulo3d1ajx9
+🎮 [Game] Session deleted: cmijl63bb0004m2ulo3d1ajx9
+--> DELETE /api/game/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 3ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 1ms
-<-- GET /api/game/tables
-🎮 [Game] Getting all active tables
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:67:41
-
-  64 gameRouter.get("/tables", async (c) => {
-  65   console.log("🎮 [Game] Getting all active tables");
-  66 
-→ 67   const sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/tables [31m500[0m 3ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-19 | `)}
-20 | 
-21 | We suggest to move the contents of ${Y(l)} to ${Y(a)} to consolidate your env vars.
-22 | `;throw new Error(u)}else if(t==="warn"){let u=`Conflict for env var${s.length>1?"s":""} ${s.map(c=>W(c)).join(", ")} in ${Y(a)} and ${Y(l)}
-23 | Env vars from ${Y(l)} overwrite the ones from ${Y(a)}
-24 |       `;console.warn(`${Ie("warn(prisma)")} ${u}`)}}}}function Is(e){if(yp(e)){$i(`Environment variables loaded from ${e}`);let r=qi.default.config({path:e,debug:process.env.DOTENV_CONFIG_DEBUG?!0:void 0});return{dotenvResult:Cs(r),message:Ce(`Environment variables loaded from ${xr.default.relative(process.cwd(),e)}`),path:e}}else $i(`Environment variables not found at ${e}`);return null}function Ds(e,r){return e&&r&&xr.default.resolve(e)===xr.default.resolve(r)}function yp(e){return!!(e&&un.default.existsSync(e))}function Vi(e,r){return Object.prototype.hasOwnProperty.call(e,r)}function pn(e,r){let t={};for(let n of Object.keys(e))t[n]=r(e[n],n);return t}function ji(e,r){if(e.length===0)return;let t=e[0];for(let n=1;n<e.length;n++)r(t,e[n])<0&&(t=e[n]);return t}function x(e,r){Object.defineProperty(e,"name",{value:r,configurable:!0})}var ks=new Set,at=(e,r,...t)=>{ks.has(e)||(ks.add(e),_i(r,...t))};var P=class e extends Error{clientVersion;errorCode;retryable;constructor(r,t,n){super(r),this.name="PrismaClie
-
-PrismaClientKnownRequestError: 
-Invalid `db.gameSession.findMany()` invocation in
-/home/user/workspace/backend/src/routes/game.ts:26:39
-
-  23 console.log("🎮 [Game] Getting active game session");
-  24 
-  25 // Find active game sessions (now can be multiple)
-→ 26 let sessions = await db.gameSession.findMany(
-The column `main.game_session.tableName` does not exist in the current database.
-       meta: {
-  modelName: "GameSession",
-  column: "main.game_session.tableName",
-},
- clientVersion: "6.17.1",
-       code: "P2022"
-
-      at new PrismaClientKnownRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:24:1351)
-      at handleRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:7268)
-      at handleAndLogRequestError (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6593)
-      at request (/home/user/workspace/backend/generated/prisma/runtime/library.js:124:6300)
-
---> GET /api/game/active [31m500[0m 2ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 2ms
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 1ms
+<-- GET /api/dealers/downs/cmijl63bb0004m2ulo3d1ajx9
+🎲 [Dealers] Getting downs for session: cmijl63bb0004m2ulo3d1ajx9
+🎲 [Dealers] Found 0 dealer downs
+--> GET /api/dealers/downs/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 1ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Getting downs for session: cmijjuwl2000dm21kgba87yhk
+🎲 [Dealers] Found 1 dealer downs
+--> GET /api/dealers/downs/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 3ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 2ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 1ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 1ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 2ms
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
 Failed to find Response internal state key
 ✅ Environment variables validated successfully
 🔐 [Auth] Initializing Better Auth...
@@ -1028,3 +281,123 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+1 | (function (entry, fetcher)
+              ^
+SyntaxError: Export named 'updateTableNameRequestSchema' not found in module '/home/user/workspace/shared/contracts.ts'.
+      at loadAndEvaluateModule (1:11)
+<-- GET /api/game/tables
+🎮 [Game] Getting all active tables
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 28ms
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 22ms
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 22ms
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 23ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 6ms
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 4ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/game/tables
+🎮 [Game] Getting all active tables
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 4ms
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 4ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 4ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 3ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+<-- GET /api/game/tables
+🎮 [Game] Getting all active tables
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 2ms
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 2ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 2ms
+<-- GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Getting transactions for session: cmijl63bb0004m2ulo3d1ajx9
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmijl63bb0004m2ulo3d1ajx9 [32m200[0m 12ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 2ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 1ms
+<-- GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary
+🎮 [Game] Getting summary for session: cmijl63bb0004m2ulo3d1ajx9
+❌ [Game] Session not found: cmijl63bb0004m2ulo3d1ajx9
+--> GET /api/game/cmijl63bb0004m2ulo3d1ajx9/summary [33m404[0m 2ms
+<-- GET /api/game/tables
+🎮 [Game] Getting all active tables
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 7ms
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 6ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 11ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 10ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+<-- GET /api/game/tables
+🎮 [Game] Getting all active tables
+🎮 [Game] Found 1 active session(s)
+--> GET /api/game/active [32m200[0m 9ms
+🎮 [Game] Found 1 active table(s)
+--> GET /api/game/tables [32m200[0m 7ms
+<-- GET /api/game/cmijjuwl2000dm21kgba87yhk/summary
+🎮 [Game] Getting summary for session: cmijjuwl2000dm21kgba87yhk
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+--> GET /api/game/cmijjuwl2000dm21kgba87yhk/summary [32m200[0m 3ms
+<-- GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk
+💰 [Players] Getting transactions for session: cmijjuwl2000dm21kgba87yhk
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cmijjuwl2000dm21kgba87yhk [32m200[0m 6ms

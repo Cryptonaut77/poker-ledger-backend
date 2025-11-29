@@ -7,6 +7,8 @@ import {
   type CreateTableResponse,
   endGameRequestSchema,
   type EndGameResponse,
+  updateTableNameRequestSchema,
+  type UpdateTableNameResponse,
   type GameSummary,
   type DeleteGameResponse,
   type StartNewGameResponse,
@@ -137,6 +139,32 @@ gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
       updatedAt: session.updatedAt.toISOString(),
     },
   } satisfies EndGameResponse);
+});
+
+// ============================================
+// PUT /api/game/:sessionId/name - Update table name
+// ============================================
+gameRouter.put("/:sessionId/name", zValidator("json", updateTableNameRequestSchema), async (c) => {
+  const sessionId = c.req.param("sessionId");
+  const { tableName } = c.req.valid("json");
+  console.log(`🎮 [Game] Updating table name for session: ${sessionId} to ${tableName}`);
+
+  const session = await db.gameSession.update({
+    where: { id: sessionId },
+    data: { tableName },
+  });
+
+  console.log(`🎮 [Game] Table name updated: ${session.id}`);
+
+  return c.json({
+    session: {
+      ...session,
+      startedAt: session.startedAt.toISOString(),
+      endedAt: session.endedAt?.toISOString() ?? null,
+      createdAt: session.createdAt.toISOString(),
+      updatedAt: session.updatedAt.toISOString(),
+    },
+  } satisfies UpdateTableNameResponse);
 });
 
 // ============================================

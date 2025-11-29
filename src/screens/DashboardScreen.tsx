@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert, TextInput } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle, Power, Trash2, PlusCircle, Table } from "lucide-react-native";
+import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle, Power, Trash2, PlusCircle, Table, Edit2 } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -16,7 +16,11 @@ const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
   const [addTableModalVisible, setAddTableModalVisible] = React.useState(false);
+  const [tableManageModalVisible, setTableManageModalVisible] = React.useState(false);
+  const [editTableNameModalVisible, setEditTableNameModalVisible] = React.useState(false);
   const [newTableName, setNewTableName] = React.useState("");
+  const [editingTableName, setEditingTableName] = React.useState("");
+  const [managingTable, setManagingTable] = React.useState<{ id: string; tableName: string } | null>(null);
 
   const selectedTableId = useTableStore((s) => s.selectedTableId);
   const setSelectedTableId = useTableStore((s) => s.setSelectedTableId);
@@ -141,6 +145,49 @@ const DashboardScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Update table name mutation
+  const updateTableNameMutation = useMutation({
+    mutationFn: ({ id, tableName }: { id: string; tableName: string }) =>
+      api.put(`/api/game/${id}/name`, { tableName }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeTables"] });
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      setEditTableNameModalVisible(false);
+      setManagingTable(null);
+      setEditingTableName("");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // End specific table mutation
+  const endTableMutation = useMutation({
+    mutationFn: (tableId: string) => api.post("/api/game/end", { sessionId: tableId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTables"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      setTableManageModalVisible(false);
+      setManagingTable(null);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // Delete specific table mutation
+  const deleteTableMutation = useMutation({
+    mutationFn: (tableId: string) => api.delete(`/api/game/${tableId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTables"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      setTableManageModalVisible(false);
+      setManagingTable(null);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
   const isLoading = isLoadingGame || isLoadingSummary;
   const isRefreshing = isRefetching;
 
@@ -222,6 +269,11 @@ const DashboardScreen = ({ navigation }: Props) => {
                     onPress={() => {
                       setSelectedTableId(table.id);
                       Haptics.selectionAsync();
+                    }}
+                    onLongPress={() => {
+                      setManagingTable({ id: table.id, tableName: table.tableName });
+                      setTableManageModalVisible(true);
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                     }}
                     className={`px-4 py-2 rounded-lg ${
                       table.id === sessionId ? 'bg-emerald-600' : 'bg-slate-800'
@@ -545,6 +597,170 @@ const DashboardScreen = ({ navigation }: Props) => {
                 onPress={() => {
                   setAddTableModalVisible(false);
                   setNewTableName("");
+                }}
+                className="py-4 rounded-lg"
+              >
+                <Text className="text-slate-400 text-center font-medium text-lg">Cancel</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Table Management Modal */}
+      <Modal visible={tableManageModalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-end">
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setTableManageModalVisible(false);
+              setManagingTable(null);
+            }}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <Text className="text-white text-2xl font-bold mb-6">
+              Manage: {managingTable?.tableName}
+            </Text>
+
+            <View className="gap-3">
+              {/* Edit Table Name */}
+              <Pressable
+                onPress={() => {
+                  setEditingTableName(managingTable?.tableName || "");
+                  setTableManageModalVisible(false);
+                  setEditTableNameModalVisible(true);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }}
+                className="bg-blue-600 py-4 rounded-lg flex-row items-center justify-center gap-2"
+              >
+                <Edit2 size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">Edit Table Name</Text>
+              </Pressable>
+
+              {/* Close/End Table */}
+              <Pressable
+                onPress={() => {
+                  if (managingTable) {
+                    endTableMutation.mutate(managingTable.id);
+                  }
+                }}
+                disabled={endTableMutation.isPending}
+                className={`bg-orange-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  endTableMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Power size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">
+                  {endTableMutation.isPending ? "Closing..." : "Close Table"}
+                </Text>
+              </Pressable>
+
+              {/* Delete Table */}
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  Alert.alert(
+                    "Delete Table",
+                    `Are you sure you want to delete ${managingTable?.tableName}? All data will be permanently removed.`,
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      {
+                        text: "Delete",
+                        style: "destructive",
+                        onPress: () => {
+                          if (managingTable) {
+                            deleteTableMutation.mutate(managingTable.id);
+                          }
+                        },
+                      },
+                    ]
+                  );
+                }}
+                disabled={deleteTableMutation.isPending}
+                className={`bg-red-600/20 border border-red-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  deleteTableMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Trash2 size={20} color="#ef4444" />
+                <Text className="text-red-500 text-center font-bold text-lg">
+                  {deleteTableMutation.isPending ? "Deleting..." : "Delete Table"}
+                </Text>
+              </Pressable>
+
+              {/* Cancel */}
+              <Pressable
+                onPress={() => {
+                  setTableManageModalVisible(false);
+                  setManagingTable(null);
+                }}
+                className="py-4 rounded-lg"
+              >
+                <Text className="text-slate-400 text-center font-medium text-lg">Cancel</Text>
+              </Pressable>
+            </View>
+
+            <View className="mt-4 p-4 bg-slate-800 rounded-lg">
+              <Text className="text-slate-400 text-xs">
+                <Text className="font-bold">Tip:</Text> Long press any table name to manage it
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Edit Table Name Modal */}
+      <Modal visible={editTableNameModalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-end">
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setEditTableNameModalVisible(false);
+              setEditingTableName("");
+              // Restore table manage modal
+              setTableManageModalVisible(true);
+            }}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <Text className="text-white text-2xl font-bold mb-6">Edit Table Name</Text>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Table Name</Text>
+                <TextInput
+                  value={editingTableName}
+                  onChangeText={setEditingTableName}
+                  placeholder="e.g., Table 1, High Stakes, Tournament"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  autoFocus
+                />
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  if (editingTableName.trim() && managingTable) {
+                    updateTableNameMutation.mutate({
+                      id: managingTable.id,
+                      tableName: editingTableName.trim(),
+                    });
+                  }
+                }}
+                disabled={!editingTableName.trim() || updateTableNameMutation.isPending}
+                className={`bg-blue-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  (!editingTableName.trim() || updateTableNameMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Edit2 size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">
+                  {updateTableNameMutation.isPending ? "Updating..." : "Update Name"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  setEditTableNameModalVisible(false);
+                  setEditingTableName("");
+                  setTableManageModalVisible(true);
                 }}
                 className="py-4 rounded-lg"
               >

@@ -81,6 +81,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - `GET /api/game/tables` - Get all active tables
   - `POST /api/game/table` - Create a new table
   - `POST /api/game/end` - End current game session
+  - `PUT /api/game/:sessionId/name` - Update table name
   - `POST /api/game/new` - Start a new game session (quick)
   - `DELETE /api/game/:sessionId` - Delete a game session
   - `GET /api/game/:sessionId/summary` - Get game summary with calculations
@@ -140,7 +141,13 @@ The app now supports tracking multiple poker tables simultaneously:
 
 **Quick Table Creation:**
 - In the Manage menu, tap "Start New Table (Quick)" to instantly create a table named "New Table"
-- You can rename it later by ending it and creating a new one with a custom name
+
+**Managing Individual Tables:**
+- **Long press** any table name in the selector to open the table management menu
+- Options available for each table:
+  - **Edit Table Name**: Rename the table
+  - **Close Table**: Mark the table as closed when the game breaks (saves all data for record keeping)
+  - **Delete Table**: Permanently remove the table and all its data
 
 **Switching Between Tables:**
 - When you have multiple active tables, tap any table name in the selector to switch to it
