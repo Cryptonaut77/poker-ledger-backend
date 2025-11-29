@@ -2,13 +2,8 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import {
   type GetActiveGameResponse,
-  type GetActiveTablesResponse,
-  createTableRequestSchema,
-  type CreateTableResponse,
   endGameRequestSchema,
   type EndGameResponse,
-  updateTableNameRequestSchema,
-  type UpdateTableNameResponse,
   type GameSummary,
   type DeleteGameResponse,
   type StartNewGameResponse,
@@ -24,16 +19,16 @@ const gameRouter = new Hono<AppType>();
 gameRouter.get("/active", async (c) => {
   console.log("🎮 [Game] Getting active game session");
 
-  // Find active game sessions (now can be multiple)
-  let sessions = await db.gameSession.findMany({
+  // Find active game session
+  let session = await db.gameSession.findFirst({
     where: { isActive: true },
     orderBy: { startedAt: "desc" },
   });
 
   // Create new session if none exists
-  if (sessions.length === 0) {
+  if (!session) {
     console.log("🎮 [Game] No active session found, creating new one");
-    const session = await db.gameSession.create({
+    session = await db.gameSession.create({
       data: {
         name: "Poker Game",
         tableName: "Main Table",
@@ -41,13 +36,9 @@ gameRouter.get("/active", async (c) => {
       },
     });
     console.log(`🎮 [Game] Created new session: ${session.id}`);
-    sessions = [session];
   } else {
-    console.log(`🎮 [Game] Found ${sessions.length} active session(s)`);
+    console.log(`🎮 [Game] Found active session: ${session.id}`);
   }
-
-  // Return the most recent active session
-  const session = sessions[0];
 
   return c.json({
     session: {
@@ -58,58 +49,6 @@ gameRouter.get("/active", async (c) => {
       updatedAt: session.updatedAt.toISOString(),
     },
   } satisfies GetActiveGameResponse);
-});
-
-// ============================================
-// GET /api/game/tables - Get all active tables
-// ============================================
-gameRouter.get("/tables", async (c) => {
-  console.log("🎮 [Game] Getting all active tables");
-
-  const sessions = await db.gameSession.findMany({
-    where: { isActive: true },
-    orderBy: { startedAt: "desc" },
-  });
-
-  console.log(`🎮 [Game] Found ${sessions.length} active table(s)`);
-
-  return c.json({
-    tables: sessions.map((s) => ({
-      ...s,
-      startedAt: s.startedAt.toISOString(),
-      endedAt: s.endedAt?.toISOString() ?? null,
-      createdAt: s.createdAt.toISOString(),
-      updatedAt: s.updatedAt.toISOString(),
-    })),
-  } satisfies GetActiveTablesResponse);
-});
-
-// ============================================
-// POST /api/game/table - Create a new table
-// ============================================
-gameRouter.post("/table", zValidator("json", createTableRequestSchema), async (c) => {
-  const { tableName } = c.req.valid("json");
-  console.log(`🎮 [Game] Creating new table: ${tableName}`);
-
-  const session = await db.gameSession.create({
-    data: {
-      name: "Poker Game",
-      tableName,
-      isActive: true,
-    },
-  });
-
-  console.log(`🎮 [Game] Table created: ${session.id}`);
-
-  return c.json({
-    session: {
-      ...session,
-      startedAt: session.startedAt.toISOString(),
-      endedAt: session.endedAt?.toISOString() ?? null,
-      createdAt: session.createdAt.toISOString(),
-      updatedAt: session.updatedAt.toISOString(),
-    },
-  } satisfies CreateTableResponse);
 });
 
 // ============================================
@@ -142,32 +81,6 @@ gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
 });
 
 // ============================================
-// PUT /api/game/:sessionId/name - Update table name
-// ============================================
-gameRouter.put("/:sessionId/name", zValidator("json", updateTableNameRequestSchema), async (c) => {
-  const sessionId = c.req.param("sessionId");
-  const { tableName } = c.req.valid("json");
-  console.log(`🎮 [Game] Updating table name for session: ${sessionId} to ${tableName}`);
-
-  const session = await db.gameSession.update({
-    where: { id: sessionId },
-    data: { tableName },
-  });
-
-  console.log(`🎮 [Game] Table name updated: ${session.id}`);
-
-  return c.json({
-    session: {
-      ...session,
-      startedAt: session.startedAt.toISOString(),
-      endedAt: session.endedAt?.toISOString() ?? null,
-      createdAt: session.createdAt.toISOString(),
-      updatedAt: session.updatedAt.toISOString(),
-    },
-  } satisfies UpdateTableNameResponse);
-});
-
-// ============================================
 // DELETE /api/game/:sessionId - Delete a game session
 // ============================================
 gameRouter.delete("/:sessionId", async (c) => {
@@ -189,12 +102,20 @@ gameRouter.delete("/:sessionId", async (c) => {
 gameRouter.post("/new", async (c) => {
   console.log("🎮 [Game] Creating new game session");
 
-  // Don't end other active sessions - allow multiple tables
-  // Just create a new session
+  // First, end any active sessions
+  await db.gameSession.updateMany({
+    where: { isActive: true },
+    data: {
+      isActive: false,
+      endedAt: new Date(),
+    },
+  });
+
+  // Create new session
   const session = await db.gameSession.create({
     data: {
       name: "Poker Game",
-      tableName: "New Table",
+      tableName: "Main Table",
       isActive: true,
     },
   });

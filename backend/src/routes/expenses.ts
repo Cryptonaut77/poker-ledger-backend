@@ -33,8 +33,13 @@ expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) 
 
   return c.json({
     expense: {
-      ...expense,
+      id: expense.id,
+      description: expense.description,
+      amount: expense.amount,
+      category: expense.category as "food" | "drinks" | "other",
+      notes: expense.notes,
       timestamp: expense.timestamp.toISOString(),
+      gameSessionId: expense.gameSessionId,
     },
   } satisfies AddExpenseResponse);
 });
@@ -55,8 +60,13 @@ expensesRouter.get("/:sessionId", async (c) => {
 
   return c.json({
     expenses: expenses.map((e) => ({
-      ...e,
+      id: e.id,
+      description: e.description,
+      amount: e.amount,
+      category: e.category as "food" | "drinks" | "other",
+      notes: e.notes,
       timestamp: e.timestamp.toISOString(),
+      gameSessionId: e.gameSessionId,
     })),
   } satisfies GetExpensesResponse);
 });
@@ -99,8 +109,13 @@ expensesRouter.put("/:id", zValidator("json", updateExpenseRequestSchema), async
 
   return c.json({
     expense: {
-      ...expense,
+      id: expense.id,
+      description: expense.description,
+      amount: expense.amount,
+      category: expense.category as "food" | "drinks" | "other",
+      notes: expense.notes,
       timestamp: expense.timestamp.toISOString(),
+      gameSessionId: expense.gameSessionId,
     },
   } satisfies UpdateExpenseResponse);
 });

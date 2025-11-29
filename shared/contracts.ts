@@ -65,22 +65,6 @@ export const getActiveGameResponseSchema = z.object({
 });
 export type GetActiveGameResponse = z.infer<typeof getActiveGameResponseSchema>;
 
-// GET /api/game/tables - Get all active tables
-export const getActiveTablesResponseSchema = z.object({
-  tables: z.array(gameSessionSchema),
-});
-export type GetActiveTablesResponse = z.infer<typeof getActiveTablesResponseSchema>;
-
-// POST /api/game/table - Create a new table
-export const createTableRequestSchema = z.object({
-  tableName: z.string().min(1),
-});
-export type CreateTableRequest = z.infer<typeof createTableRequestSchema>;
-export const createTableResponseSchema = z.object({
-  session: gameSessionSchema,
-});
-export type CreateTableResponse = z.infer<typeof createTableResponseSchema>;
-
 // POST /api/game/end - End current game session
 export const endGameRequestSchema = z.object({
   sessionId: z.string(),
@@ -91,16 +75,6 @@ export const endGameResponseSchema = z.object({
   session: gameSessionSchema,
 });
 export type EndGameResponse = z.infer<typeof endGameResponseSchema>;
-
-// PUT /api/game/:sessionId/name - Update table name
-export const updateTableNameRequestSchema = z.object({
-  tableName: z.string().min(1),
-});
-export type UpdateTableNameRequest = z.infer<typeof updateTableNameRequestSchema>;
-export const updateTableNameResponseSchema = z.object({
-  session: gameSessionSchema,
-});
-export type UpdateTableNameResponse = z.infer<typeof updateTableNameResponseSchema>;
 
 // DELETE /api/game/:sessionId - Delete a game session
 export const deleteGameResponseSchema = z.object({

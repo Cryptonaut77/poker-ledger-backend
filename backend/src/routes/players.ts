@@ -37,8 +37,14 @@ playersRouter.post(
 
     return c.json({
       transaction: {
-        ...transaction,
+        id: transaction.id,
+        playerName: transaction.playerName,
+        type: transaction.type as "buy-in" | "cashout",
+        amount: transaction.amount,
+        paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
+        notes: transaction.notes,
         timestamp: transaction.timestamp.toISOString(),
+        gameSessionId: transaction.gameSessionId,
       },
     } satisfies AddPlayerTransactionResponse);
   },
@@ -60,8 +66,14 @@ playersRouter.get("/transactions/:sessionId", async (c) => {
 
   return c.json({
     transactions: transactions.map((t) => ({
-      ...t,
+      id: t.id,
+      playerName: t.playerName,
+      type: t.type as "buy-in" | "cashout",
+      amount: t.amount,
+      paymentMethod: t.paymentMethod as "cash" | "electronic" | "credit",
+      notes: t.notes,
       timestamp: t.timestamp.toISOString(),
+      gameSessionId: t.gameSessionId,
     })),
   } satisfies GetPlayerTransactionsResponse);
 });
@@ -106,8 +118,14 @@ playersRouter.put(
 
     return c.json({
       transaction: {
-        ...transaction,
+        id: transaction.id,
+        playerName: transaction.playerName,
+        type: transaction.type as "buy-in" | "cashout",
+        amount: transaction.amount,
+        paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
+        notes: transaction.notes,
         timestamp: transaction.timestamp.toISOString(),
+        gameSessionId: transaction.gameSessionId,
       },
     } satisfies UpdatePlayerTransactionResponse);
   },
