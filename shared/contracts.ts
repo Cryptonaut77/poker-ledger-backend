@@ -13,6 +13,7 @@ import { z } from "zod";
 export const gameSessionSchema = z.object({
   id: z.string(),
   name: z.string(),
+  tableName: z.string(),
   startedAt: z.string(),
   endedAt: z.string().nullable(),
   isActive: z.boolean(),
@@ -63,6 +64,22 @@ export const getActiveGameResponseSchema = z.object({
   session: gameSessionSchema,
 });
 export type GetActiveGameResponse = z.infer<typeof getActiveGameResponseSchema>;
+
+// GET /api/game/tables - Get all active tables
+export const getActiveTablesResponseSchema = z.object({
+  tables: z.array(gameSessionSchema),
+});
+export type GetActiveTablesResponse = z.infer<typeof getActiveTablesResponseSchema>;
+
+// POST /api/game/table - Create a new table
+export const createTableRequestSchema = z.object({
+  tableName: z.string().min(1),
+});
+export type CreateTableRequest = z.infer<typeof createTableRequestSchema>;
+export const createTableResponseSchema = z.object({
+  session: gameSessionSchema,
+});
+export type CreateTableResponse = z.infer<typeof createTableResponseSchema>;
 
 // POST /api/game/end - End current game session
 export const endGameRequestSchema = z.object({

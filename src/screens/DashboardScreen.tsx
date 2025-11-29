@@ -1,27 +1,51 @@
 import React from "react";
-import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert } from "react-native";
+import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert, TextInput } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle, Power, Trash2, PlusCircle } from "lucide-react-native";
+import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, CheckCircle, AlertCircle, Power, Trash2, PlusCircle, Table } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
+import { useTableStore } from "@/lib/tableStore";
 import type { BottomTabScreenProps } from "@/navigation/types";
-import type { GetActiveGameResponse, GameSummary, GetPlayerTransactionsResponse } from "@/shared/contracts";
+import type { GetActiveGameResponse, GetActiveTablesResponse, GameSummary, GetPlayerTransactionsResponse } from "@/shared/contracts";
 
 type Props = BottomTabScreenProps<"DashboardTab">;
 
 const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
+  const [addTableModalVisible, setAddTableModalVisible] = React.useState(false);
+  const [newTableName, setNewTableName] = React.useState("");
 
-  // Fetch active game session
+  const selectedTableId = useTableStore((s) => s.selectedTableId);
+  const setSelectedTableId = useTableStore((s) => s.setSelectedTableId);
+
+  // Fetch all active tables
+  const { data: tablesData } = useQuery({
+    queryKey: ["activeTables"],
+    queryFn: () => api.get<GetActiveTablesResponse>("/api/game/tables"),
+  });
+
+  // Fetch active game session (for backward compatibility)
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
   });
 
-  const sessionId = gameData?.session.id;
+  // Use selected table or fall back to first active table
+  const sessionId = selectedTableId || gameData?.session.id;
+  const currentTable = React.useMemo(() => {
+    if (!tablesData?.tables) return gameData?.session;
+    return tablesData.tables.find((t) => t.id === sessionId) || tablesData.tables[0] || gameData?.session;
+  }, [tablesData, sessionId, gameData]);
+
+  // Set initial selected table
+  React.useEffect(() => {
+    if (!selectedTableId && currentTable) {
+      setSelectedTableId(currentTable.id);
+    }
+  }, [selectedTableId, currentTable, setSelectedTableId]);
 
   // Fetch game summary
   const {
@@ -84,14 +108,35 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   // Start new game mutation
   const startNewGameMutation = useMutation({
-    mutationFn: () => api.post("/api/game/new", {}),
-    onSuccess: () => {
+    mutationFn: () => api.post<{ session: { id: string } }>("/api/game/new", {}),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTables"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      // Switch to the new table
+      if (data?.session) {
+        setSelectedTableId(data.session.id);
+      }
       setManageModalVisible(false);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // Add table mutation
+  const addTableMutation = useMutation({
+    mutationFn: (tableName: string) => api.post<{ session: { id: string } }>("/api/game/table", { tableName }),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["activeTables"] });
+      queryClient.invalidateQueries({ queryKey: ["activeGame"] });
+      // Switch to the new table
+      if (data?.session) {
+        setSelectedTableId(data.session.id);
+      }
+      setAddTableModalVisible(false);
+      setNewTableName("");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
   });
@@ -151,11 +196,53 @@ const DashboardScreen = ({ navigation }: Props) => {
               <Text className="text-white font-semibold">Manage</Text>
             </Pressable>
           </View>
-          {summary?.session && (
+
+          {/* Active Tables Info */}
+          <View className="flex-row items-center justify-between mb-3">
+            <View className="flex-row items-center gap-2">
+              <Table size={16} color="#10b981" />
+              <Text className="text-emerald-300 text-sm font-medium">
+                {tablesData?.tables.length || 1} Active Table{(tablesData?.tables.length || 1) !== 1 ? 's' : ''}
+              </Text>
+            </View>
+            {currentTable && (
+              <Text className="text-slate-400 text-sm">
+                Table: {currentTable.tableName}
+              </Text>
+            )}
+          </View>
+
+          {/* Table Selector */}
+          {tablesData && tablesData.tables.length > 1 && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-3">
+              <View className="flex-row gap-2">
+                {tablesData.tables.map((table) => (
+                  <Pressable
+                    key={table.id}
+                    onPress={() => {
+                      setSelectedTableId(table.id);
+                      Haptics.selectionAsync();
+                    }}
+                    className={`px-4 py-2 rounded-lg ${
+                      table.id === sessionId ? 'bg-emerald-600' : 'bg-slate-800'
+                    }`}
+                  >
+                    <Text className={`font-semibold ${
+                      table.id === sessionId ? 'text-white' : 'text-slate-400'
+                    }`}>
+                      {table.tableName}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </ScrollView>
+          )}
+
+          {currentTable && (
             <View className="flex-row items-center gap-2">
               <View className="w-2 h-2 rounded-full bg-emerald-500" />
               <Text className="text-emerald-300 text-sm">
-                Started {formatDate(summary.session.startedAt)}
+                Started {formatDate(currentTable.startedAt)}
               </Text>
             </View>
           )}
@@ -309,20 +396,33 @@ const DashboardScreen = ({ navigation }: Props) => {
             <Text className="text-white text-2xl font-bold mb-6">Manage Game</Text>
 
             <View className="gap-3">
+              {/* Add Table */}
+              <Pressable
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setManageModalVisible(false);
+                  setAddTableModalVisible(true);
+                }}
+                className="bg-violet-600 py-4 rounded-lg flex-row items-center justify-center gap-2"
+              >
+                <Table size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">Add New Table</Text>
+              </Pressable>
+
               {/* End & Save Game */}
               <Pressable
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   endGameMutation.mutate();
                 }}
-                disabled={endGameMutation.isPending || !gameData?.session.isActive}
+                disabled={endGameMutation.isPending || !currentTable?.isActive}
                 className={`bg-blue-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
-                  (endGameMutation.isPending || !gameData?.session.isActive) && "opacity-50"
+                  (endGameMutation.isPending || !currentTable?.isActive) && "opacity-50"
                 }`}
               >
                 <Power size={20} color="#fff" />
                 <Text className="text-white text-center font-bold text-lg">
-                  {endGameMutation.isPending ? "Ending Game..." : "End & Save Game"}
+                  {endGameMutation.isPending ? "Ending Game..." : "End & Save Current Table"}
                 </Text>
               </Pressable>
 
@@ -339,7 +439,7 @@ const DashboardScreen = ({ navigation }: Props) => {
               >
                 <PlusCircle size={20} color="#fff" />
                 <Text className="text-white text-center font-bold text-lg">
-                  {startNewGameMutation.isPending ? "Starting..." : "Start New Game"}
+                  {startNewGameMutation.isPending ? "Starting..." : "Start New Table (Quick)"}
                 </Text>
               </Pressable>
 
@@ -382,10 +482,68 @@ const DashboardScreen = ({ navigation }: Props) => {
 
             <View className="mt-4 p-4 bg-slate-800 rounded-lg">
               <Text className="text-slate-400 text-xs">
-                <Text className="font-bold">End & Save:</Text> Marks game as complete for record keeping{"\n"}
-                <Text className="font-bold">Start New:</Text> Ends current game and creates a fresh one{"\n"}
-                <Text className="font-bold">Delete:</Text> Permanently removes all game data
+                <Text className="font-bold">Add Table:</Text> Create a new table with a custom name{"\n"}
+                <Text className="font-bold">End & Save:</Text> Marks current table as complete{"\n"}
+                <Text className="font-bold">Start New:</Text> Quickly creates a new table{"\n"}
+                <Text className="font-bold">Delete:</Text> Permanently removes current table data
               </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Add Table Modal */}
+      <Modal visible={addTableModalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-end">
+          <Pressable
+            className="flex-1 bg-black/50"
+            onPress={() => {
+              setAddTableModalVisible(false);
+              setNewTableName("");
+            }}
+          />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <Text className="text-white text-2xl font-bold mb-6">Add New Table</Text>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Table Name</Text>
+                <TextInput
+                  value={newTableName}
+                  onChangeText={setNewTableName}
+                  placeholder="e.g., Table 1, High Stakes, Tournament"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  autoFocus
+                />
+              </View>
+
+              <Pressable
+                onPress={() => {
+                  if (newTableName.trim()) {
+                    addTableMutation.mutate(newTableName.trim());
+                  }
+                }}
+                disabled={!newTableName.trim() || addTableMutation.isPending}
+                className={`bg-violet-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
+                  (!newTableName.trim() || addTableMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Table size={20} color="#fff" />
+                <Text className="text-white text-center font-bold text-lg">
+                  {addTableMutation.isPending ? "Creating..." : "Create Table"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  setAddTableModalVisible(false);
+                  setNewTableName("");
+                }}
+                className="py-4 rounded-lg"
+              >
+                <Text className="text-slate-400 text-center font-medium text-lg">Cancel</Text>
+              </Pressable>
             </View>
           </View>
         </View>

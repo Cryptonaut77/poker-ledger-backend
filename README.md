@@ -7,10 +7,14 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### 🎮 Game Session Management
 - Automatic game session creation
 - Real-time game tracking
-- Comprehensive game summary with net profit calculations
-- End & save game for record keeping
-- Start new game session
-- Delete game and all associated data
+- **Multi-table support** - Track multiple tables simultaneously
+- Table selector to switch between active tables
+- View total number of active tables
+- Comprehensive game summary with net profit calculations per table
+- End & save individual tables for record keeping
+- Quick-start new tables
+- Create custom-named tables
+- Delete tables and all associated data
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
@@ -74,8 +78,10 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### Backend API Routes
 - **Game Routes** (`/api/game/*`)
   - `GET /api/game/active` - Get or create active game session
+  - `GET /api/game/tables` - Get all active tables
+  - `POST /api/game/table` - Create a new table
   - `POST /api/game/end` - End current game session
-  - `POST /api/game/new` - Start a new game session
+  - `POST /api/game/new` - Start a new game session (quick)
   - `DELETE /api/game/:sessionId` - Delete a game session
   - `GET /api/game/:sessionId/summary` - Get game summary with calculations
 
@@ -117,17 +123,41 @@ The app features a sophisticated poker room aesthetic:
 
 ## Usage
 
+### Managing Multiple Tables
+The app now supports tracking multiple poker tables simultaneously:
+
+**Viewing Active Tables:**
+- The Dashboard header shows the total number of active tables
+- Current table name is displayed in the header
+- When multiple tables exist, a horizontal scroll selector appears to switch between tables
+
+**Adding a New Table:**
+1. Navigate to the Dashboard tab
+2. Tap the "Manage" button in the top right
+3. Tap "Add New Table"
+4. Enter a custom name for your table (e.g., "Table 1", "High Stakes", "Tournament")
+5. Tap "Create Table" - you'll automatically switch to the new table
+
+**Quick Table Creation:**
+- In the Manage menu, tap "Start New Table (Quick)" to instantly create a table named "New Table"
+- You can rename it later by ending it and creating a new one with a custom name
+
+**Switching Between Tables:**
+- When you have multiple active tables, tap any table name in the selector to switch to it
+- All tabs (Players, Dealers, Expenses) will show data for the selected table
+
 ### Managing Game Sessions
-The app automatically creates a game session when you first open it. To manage your game:
+To manage your current table:
 1. Navigate to the Dashboard tab
 2. Tap the "Manage" button in the top right
 3. Choose an action:
-   - **End & Save Game**: Marks the current game as complete and saves it for record keeping
-   - **Start New Game**: Ends the current game and creates a fresh session (all old data is saved)
-   - **Delete Game**: Permanently removes the current game and all associated data (cannot be undone)
+   - **Add New Table**: Create a new table with a custom name
+   - **End & Save Current Table**: Marks the current table as complete and saves it for record keeping
+   - **Start New Table (Quick)**: Quickly creates a new table without entering a name
+   - **Delete Current Table**: Permanently removes the current table and all associated data (cannot be undone)
 
 ### Starting a Game
-The app automatically creates a game session when you first open it. All transactions, dealer downs, and expenses are tied to the active game session.
+The app automatically creates a game session when you first open it. All transactions, dealer downs, and expenses are tied to the active table. You can create additional tables at any time to track multiple games simultaneously.
 
 ### Tracking Players
 1. Navigate to the Players tab
