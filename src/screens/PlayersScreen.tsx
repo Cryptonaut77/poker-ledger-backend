@@ -150,11 +150,30 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const handlePlayerNameChange = (text: string) => {
-    // Prevent duplicate text from voice input by checking if the text is actually different
-    if (text !== playerNameRef.current) {
-      playerNameRef.current = text;
-      setPlayerName(text);
+    // Prevent duplicate text from voice input
+    // Check if the new text contains the current text repeated
+    const currentValue = playerNameRef.current;
+
+    if (currentValue && text.startsWith(currentValue)) {
+      // If the new text starts with current value, check for duplication
+      const afterCurrent = text.slice(currentValue.length).trim();
+
+      // If what comes after is the same as current (or empty), it's a duplicate
+      if (afterCurrent === currentValue || afterCurrent === '') {
+        // Only update if it's truly new content (afterCurrent is empty means partial update)
+        if (afterCurrent === '') {
+          return; // Ignore, it's the same value
+        }
+        // It's a duplicate, use only the first occurrence
+        playerNameRef.current = currentValue;
+        setPlayerName(currentValue);
+        return;
+      }
     }
+
+    // Normal update
+    playerNameRef.current = text;
+    setPlayerName(text);
   };
 
   const handleSubmit = () => {
