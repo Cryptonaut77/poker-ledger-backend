@@ -357,6 +357,16 @@ const DashboardScreen = ({ navigation }: Props) => {
             />
           </View>
 
+          {/* Row 1.5 - Active Tables */}
+          <View className="flex-row gap-4">
+            <StatCard
+              icon={<Table size={24} color="#10b981" />}
+              label="Active Tables"
+              value={tablesData?.tables.length?.toString() || "1"}
+              bgColor="bg-slate-900"
+            />
+          </View>
+
           {/* Row 2 */}
           <View className="flex-row gap-4">
             <StatCard
