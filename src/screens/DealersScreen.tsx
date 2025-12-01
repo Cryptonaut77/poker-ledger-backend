@@ -42,9 +42,10 @@ const DealerGroupCard: React.FC<{
   onToggle: () => void;
   onEdit: (down: DealerDown) => void;
   onMarkPaid: (id: string) => void;
+  onMarkUnpaid: (id: string) => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
-}> = ({ dealerName, downs, totals, isExpanded, onToggle, onEdit, onMarkPaid, formatCurrency, formatTime }) => {
+}> = ({ dealerName, downs, totals, isExpanded, onToggle, onEdit, onMarkPaid, onMarkUnpaid, formatCurrency, formatTime }) => {
   const grandTotal = totals.totalTips + totals.totalRake;
 
   return (
@@ -153,7 +154,7 @@ const DealerGroupCard: React.FC<{
                   </View>
                 </View>
 
-                {!down.tipsPaid && (
+                {!down.tipsPaid ? (
                   <Pressable
                     onPress={() => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -162,6 +163,16 @@ const DealerGroupCard: React.FC<{
                     className="bg-emerald-600 py-2.5 rounded-lg"
                   >
                     <Text className="text-white text-center font-bold text-sm">Mark Tips as Paid</Text>
+                  </Pressable>
+                ) : (
+                  <Pressable
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                      onMarkUnpaid(down.id);
+                    }}
+                    className="bg-amber-600 py-2.5 rounded-lg"
+                  >
+                    <Text className="text-white text-center font-bold text-sm">Mark as Unpaid</Text>
                   </Pressable>
                 )}
               </View>
@@ -239,6 +250,16 @@ const DealersScreen = ({ navigation }: Props) => {
   // Mark tips as paid mutation
   const markTipsPaidMutation = useMutation({
     mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/pay`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+  });
+
+  // Mark tips as unpaid mutation
+  const markTipsUnpaidMutation = useMutation({
+    mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/unpay`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
@@ -367,6 +388,7 @@ const DealersScreen = ({ navigation }: Props) => {
                 onToggle={() => toggleDealer(dealerName)}
                 onEdit={handleEdit}
                 onMarkPaid={(id) => markTipsPaidMutation.mutate(id)}
+                onMarkUnpaid={(id) => markTipsUnpaidMutation.mutate(id)}
                 formatCurrency={formatCurrency}
                 formatTime={formatTime}
               />

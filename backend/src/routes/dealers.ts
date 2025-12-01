@@ -126,4 +126,26 @@ dealersRouter.put("/down/:id/pay", async (c) => {
   } satisfies MarkDealerTipsPaidResponse);
 });
 
+// ============================================
+// PUT /api/dealers/down/:id/unpay - Mark dealer tips as unpaid
+// ============================================
+dealersRouter.put("/down/:id/unpay", async (c) => {
+  const id = c.req.param("id");
+  console.log(`🎲 [Dealers] Marking tips as unpaid for dealer down: ${id}`);
+
+  const dealerDown = await db.dealerDown.update({
+    where: { id },
+    data: { tipsPaid: false },
+  });
+
+  console.log(`🎲 [Dealers] Tips marked as unpaid: ${id}`);
+
+  return c.json({
+    dealerDown: {
+      ...dealerDown,
+      timestamp: dealerDown.timestamp.toISOString(),
+    },
+  } satisfies MarkDealerTipsPaidResponse);
+});
+
 export { dealersRouter };

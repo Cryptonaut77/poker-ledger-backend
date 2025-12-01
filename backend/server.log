@@ -11,10 +11,10 @@ Prisma schema loaded from prisma/schema.prisma
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
 
 
-Checked 761 installs across 703 packages (no changes) [1325.00ms]
+Checked 761 installs across 703 packages (no changes) [1324.00ms]
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
 Failed to find Response internal state key
@@ -75,194 +75,81 @@ Failed to find Response internal state key
 
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-🎮 [Game] No active session found, creating new one
-🎮 [Game] Created new session: cminq0hxp0000m2ukimlgisbx
+🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
 --> GET /api/game/active [32m200[0m 5ms
 <-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
 🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
+🎮 [Game] Summary calculated - Net profit: $50.00, Till balance: $950.00
 --> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
 <-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
 💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
+💰 [Players] Found 2 transactions
+--> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
+<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
+🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
+🎲 [Dealers] Found 2 dealer downs
+--> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 3ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
 🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 1ms
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Tt: $1000
-💰 [Players] Transaction created: cminq1wh90002m2ukeuls5udc
---> POST /api/players/transaction [32m200[0m 6ms
+--> GET /api/game/active [32m200[0m 0ms
+<-- PUT /api/dealers/down/cminq8tmq000am2ukdgwmef4c/pay
+🎲 [Dealers] Marking tips as paid for dealer down: cminq8tmq000am2ukdgwmef4c
+🎲 [Dealers] Tips marked as paid: cminq8tmq000am2ukdgwmef4c
+--> PUT /api/dealers/down/cminq8tmq000am2ukdgwmef4c/pay [32m200[0m 4ms
 <-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
 🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 2ms
-💰 [Players] Found 1 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Pp: $1000
-💰 [Players] Transaction created: cminq2ueo0004m2ukkn44q6sz
---> POST /api/players/transaction [32m200[0m 2ms
+🎮 [Game] Summary calculated - Net profit: $100.00, Till balance: $900.00
+--> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
+<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
+🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
+🎲 [Dealers] Found 2 dealer downs
+--> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
 <-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
 💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
 💰 [Players] Found 2 transactions
 --> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 2ms
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
+--> GET /api/game/active [32m200[0m 2ms
 <-- POST /api/players/transaction
-💰 [Players] Adding cashout for Pp: $2000
-💰 [Players] Transaction created: cminq3j820006m2uknp7com8s
---> POST /api/players/transaction [32m200[0m 3ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
+💰 [Players] Adding cashout for Pp: $900
+💰 [Players] Transaction created: cminrj6y60001m22v8xa3i0cu
+--> POST /api/players/transaction [32m200[0m 4ms
 <-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
 💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
 💰 [Players] Found 3 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $-1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
-<-- DELETE /api/players/transaction/cminq2ueo0004m2ukkn44q6sz
-💰 [Players] Deleting transaction: cminq2ueo0004m2ukkn44q6sz
-💰 [Players] Transaction deleted: cminq2ueo0004m2ukkn44q6sz
---> DELETE /api/players/transaction/cminq2ueo0004m2ukkn44q6sz [32m200[0m 5ms
+--> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 3ms
 <-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
 🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $-1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- PUT /api/players/transaction/cminq3j820006m2uknp7com8s
-💰 [Players] Updating transaction: cminq3j820006m2uknp7com8s
-💰 [Players] Transaction updated: cminq3j820006m2uknp7com8s
---> PUT /api/players/transaction/cminq3j820006m2uknp7com8s [32m200[0m 2ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- DELETE /api/players/transaction/cminq3j820006m2uknp7com8s
-💰 [Players] Deleting transaction: cminq3j820006m2uknp7com8s
-💰 [Players] Transaction deleted: cminq3j820006m2uknp7com8s
---> DELETE /api/players/transaction/cminq3j820006m2uknp7com8s [32m200[0m 2ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 2ms
-💰 [Players] Found 1 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Pp: $1000
-💰 [Players] Transaction created: cminq86ry0008m2uk6q4yo600
---> POST /api/players/transaction [32m200[0m 1ms
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
+🎮 [Game] Summary calculated - Net profit: $100.00, Till balance: $0.00
 --> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 2ms
-🎲 [Dealers] Found 0 dealer downs
---> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for Z: Tips $50, Rake $50
-🎲 [Dealers] Dealer down created: cminq8tmq000am2ukdgwmef4c
---> POST /api/dealers/down [32m200[0m 3ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Found 1 dealer downs
---> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 3ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for Z: Tips $50, Rake $50
-🎲 [Dealers] Dealer down created: cminqabz6000cm2ukrzegkdtc
---> POST /api/dealers/down [32m200[0m 3ms
-<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Found 2 dealer downs
---> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 1ms
-<-- PUT /api/dealers/down/cminqabz6000cm2ukrzegkdtc/pay
-🎲 [Dealers] Marking tips as paid for dealer down: cminqabz6000cm2ukrzegkdtc
-🎲 [Dealers] Tips marked as paid: cminqabz6000cm2ukrzegkdtc
---> PUT /api/dealers/down/cminqabz6000cm2ukrzegkdtc/pay [32m200[0m 2ms
-<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Found 2 dealer downs
---> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $50.00, Till balance: $950.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 3ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $50.00, Till balance: $950.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 2ms
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Getting downs for session: cminq0hxp0000m2ukimlgisbx
-🎲 [Dealers] Found 2 dealer downs
---> GET /api/dealers/downs/cminq0hxp0000m2ukimlgisbx [32m200[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 1ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 1ms
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-🎮 [Game] Summary calculated - Net profit: $50.00, Till balance: $950.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cminq0hxp0000m2ukimlgisbx
---> GET /api/game/active [32m200[0m 6ms
-<-- GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx
-💰 [Players] Getting transactions for session: cminq0hxp0000m2ukimlgisbx
-<-- GET /api/game/cminq0hxp0000m2ukimlgisbx/summary
-🎮 [Game] Getting summary for session: cminq0hxp0000m2ukimlgisbx
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cminq0hxp0000m2ukimlgisbx [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $50.00, Till balance: $950.00
---> GET /api/game/cminq0hxp0000m2ukimlgisbx/summary [32m200[0m 6ms
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-bozmwbbbzufx.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-bozmwbbbzufx.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+

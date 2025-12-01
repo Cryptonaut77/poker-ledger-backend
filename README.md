@@ -35,6 +35,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Edit dealer downs with blue edit icon
 - Delete dealer downs from edit modal
 - Mark tips as paid with one-tap button
+- **Mark tips as unpaid** - Toggle paid tips back to unpaid status
 - View paid/unpaid status with color-coded badges
 - View dealer performance history
 - Database fully supports paid/unpaid tip tracking
@@ -166,7 +167,8 @@ The app automatically creates a game session when you first open it. All transac
    - Timestamp
    - Individual tips and rake amounts
    - Paid/unpaid status
-   - Mark Tips as Paid button (if unpaid)
+   - **Mark Tips as Paid** button (if unpaid)
+   - **Mark as Unpaid** button (if paid) - allows you to toggle back to unpaid
 9. Edit any individual down by tapping the blue edit icon
 10. Paid/unpaid status is tracked per down and rolled up to show overall dealer status
 
@@ -202,6 +204,13 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Dealer Payment Toggle (Dec 1, 2024)
+Added ability to toggle dealer tips between paid and unpaid status:
+- New "Mark as Unpaid" button appears for paid dealer downs
+- Allows you to correct payment status if tips were marked as paid by mistake
+- Backend endpoint `/api/dealers/down/:id/unpay` handles the toggle
+- Till Balance and House Profit calculations update immediately when toggling payment status
 
 ### Dealer Grouping Feature (Dec 1, 2024)
 Redesigned the Dealers screen to group all dealer downs by dealer name:
