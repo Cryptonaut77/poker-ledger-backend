@@ -26,6 +26,11 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### 🎲 Dealer Management
 - Track dealer tips per down
 - Log rake collected
+- **Grouped by dealer** - All downs for each dealer are consolidated in one section
+- **Expandable view** - Tap to expand/collapse individual dealer downs
+- Shows consolidated totals: total tips, total rake, and grand total per dealer
+- Visual status indicators (All Paid, Partial, Unpaid)
+- Displays number of downs per dealer
 - Editable text inputs for dealer name, tips, and rake amounts
 - Edit dealer downs with blue edit icon
 - Delete dealer downs from edit modal
@@ -148,10 +153,22 @@ The app automatically creates a game session when you first open it. All transac
 2. Tap the "+" button
 3. Enter dealer name, tips, and rake
 4. Submit to add the dealer down
-5. Each dealer down shows as "Unpaid" by default
-6. Tap "Mark Tips as Paid" button when you pay the dealer
-7. Paid dealer downs show a green "Paid" badge
-8. Only paid tips affect the Till Balance and House Profit calculations
+5. **Dealers are automatically grouped** - All downs for the same dealer appear under one card
+6. **Tap any dealer card** to expand and see individual downs
+7. Each dealer card shows:
+   - Total tips (with unpaid amount if applicable)
+   - Total rake
+   - Grand total (tips + rake)
+   - Number of downs
+   - Payment status (All Paid, Partial, or Unpaid)
+8. Each individual down within the expanded view shows:
+   - Down number
+   - Timestamp
+   - Individual tips and rake amounts
+   - Paid/unpaid status
+   - Mark Tips as Paid button (if unpaid)
+9. Edit any individual down by tapping the blue edit icon
+10. Paid/unpaid status is tracked per down and rolled up to show overall dealer status
 
 ### Recording Expenses
 1. Navigate to the Expenses tab
@@ -185,6 +202,15 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Dealer Grouping Feature (Dec 1, 2024)
+Redesigned the Dealers screen to group all dealer downs by dealer name:
+- All downs for each dealer are now consolidated under one expandable card
+- Shows total tips, total rake, and grand total for each dealer
+- Displays payment status at a glance (All Paid, Partial, Unpaid)
+- Tap any dealer card to expand and see individual downs
+- Each individual down can still be edited or marked as paid independently
+- Cleaner, more organized view when tracking multiple dealer downs throughout the night
 
 ### Database Schema Fix (Dec 1, 2024)
 Fixed critical database schema synchronization issue that was preventing the app from accepting new information:
