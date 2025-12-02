@@ -454,190 +454,180 @@ const DealersScreen = ({ navigation }: Props) => {
 
       {/* Add Dealer Down Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1 justify-end"
-        >
+        <View className="flex-1 justify-end bg-black/50">
           <Pressable
-            className="flex-1 bg-black/50"
+            className="flex-1"
             onPress={() => {
               setModalVisible(false);
               resetForm();
             }}
           />
-          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-            <View className="flex-row items-center justify-between mb-6">
-              <Text className="text-white text-2xl font-bold">Dealer Down</Text>
-              <Pressable
-                onPress={() => {
-                  setModalVisible(false);
-                  resetForm();
-                }}
-                className="w-10 h-10 items-center justify-center"
-              >
-                <X size={24} color="#94a3b8" />
-              </Pressable>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+              <View className="flex-row items-center justify-between mb-6">
+                <Text className="text-white text-2xl font-bold">Dealer Down</Text>
+                <Pressable
+                  onPress={() => {
+                    setModalVisible(false);
+                    resetForm();
+                  }}
+                  className="w-10 h-10 items-center justify-center"
+                >
+                  <X size={24} color="#94a3b8" />
+                </Pressable>
+              </View>
+
+              <View className="gap-4">
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
+                  <TextInput
+                    value={dealerName}
+                    onChangeText={setDealerName}
+                    placeholder="Enter dealer name"
+                    placeholderTextColor="#475569"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
+                  <TextInput
+                    value={tips}
+                    onChangeText={setTips}
+                    placeholder="0.00"
+                    placeholderTextColor="#475569"
+                    keyboardType="decimal-pad"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
+                  <TextInput
+                    value={rake}
+                    onChangeText={setRake}
+                    placeholder="0.00"
+                    placeholderTextColor="#475569"
+                    keyboardType="decimal-pad"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  />
+                </View>
+
+                <Pressable
+                  onPress={handleSubmit}
+                  disabled={!dealerName.trim() || addDownMutation.isPending}
+                  className={`bg-amber-600 py-4 rounded-lg mt-2 ${
+                    (!dealerName.trim() || addDownMutation.isPending) && "opacity-50"
+                  }`}
+                >
+                  <Text className="text-white text-center font-bold text-lg">
+                    {addDownMutation.isPending ? "Adding..." : "Add Down"}
+                  </Text>
+                </Pressable>
+              </View>
             </View>
-
-            <View className="gap-4">
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
-                <TextInput
-                  value={dealerName}
-                  onChangeText={setDealerName}
-                  placeholder="Enter dealer name"
-                  placeholderTextColor="#475569"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                />
-              </View>
-
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
-                <TextInput
-                  value={tips}
-                  onChangeText={setTips}
-                  placeholder="0.00"
-                  placeholderTextColor="#475569"
-                  keyboardType="decimal-pad"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  returnKeyType="next"
-                />
-              </View>
-
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
-                <TextInput
-                  value={rake}
-                  onChangeText={setRake}
-                  placeholder="0.00"
-                  placeholderTextColor="#475569"
-                  keyboardType="decimal-pad"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  returnKeyType="done"
-                  onSubmitEditing={handleSubmit}
-                />
-              </View>
-
-              <Pressable
-                onPress={handleSubmit}
-                disabled={!dealerName.trim() || addDownMutation.isPending}
-                className={`bg-amber-600 py-4 rounded-lg mt-2 ${
-                  (!dealerName.trim() || addDownMutation.isPending) && "opacity-50"
-                }`}
-              >
-                <Text className="text-white text-center font-bold text-lg">
-                  {addDownMutation.isPending ? "Adding..." : "Add Down"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
       </Modal>
 
       {/* Edit Dealer Down Modal */}
       <Modal visible={editModalVisible} animationType="slide" transparent>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1 justify-end"
-        >
+        <View className="flex-1 justify-end bg-black/50">
           <Pressable
-            className="flex-1 bg-black/50"
+            className="flex-1"
             onPress={() => {
               setEditModalVisible(false);
               setEditingDown(null);
               resetForm();
             }}
           />
-          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-            <View className="flex-row items-center justify-between mb-6">
-              <Text className="text-white text-2xl font-bold">Edit Dealer Down</Text>
-              <Pressable
-                onPress={() => {
-                  setEditModalVisible(false);
-                  setEditingDown(null);
-                  resetForm();
-                }}
-                className="w-10 h-10 items-center justify-center"
-              >
-                <X size={24} color="#94a3b8" />
-              </Pressable>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+              <View className="flex-row items-center justify-between mb-6">
+                <Text className="text-white text-2xl font-bold">Edit Dealer Down</Text>
+                <Pressable
+                  onPress={() => {
+                    setEditModalVisible(false);
+                    setEditingDown(null);
+                    resetForm();
+                  }}
+                  className="w-10 h-10 items-center justify-center"
+                >
+                  <X size={24} color="#94a3b8" />
+                </Pressable>
+              </View>
+
+              <View className="gap-4">
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
+                  <TextInput
+                    value={dealerName}
+                    onChangeText={setDealerName}
+                    placeholder="Enter dealer name"
+                    placeholderTextColor="#475569"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
+                  <TextInput
+                    value={tips}
+                    onChangeText={setTips}
+                    placeholder="0.00"
+                    placeholderTextColor="#475569"
+                    keyboardType="decimal-pad"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  />
+                </View>
+
+                <View>
+                  <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
+                  <TextInput
+                    value={rake}
+                    onChangeText={setRake}
+                    placeholder="0.00"
+                    placeholderTextColor="#475569"
+                    keyboardType="decimal-pad"
+                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  />
+                </View>
+
+                <Pressable
+                  onPress={handleUpdate}
+                  disabled={!dealerName.trim() || updateDownMutation.isPending}
+                  className={`bg-blue-600 py-4 rounded-lg mt-2 ${
+                    (!dealerName.trim() || updateDownMutation.isPending) && "opacity-50"
+                  }`}
+                >
+                  <Text className="text-white text-center font-bold text-lg">
+                    {updateDownMutation.isPending ? "Updating..." : "Update Down"}
+                  </Text>
+                </Pressable>
+
+                <Pressable
+                  onPress={handleDelete}
+                  disabled={deleteDownMutation.isPending}
+                  className={`bg-red-600 py-4 rounded-lg ${
+                    deleteDownMutation.isPending && "opacity-50"
+                  }`}
+                >
+                  <Text className="text-white text-center font-bold text-lg">
+                    {deleteDownMutation.isPending ? "Deleting..." : "Delete Down"}
+                  </Text>
+                </Pressable>
+              </View>
             </View>
-
-            <View className="gap-4">
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
-                <TextInput
-                  value={dealerName}
-                  onChangeText={setDealerName}
-                  placeholder="Enter dealer name"
-                  placeholderTextColor="#475569"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                />
-              </View>
-
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
-                <TextInput
-                  value={tips}
-                  onChangeText={setTips}
-                  placeholder="0.00"
-                  placeholderTextColor="#475569"
-                  keyboardType="decimal-pad"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  returnKeyType="next"
-                />
-              </View>
-
-              <View>
-                <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
-                <TextInput
-                  value={rake}
-                  onChangeText={setRake}
-                  placeholder="0.00"
-                  placeholderTextColor="#475569"
-                  keyboardType="decimal-pad"
-                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  editable
-                  returnKeyType="done"
-                  onSubmitEditing={handleUpdate}
-                />
-              </View>
-
-              <Pressable
-                onPress={handleUpdate}
-                disabled={!dealerName.trim() || updateDownMutation.isPending}
-                className={`bg-blue-600 py-4 rounded-lg mt-2 ${
-                  (!dealerName.trim() || updateDownMutation.isPending) && "opacity-50"
-                }`}
-              >
-                <Text className="text-white text-center font-bold text-lg">
-                  {updateDownMutation.isPending ? "Updating..." : "Update Down"}
-                </Text>
-              </Pressable>
-
-              <Pressable
-                onPress={handleDelete}
-                disabled={deleteDownMutation.isPending}
-                className={`bg-red-600 py-4 rounded-lg ${
-                  deleteDownMutation.isPending && "opacity-50"
-                }`}
-              >
-                <Text className="text-white text-center font-bold text-lg">
-                  {deleteDownMutation.isPending ? "Deleting..." : "Delete Down"}
-                </Text>
-              </Pressable>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        </View>
       </Modal>
     </View>
   );
