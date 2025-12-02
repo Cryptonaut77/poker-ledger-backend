@@ -47,20 +47,23 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<PlayerTransaction | null>(null);
 
-  // Fetch active game session
-  const { data: gameData } = useQuery({
+  // Fetch active game session - refetch frequently to prevent stale data
+  const { data: gameData, refetch: refetchGame } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
     retry: 3,
+    staleTime: 30000, // Consider data stale after 30 seconds
+    refetchOnWindowFocus: true,
   });
 
-  const sessionId = gameData?.session.id;
+  const sessionId = gameData?.session?.id;
 
   // Fetch player transactions
   const { data: transactionsData } = useQuery({
     queryKey: ["playerTransactions", sessionId],
     queryFn: () => api.get<GetPlayerTransactionsResponse>(`/api/players/transactions/${sessionId}`),
     enabled: !!sessionId,
+    staleTime: 10000, // Refetch transactions more frequently
   });
 
   // Add transaction mutation
@@ -159,7 +162,7 @@ const PlayersScreen = ({ navigation }: Props) => {
     setPlayerName(text);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("[Players] handleSubmit called", { playerName, amount, sessionId, transactionType });
 
     if (!playerName.trim()) {
@@ -172,8 +175,21 @@ const PlayersScreen = ({ navigation }: Props) => {
       Alert.alert("Missing Info", "Please enter an amount.");
       return;
     }
-    if (!sessionId) {
-      console.log("[Players] Submit blocked: no sessionId");
+
+    // If no sessionId, try to refetch the game session
+    let currentSessionId = sessionId;
+    if (!currentSessionId) {
+      console.log("[Players] No sessionId, attempting to refetch game session");
+      try {
+        const result = await refetchGame();
+        currentSessionId = result.data?.session?.id;
+      } catch (e) {
+        console.error("[Players] Failed to refetch game session:", e);
+      }
+    }
+
+    if (!currentSessionId) {
+      console.log("[Players] Submit blocked: no sessionId after refetch");
       Alert.alert("Error", "No active game session. Please restart the app.");
       return;
     }
@@ -193,7 +209,7 @@ const PlayersScreen = ({ navigation }: Props) => {
       amount: numAmount,
       paymentMethod,
       notes: notes.trim() || undefined,
-      gameSessionId: sessionId,
+      gameSessionId: currentSessionId,
     });
   };
 
