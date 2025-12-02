@@ -45,7 +45,6 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<PlayerTransaction | null>(null);
-  const playerNameRef = React.useRef("");
 
   // Fetch active game session
   const { data: gameData } = useQuery({
@@ -149,36 +148,13 @@ const PlayersScreen = ({ navigation }: Props) => {
 
   const resetForm = () => {
     setPlayerName("");
-    playerNameRef.current = "";
     setAmount("");
     setPaymentMethod("cash");
     setNotes("");
   };
 
   const handlePlayerNameChange = (text: string) => {
-    // Prevent duplicate text from voice input
-    const currentValue = playerNameRef.current;
-
-    // Check if text contains a duplicate pattern (e.g., "John John" or "John john")
-    const words = text.trim().split(/\s+/);
-    if (words.length >= 2) {
-      const firstWord = words[0].toLowerCase();
-      const secondWord = words[1].toLowerCase();
-
-      // If the first two words are the same (case-insensitive), it's likely a duplicate
-      if (firstWord === secondWord && firstWord.length > 0) {
-        const cleanText = words[0];
-        playerNameRef.current = cleanText;
-        setPlayerName(cleanText);
-        return;
-      }
-    }
-
-    // Only update if the text is actually different
-    if (text !== currentValue) {
-      playerNameRef.current = text;
-      setPlayerName(text);
-    }
+    setPlayerName(text);
   };
 
   const handleSubmit = () => {
@@ -369,7 +345,10 @@ const PlayersScreen = ({ navigation }: Props) => {
                   onChangeText={handlePlayerNameChange}
                   placeholder="Enter player name"
                   placeholderTextColor="#475569"
+                  autoCapitalize="words"
+                  autoCorrect={false}
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  style={{ minHeight: 48 }}
                 />
               </View>
 
@@ -382,6 +361,7 @@ const PlayersScreen = ({ navigation }: Props) => {
                   placeholderTextColor="#475569"
                   keyboardType="decimal-pad"
                   className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  style={{ minHeight: 48 }}
                 />
               </View>
 
