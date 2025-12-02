@@ -240,14 +240,14 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .filter((d) => d.tipsPaid)
     .reduce((sum, d) => sum + d.tips, 0);
 
-  // Only count rake from downs where tips have been paid
-  const totalPaidRake = session.dealerDowns
-    .filter((d) => d.tipsPaid)
+  // Only count rake that has been claimed (separate from tips paid)
+  const totalClaimedRake = session.dealerDowns
+    .filter((d) => d.rakeClaimed)
     .reduce((sum, d) => sum + d.rake, 0);
 
-  // House profit = Paid Rake - Expenses
-  // Only count rake that has been claimed (tips paid)
-  const netProfit = totalPaidRake - totalExpenses;
+  // House profit = Claimed Rake - Expenses
+  // Only count rake that has been claimed
+  const netProfit = totalClaimedRake - totalExpenses;
 
   // Till balance = Physical cash in the till
   // Cash buy-ins add money (money IN)

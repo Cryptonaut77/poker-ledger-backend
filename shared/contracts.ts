@@ -42,6 +42,7 @@ export const dealerDownSchema = z.object({
   tips: z.number(),
   rake: z.number(),
   tipsPaid: z.boolean(),
+  rakeClaimed: z.boolean(),
   timestamp: z.string(),
   gameSessionId: z.string(),
 });

@@ -110,6 +110,7 @@ model DealerDown {
   tips          Float       @default(0)
   rake          Float       @default(0)
   tipsPaid      Boolean     @default(false)
+  rakeClaimed   Boolean     @default(false)
   timestamp     DateTime    @default(now())
   gameSessionId String
   gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)

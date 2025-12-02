@@ -34,11 +34,16 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Editable text inputs for dealer name, tips, and rake amounts
 - Edit dealer downs with blue edit icon
 - Delete dealer downs from edit modal
+- **Separate tabs for Tips and Rake**:
+  - **Pay Dealers tab**: Track and pay out dealer tips independently
+  - **Claim Rake tab**: Track and claim house rake separately
 - Mark tips as paid with one-tap button
+- Mark rake as claimed with one-tap button
 - **Mark tips as unpaid** - Toggle paid tips back to unpaid status
-- View paid/unpaid status with color-coded badges
+- **Mark rake as unclaimed** - Toggle claimed rake back to unclaimed status
+- View paid/unpaid and claimed/unclaimed status with color-coded badges
 - View dealer performance history
-- Database fully supports paid/unpaid tip tracking
+- Database fully supports independent tip payment and rake claiming
 
 ### 💸 Expense Tracking
 - Log comped food, drinks, and other expenses
@@ -100,6 +105,9 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - `POST /api/dealers/down` - Add dealer down
   - `GET /api/dealers/downs/:sessionId` - Get all dealer downs
   - `PUT /api/dealers/down/:id/pay` - Mark dealer tips as paid
+  - `PUT /api/dealers/down/:id/unpay` - Mark dealer tips as unpaid
+  - `PUT /api/dealers/down/:id/claim-rake` - Mark rake as claimed
+  - `PUT /api/dealers/down/:id/unclaim-rake` - Mark rake as unclaimed
   - `DELETE /api/dealers/down/:id` - Delete a dealer down
 
 - **Expense Routes** (`/api/expenses/*`)
@@ -204,6 +212,17 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Separate Tips and Rake Tracking (Dec 2, 2024)
+Major improvement to dealer management - tips and rake are now tracked independently:
+- **Separate tabs**: "Pay Dealers" for tips and "Claim Rake" for house rake
+- Paying dealer tips no longer automatically marks rake as claimed
+- New `rakeClaimed` field in database for independent tracking
+- New API endpoints: `/claim-rake` and `/unclaim-rake`
+- House profit now calculated from claimed rake only (not from paid tips)
+- Amber-colored "Pay Dealers" tab with tip tracking
+- Purple-colored "Claim Rake" tab with rake tracking
+- Each tab shows appropriate totals (paid/unpaid for tips, claimed/unclaimed for rake)
 
 ### Database Schema Fix - Round 2 (Dec 2, 2024)
 Fixed recurring database schema synchronization issue:

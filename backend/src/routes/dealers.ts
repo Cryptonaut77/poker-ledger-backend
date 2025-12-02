@@ -148,4 +148,48 @@ dealersRouter.put("/down/:id/unpay", async (c) => {
   } satisfies MarkDealerTipsPaidResponse);
 });
 
+// ============================================
+// PUT /api/dealers/down/:id/claim-rake - Mark rake as claimed
+// ============================================
+dealersRouter.put("/down/:id/claim-rake", async (c) => {
+  const id = c.req.param("id");
+  console.log(`🎲 [Dealers] Marking rake as claimed for dealer down: ${id}`);
+
+  const dealerDown = await db.dealerDown.update({
+    where: { id },
+    data: { rakeClaimed: true },
+  });
+
+  console.log(`🎲 [Dealers] Rake marked as claimed: ${id}`);
+
+  return c.json({
+    dealerDown: {
+      ...dealerDown,
+      timestamp: dealerDown.timestamp.toISOString(),
+    },
+  } satisfies MarkDealerTipsPaidResponse);
+});
+
+// ============================================
+// PUT /api/dealers/down/:id/unclaim-rake - Mark rake as unclaimed
+// ============================================
+dealersRouter.put("/down/:id/unclaim-rake", async (c) => {
+  const id = c.req.param("id");
+  console.log(`🎲 [Dealers] Marking rake as unclaimed for dealer down: ${id}`);
+
+  const dealerDown = await db.dealerDown.update({
+    where: { id },
+    data: { rakeClaimed: false },
+  });
+
+  console.log(`🎲 [Dealers] Rake marked as unclaimed: ${id}`);
+
+  return c.json({
+    dealerDown: {
+      ...dealerDown,
+      timestamp: dealerDown.timestamp.toISOString(),
+    },
+  } satisfies MarkDealerTipsPaidResponse);
+});
+
 export { dealersRouter };
