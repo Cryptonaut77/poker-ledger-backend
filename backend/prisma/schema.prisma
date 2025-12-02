@@ -77,12 +77,12 @@ model Profile {
 model GameSession {
   id                 String              @id @default(cuid())
   name               String              @default("Poker Game")
-  tableName          String              @default("Main Table")
   startedAt          DateTime            @default(now())
   endedAt            DateTime?
   isActive           Boolean             @default(true)
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  tableName          String              @default("Main Table")
   dealerDowns        DealerDown[]
   expenses           Expense[]
   playerTransactions PlayerTransaction[]

@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, ChevronDown, ChevronRight, Trash2, DollarSign, Pencil } from "lucide-react-native";
@@ -74,8 +75,9 @@ const PlayersScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
-    onError: (error) => {
-      console.error("[Players] Error adding transaction:", error);
+    onError: (error: Error) => {
+      console.error("[Players] Error adding transaction:", error.message);
+      Alert.alert("Error", "Failed to add transaction. Please try again.");
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -162,20 +164,24 @@ const PlayersScreen = ({ navigation }: Props) => {
 
     if (!playerName.trim()) {
       console.log("[Players] Submit blocked: no player name");
+      Alert.alert("Missing Info", "Please enter a player name.");
       return;
     }
     if (!amount) {
       console.log("[Players] Submit blocked: no amount");
+      Alert.alert("Missing Info", "Please enter an amount.");
       return;
     }
     if (!sessionId) {
       console.log("[Players] Submit blocked: no sessionId");
+      Alert.alert("Error", "No active game session. Please restart the app.");
       return;
     }
 
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       console.log("[Players] Submit blocked: invalid amount", numAmount);
+      Alert.alert("Invalid Amount", "Please enter a valid positive number.");
       return;
     }
 
@@ -407,7 +413,10 @@ const PlayersScreen = ({ navigation }: Props) => {
               </View>
 
               <Pressable
-                onPress={handleSubmit}
+                onPress={() => {
+                  console.log("[Players] Submit button pressed");
+                  handleSubmit();
+                }}
                 disabled={!playerName.trim() || !amount || addTransactionMutation.isPending}
                 className={`py-4 rounded-lg mt-2 ${
                   transactionType === "buy-in" ? "bg-emerald-600" : "bg-red-600"
@@ -415,6 +424,7 @@ const PlayersScreen = ({ navigation }: Props) => {
                   (!playerName.trim() || !amount || addTransactionMutation.isPending) &&
                   "opacity-50"
                 }`}
+                style={{ marginBottom: 20 }}
               >
                 <Text className="text-white text-center font-bold text-lg">
                   {addTransactionMutation.isPending ? "Adding..." : `Add ${transactionType}`}
