@@ -68,11 +68,16 @@ const PlayersScreen = ({ navigation }: Props) => {
     mutationFn: (data: AddPlayerTransactionRequest) =>
       api.post("/api/players/transaction", data),
     onSuccess: () => {
+      console.log("[Players] Transaction added successfully");
       queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       setModalVisible(false);
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error) => {
+      console.error("[Players] Error adding transaction:", error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
 
@@ -177,10 +182,28 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    if (!playerName.trim() || !amount || !sessionId) return;
+    console.log("[Players] handleSubmit called", { playerName, amount, sessionId, transactionType });
+
+    if (!playerName.trim()) {
+      console.log("[Players] Submit blocked: no player name");
+      return;
+    }
+    if (!amount) {
+      console.log("[Players] Submit blocked: no amount");
+      return;
+    }
+    if (!sessionId) {
+      console.log("[Players] Submit blocked: no sessionId");
+      return;
+    }
 
     const numAmount = parseFloat(amount);
-    if (isNaN(numAmount) || numAmount <= 0) return;
+    if (isNaN(numAmount) || numAmount <= 0) {
+      console.log("[Players] Submit blocked: invalid amount", numAmount);
+      return;
+    }
+
+    console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
 
     addTransactionMutation.mutate({
       playerName: playerName.trim(),
@@ -281,6 +304,7 @@ const PlayersScreen = ({ navigation }: Props) => {
       <View className="absolute bottom-28 right-4 flex-row gap-2">
         <Pressable
           onPress={() => {
+            console.log("[Players] Cash-out button pressed");
             setTransactionType("cashout");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -299,6 +323,7 @@ const PlayersScreen = ({ navigation }: Props) => {
         </Pressable>
         <Pressable
           onPress={() => {
+            console.log("[Players] Buy-in button pressed");
             setTransactionType("buy-in");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
