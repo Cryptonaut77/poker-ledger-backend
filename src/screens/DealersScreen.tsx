@@ -8,7 +8,6 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, CheckCircle, Circle, Edit3, ChevronDown, ChevronRight } from "lucide-react-native";
@@ -212,20 +211,13 @@ const DealersScreen = ({ navigation }: Props) => {
 
   // Add dealer down mutation
   const addDownMutation = useMutation({
-    mutationFn: (data: AddDealerDownRequest) => {
-      console.log('[DealersScreen] mutation starting with data:', data);
-      return api.post("/api/dealers/down", data);
-    },
-    onSuccess: (data) => {
-      console.log('[DealersScreen] mutation success:', data);
+    mutationFn: (data: AddDealerDownRequest) => api.post("/api/dealers/down", data),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       setModalVisible(false);
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    },
-    onError: (error) => {
-      console.error('[DealersScreen] mutation error:', error);
     },
   });
 
@@ -291,34 +283,12 @@ const DealersScreen = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    console.log('[DealersScreen] handleSubmit called');
-    console.log('[DealersScreen] dealerName:', dealerName);
-    console.log('[DealersScreen] tips:', tips);
-    console.log('[DealersScreen] rake:', rake);
-    console.log('[DealersScreen] sessionId:', sessionId);
-
-    if (!dealerName.trim() || !sessionId) {
-      console.log('[DealersScreen] Validation failed - missing dealerName or sessionId');
-      return;
-    }
+    if (!dealerName.trim() || !sessionId) return;
 
     const numTips = parseFloat(tips) || 0;
     const numRake = parseFloat(rake) || 0;
 
-    console.log('[DealersScreen] numTips:', numTips);
-    console.log('[DealersScreen] numRake:', numRake);
-
-    if (numTips < 0 || numRake < 0) {
-      console.log('[DealersScreen] Validation failed - negative values');
-      return;
-    }
-
-    console.log('[DealersScreen] Calling mutation with data:', {
-      dealerName: dealerName.trim(),
-      tips: numTips,
-      rake: numRake,
-      gameSessionId: sessionId,
-    });
+    if (numTips < 0 || numRake < 0) return;
 
     addDownMutation.mutate({
       dealerName: dealerName.trim(),
@@ -436,210 +406,209 @@ const DealersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
-          console.log('[DealersScreen] FAB pressed');
           setModalVisible(true);
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }}
-        activeOpacity={0.7}
+        className="absolute bottom-28 right-4 bg-amber-600 w-16 h-16 rounded-full items-center justify-center"
         style={{
-          position: 'absolute',
-          bottom: 112,
-          right: 16,
-          backgroundColor: '#d97706',
-          width: 64,
-          height: 64,
-          borderRadius: 32,
-          alignItems: 'center',
-          justifyContent: 'center',
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
           shadowRadius: 4.65,
           elevation: 8,
-          zIndex: 999,
         }}
       >
         <Plus size={32} color="#fff" />
-      </TouchableOpacity>
+      </Pressable>
 
       {/* Add Dealer Down Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <View className="flex-1 justify-end bg-black/50">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
           <Pressable
-            className="flex-1"
+            className="flex-1 bg-black/50"
             onPress={() => {
               setModalVisible(false);
               resetForm();
             }}
           />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-              <View className="flex-row items-center justify-between mb-6">
-                <Text className="text-white text-2xl font-bold">Dealer Down</Text>
-                <Pressable
-                  onPress={() => {
-                    setModalVisible(false);
-                    resetForm();
-                  }}
-                  className="w-10 h-10 items-center justify-center"
-                >
-                  <X size={24} color="#94a3b8" />
-                </Pressable>
-              </View>
-
-              <View className="gap-4">
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
-                  <TextInput
-                    value={dealerName}
-                    onChangeText={setDealerName}
-                    placeholder="Enter dealer name"
-                    placeholderTextColor="#475569"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                    autoCapitalize="words"
-                    autoCorrect={false}
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
-                  <TextInput
-                    value={tips}
-                    onChangeText={setTips}
-                    placeholder="0.00"
-                    placeholderTextColor="#475569"
-                    keyboardType="decimal-pad"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
-                  <TextInput
-                    value={rake}
-                    onChangeText={setRake}
-                    placeholder="0.00"
-                    placeholderTextColor="#475569"
-                    keyboardType="decimal-pad"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <Pressable
-                  onPress={handleSubmit}
-                  disabled={!dealerName.trim() || addDownMutation.isPending}
-                  className={`bg-amber-600 py-4 rounded-lg mt-2 ${
-                    (!dealerName.trim() || addDownMutation.isPending) && "opacity-50"
-                  }`}
-                >
-                  <Text className="text-white text-center font-bold text-lg">
-                    {addDownMutation.isPending ? "Adding..." : "Add Down"}
-                  </Text>
-                </Pressable>
-              </View>
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">Dealer Down</Text>
+              <Pressable
+                onPress={() => {
+                  setModalVisible(false);
+                  resetForm();
+                }}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
             </View>
-          </KeyboardAvoidingView>
-        </View>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
+                <TextInput
+                  value={dealerName}
+                  onChangeText={setDealerName}
+                  placeholder="Enter dealer name"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
+                <TextInput
+                  value={tips}
+                  onChangeText={setTips}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
+                <TextInput
+                  value={rake}
+                  onChangeText={setRake}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="done"
+                  onSubmitEditing={handleSubmit}
+                />
+              </View>
+
+              <Pressable
+                onPress={handleSubmit}
+                disabled={!dealerName.trim() || addDownMutation.isPending}
+                className={`bg-amber-600 py-4 rounded-lg mt-2 ${
+                  (!dealerName.trim() || addDownMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {addDownMutation.isPending ? "Adding..." : "Add Down"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Edit Dealer Down Modal */}
       <Modal visible={editModalVisible} animationType="slide" transparent>
-        <View className="flex-1 justify-end bg-black/50">
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
           <Pressable
-            className="flex-1"
+            className="flex-1 bg-black/50"
             onPress={() => {
               setEditModalVisible(false);
               setEditingDown(null);
               resetForm();
             }}
           />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-              <View className="flex-row items-center justify-between mb-6">
-                <Text className="text-white text-2xl font-bold">Edit Dealer Down</Text>
-                <Pressable
-                  onPress={() => {
-                    setEditModalVisible(false);
-                    setEditingDown(null);
-                    resetForm();
-                  }}
-                  className="w-10 h-10 items-center justify-center"
-                >
-                  <X size={24} color="#94a3b8" />
-                </Pressable>
-              </View>
-
-              <View className="gap-4">
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
-                  <TextInput
-                    value={dealerName}
-                    onChangeText={setDealerName}
-                    placeholder="Enter dealer name"
-                    placeholderTextColor="#475569"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                    autoCapitalize="words"
-                    autoCorrect={false}
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
-                  <TextInput
-                    value={tips}
-                    onChangeText={setTips}
-                    placeholder="0.00"
-                    placeholderTextColor="#475569"
-                    keyboardType="decimal-pad"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
-                  <TextInput
-                    value={rake}
-                    onChangeText={setRake}
-                    placeholder="0.00"
-                    placeholderTextColor="#475569"
-                    keyboardType="decimal-pad"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <Pressable
-                  onPress={handleUpdate}
-                  disabled={!dealerName.trim() || updateDownMutation.isPending}
-                  className={`bg-blue-600 py-4 rounded-lg mt-2 ${
-                    (!dealerName.trim() || updateDownMutation.isPending) && "opacity-50"
-                  }`}
-                >
-                  <Text className="text-white text-center font-bold text-lg">
-                    {updateDownMutation.isPending ? "Updating..." : "Update Down"}
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={handleDelete}
-                  disabled={deleteDownMutation.isPending}
-                  className={`bg-red-600 py-4 rounded-lg ${
-                    deleteDownMutation.isPending && "opacity-50"
-                  }`}
-                >
-                  <Text className="text-white text-center font-bold text-lg">
-                    {deleteDownMutation.isPending ? "Deleting..." : "Delete Down"}
-                  </Text>
-                </Pressable>
-              </View>
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">Edit Dealer Down</Text>
+              <Pressable
+                onPress={() => {
+                  setEditModalVisible(false);
+                  setEditingDown(null);
+                  resetForm();
+                }}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
             </View>
-          </KeyboardAvoidingView>
-        </View>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Dealer Name</Text>
+                <TextInput
+                  value={dealerName}
+                  onChangeText={setDealerName}
+                  placeholder="Enter dealer name"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Tips</Text>
+                <TextInput
+                  value={tips}
+                  onChangeText={setTips}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="next"
+                />
+              </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Rake</Text>
+                <TextInput
+                  value={rake}
+                  onChangeText={setRake}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                  editable
+                  returnKeyType="done"
+                  onSubmitEditing={handleUpdate}
+                />
+              </View>
+
+              <Pressable
+                onPress={handleUpdate}
+                disabled={!dealerName.trim() || updateDownMutation.isPending}
+                className={`bg-blue-600 py-4 rounded-lg mt-2 ${
+                  (!dealerName.trim() || updateDownMutation.isPending) && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {updateDownMutation.isPending ? "Updating..." : "Update Down"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleDelete}
+                disabled={deleteDownMutation.isPending}
+                className={`bg-red-600 py-4 rounded-lg ${
+                  deleteDownMutation.isPending && "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {deleteDownMutation.isPending ? "Deleting..." : "Delete Down"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

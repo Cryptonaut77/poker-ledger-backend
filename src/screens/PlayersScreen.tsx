@@ -8,7 +8,6 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, ChevronDown, ChevronRight, Trash2, DollarSign, Pencil } from "lucide-react-native";
@@ -279,22 +278,15 @@ const PlayersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <View style={{ position: 'absolute', bottom: 112, right: 16, flexDirection: 'row', gap: 8, zIndex: 999 }}>
-        <TouchableOpacity
+      <View className="absolute bottom-28 right-4 flex-row gap-2">
+        <Pressable
           onPress={() => {
-            console.log('[PlayersScreen] Cashout FAB pressed');
             setTransactionType("cashout");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
-          activeOpacity={0.7}
+          className="bg-red-600 w-14 h-14 rounded-full items-center justify-center"
           style={{
-            backgroundColor: '#dc2626',
-            width: 56,
-            height: 56,
-            borderRadius: 28,
-            alignItems: 'center',
-            justifyContent: 'center',
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -303,23 +295,16 @@ const PlayersScreen = ({ navigation }: Props) => {
           }}
         >
           <DollarSign size={24} color="#fff" />
-          <Text style={{ color: '#fff', fontSize: 10, fontWeight: 'bold' }}>OUT</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+          <Text className="text-white text-[10px] font-bold">OUT</Text>
+        </Pressable>
+        <Pressable
           onPress={() => {
-            console.log('[PlayersScreen] Buy-in FAB pressed');
             setTransactionType("buy-in");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
-          activeOpacity={0.7}
+          className="bg-emerald-600 w-14 h-14 rounded-full items-center justify-center"
           style={{
-            backgroundColor: '#059669',
-            width: 56,
-            height: 56,
-            borderRadius: 28,
-            alignItems: 'center',
-            justifyContent: 'center',
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -328,262 +313,242 @@ const PlayersScreen = ({ navigation }: Props) => {
           }}
         >
           <Plus size={28} color="#fff" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Add Transaction Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <View className="flex-1 justify-end bg-black/50">
-          <Pressable
-            className="flex-1"
-            onPress={() => {
-              setModalVisible(false);
-              resetForm();
-            }}
-          />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-              <View className="flex-row items-center justify-between mb-6">
-                <Text className="text-white text-2xl font-bold">
-                  {transactionType === "buy-in" ? "Buy-in" : "Cashout"}
-                </Text>
-                <Pressable
-                  onPress={() => {
-                    setModalVisible(false);
-                    resetForm();
-                  }}
-                  className="w-10 h-10 items-center justify-center"
-                >
-                  <X size={24} color="#94a3b8" />
-                </Pressable>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
+          <Pressable className="flex-1 bg-black/50" onPress={() => setModalVisible(false)} />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">
+                {transactionType === "buy-in" ? "Buy-in" : "Cashout"}
+              </Text>
+              <Pressable
+                onPress={() => setModalVisible(false)}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
+            </View>
+
+            <View className="gap-4">
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Player Name</Text>
+                <TextInput
+                  value={playerName}
+                  onChangeText={handlePlayerNameChange}
+                  placeholder="Enter player name"
+                  placeholderTextColor="#475569"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
               </View>
 
-              <View className="gap-4">
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Player Name</Text>
-                  <TextInput
-                    value={playerName}
-                    onChangeText={handlePlayerNameChange}
-                    placeholder="Enter player name"
-                    placeholderTextColor="#475569"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Amount</Text>
+                <TextInput
+                  value={amount}
+                  onChangeText={setAmount}
+                  placeholder="0.00"
+                  placeholderTextColor="#475569"
+                  keyboardType="decimal-pad"
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
+              </View>
 
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Amount</Text>
-                  <TextInput
-                    value={amount}
-                    onChangeText={setAmount}
-                    placeholder="0.00"
-                    placeholderTextColor="#475569"
-                    keyboardType="decimal-pad"
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
-                  <View className="flex-row gap-2">
-                    {(["cash", "electronic", "credit"] as const).map((method) => (
-                      <Pressable
-                        key={method}
-                        onPress={() => {
-                          setPaymentMethod(method);
-                          Haptics.selectionAsync();
-                        }}
-                        className={`flex-1 py-3 rounded-lg border ${
-                          paymentMethod === method
-                            ? "bg-emerald-600 border-emerald-500"
-                            : "bg-slate-800 border-slate-700"
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
+                <View className="flex-row gap-2">
+                  {(["cash", "electronic", "credit"] as const).map((method) => (
+                    <Pressable
+                      key={method}
+                      onPress={() => {
+                        setPaymentMethod(method);
+                        Haptics.selectionAsync();
+                      }}
+                      className={`flex-1 py-3 rounded-lg border ${
+                        paymentMethod === method
+                          ? "bg-emerald-600 border-emerald-500"
+                          : "bg-slate-800 border-slate-700"
+                      }`}
+                    >
+                      <Text
+                        className={`text-center font-medium capitalize ${
+                          paymentMethod === method ? "text-white" : "text-slate-400"
                         }`}
                       >
-                        <Text
-                          className={`text-center font-medium capitalize ${
-                            paymentMethod === method ? "text-white" : "text-slate-400"
-                          }`}
-                        >
-                          {method}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
+                        {method}
+                      </Text>
+                    </Pressable>
+                  ))}
                 </View>
-
-                <View>
-                  <Text className="text-slate-400 text-sm mb-2 font-medium">Notes (Optional)</Text>
-                  <TextInput
-                    value={notes}
-                    onChangeText={setNotes}
-                    placeholder="Add notes..."
-                    placeholderTextColor="#475569"
-                    multiline
-                    numberOfLines={2}
-                    className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                  />
-                </View>
-
-                <Pressable
-                  onPress={handleSubmit}
-                  disabled={!playerName.trim() || !amount || addTransactionMutation.isPending}
-                  className={`py-4 rounded-lg mt-2 ${
-                    transactionType === "buy-in" ? "bg-emerald-600" : "bg-red-600"
-                  } ${
-                    (!playerName.trim() || !amount || addTransactionMutation.isPending) &&
-                    "opacity-50"
-                  }`}
-                >
-                  <Text className="text-white text-center font-bold text-lg">
-                    {addTransactionMutation.isPending ? "Adding..." : `Add ${transactionType}`}
-                  </Text>
-                </Pressable>
               </View>
+
+              <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Notes (Optional)</Text>
+                <TextInput
+                  value={notes}
+                  onChangeText={setNotes}
+                  placeholder="Add notes..."
+                  placeholderTextColor="#475569"
+                  multiline
+                  numberOfLines={2}
+                  className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                />
+              </View>
+
+              <Pressable
+                onPress={handleSubmit}
+                disabled={!playerName.trim() || !amount || addTransactionMutation.isPending}
+                className={`py-4 rounded-lg mt-2 ${
+                  transactionType === "buy-in" ? "bg-emerald-600" : "bg-red-600"
+                } ${
+                  (!playerName.trim() || !amount || addTransactionMutation.isPending) &&
+                  "opacity-50"
+                }`}
+              >
+                <Text className="text-white text-center font-bold text-lg">
+                  {addTransactionMutation.isPending ? "Adding..." : `Add ${transactionType}`}
+                </Text>
+              </Pressable>
             </View>
-          </KeyboardAvoidingView>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Edit Transaction Modal */}
       <Modal visible={editModalVisible} animationType="slide" transparent>
-        <View className="flex-1 justify-end bg-black/50">
-          <Pressable
-            className="flex-1"
-            onPress={() => {
-              setEditModalVisible(false);
-              setEditingTransaction(null);
-            }}
-          />
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
-              <View className="flex-row items-center justify-between mb-6">
-                <Text className="text-white text-2xl font-bold">Edit Transaction</Text>
-                <Pressable
-                  onPress={() => {
-                    setEditModalVisible(false);
-                    setEditingTransaction(null);
-                  }}
-                  className="w-10 h-10 items-center justify-center"
-                >
-                  <X size={24} color="#94a3b8" />
-                </Pressable>
-              </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          className="flex-1 justify-end"
+        >
+          <Pressable className="flex-1 bg-black/50" onPress={() => setEditModalVisible(false)} />
+          <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-white text-2xl font-bold">Edit Transaction</Text>
+              <Pressable
+                onPress={() => setEditModalVisible(false)}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <X size={24} color="#94a3b8" />
+              </Pressable>
+            </View>
 
-              <View className="gap-4">
-                {editingTransaction && (
-                  <>
-                    <View className="bg-slate-800 rounded-lg p-3 mb-2">
-                      <Text className="text-slate-400 text-xs mb-1">Player</Text>
-                      <Text className="text-white text-lg font-bold">
-                        {editingTransaction.playerName}
-                      </Text>
-                      <Text className="text-slate-400 text-xs mt-2">Type</Text>
-                      <View
-                        className="px-2 py-1 rounded self-start mt-1"
-                        style={{
-                          backgroundColor:
-                            editingTransaction.type === "buy-in"
-                              ? "rgba(16, 185, 129, 0.2)"
-                              : "rgba(239, 68, 68, 0.2)",
-                        }}
+            <View className="gap-4">
+              {editingTransaction && (
+                <>
+                  <View className="bg-slate-800 rounded-lg p-3 mb-2">
+                    <Text className="text-slate-400 text-xs mb-1">Player</Text>
+                    <Text className="text-white text-lg font-bold">
+                      {editingTransaction.playerName}
+                    </Text>
+                    <Text className="text-slate-400 text-xs mt-2">Type</Text>
+                    <View
+                      className="px-2 py-1 rounded self-start mt-1"
+                      style={{
+                        backgroundColor:
+                          editingTransaction.type === "buy-in"
+                            ? "rgba(16, 185, 129, 0.2)"
+                            : "rgba(239, 68, 68, 0.2)",
+                      }}
+                    >
+                      <Text
+                        className={`text-xs font-bold ${
+                          editingTransaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
+                        }`}
                       >
-                        <Text
-                          className={`text-xs font-bold ${
-                            editingTransaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
+                        {editingTransaction.type.toUpperCase()}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View>
+                    <Text className="text-slate-400 text-sm mb-2 font-medium">Amount</Text>
+                    <TextInput
+                      value={amount}
+                      onChangeText={setAmount}
+                      placeholder="0.00"
+                      placeholderTextColor="#475569"
+                      keyboardType="decimal-pad"
+                      className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                    />
+                  </View>
+
+                  <View>
+                    <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
+                    <View className="flex-row gap-2">
+                      {(["cash", "electronic", "credit"] as const).map((method) => (
+                        <Pressable
+                          key={method}
+                          onPress={() => {
+                            setPaymentMethod(method);
+                            Haptics.selectionAsync();
+                          }}
+                          className={`flex-1 py-3 rounded-lg border ${
+                            paymentMethod === method
+                              ? "bg-blue-600 border-blue-500"
+                              : "bg-slate-800 border-slate-700"
                           }`}
                         >
-                          {editingTransaction.type.toUpperCase()}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View>
-                      <Text className="text-slate-400 text-sm mb-2 font-medium">Amount</Text>
-                      <TextInput
-                        value={amount}
-                        onChangeText={setAmount}
-                        placeholder="0.00"
-                        placeholderTextColor="#475569"
-                        keyboardType="decimal-pad"
-                        className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                      />
-                    </View>
-
-                    <View>
-                      <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
-                      <View className="flex-row gap-2">
-                        {(["cash", "electronic", "credit"] as const).map((method) => (
-                          <Pressable
-                            key={method}
-                            onPress={() => {
-                              setPaymentMethod(method);
-                              Haptics.selectionAsync();
-                            }}
-                            className={`flex-1 py-3 rounded-lg border ${
-                              paymentMethod === method
-                                ? "bg-blue-600 border-blue-500"
-                                : "bg-slate-800 border-slate-700"
+                          <Text
+                            className={`text-center font-medium capitalize ${
+                              paymentMethod === method ? "text-white" : "text-slate-400"
                             }`}
                           >
-                            <Text
-                              className={`text-center font-medium capitalize ${
-                                paymentMethod === method ? "text-white" : "text-slate-400"
-                              }`}
-                            >
-                              {method}
-                            </Text>
-                          </Pressable>
-                        ))}
-                      </View>
+                            {method}
+                          </Text>
+                        </Pressable>
+                      ))}
                     </View>
+                  </View>
 
-                    <View>
-                      <Text className="text-slate-400 text-sm mb-2 font-medium">
-                        Notes (Optional)
-                      </Text>
-                      <TextInput
-                        value={notes}
-                        onChangeText={setNotes}
-                        placeholder="Add notes..."
-                        placeholderTextColor="#475569"
-                        multiline
-                        numberOfLines={2}
-                        className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
-                      />
-                    </View>
+                  <View>
+                    <Text className="text-slate-400 text-sm mb-2 font-medium">
+                      Notes (Optional)
+                    </Text>
+                    <TextInput
+                      value={notes}
+                      onChangeText={setNotes}
+                      placeholder="Add notes..."
+                      placeholderTextColor="#475569"
+                      multiline
+                      numberOfLines={2}
+                      className="bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700"
+                    />
+                  </View>
 
-                    <Pressable
-                      onPress={handleUpdateTransaction}
-                      disabled={!amount || updateTransactionMutation.isPending}
-                      className={`py-4 rounded-lg bg-blue-600 ${
-                        (!amount || updateTransactionMutation.isPending) && "opacity-50"
-                      }`}
-                    >
-                      <Text className="text-white text-center font-bold text-lg">
-                        {updateTransactionMutation.isPending ? "Updating..." : "Update Transaction"}
-                      </Text>
-                    </Pressable>
+                  <Pressable
+                    onPress={handleUpdateTransaction}
+                    disabled={!amount || updateTransactionMutation.isPending}
+                    className={`py-4 rounded-lg bg-blue-600 ${
+                      (!amount || updateTransactionMutation.isPending) && "opacity-50"
+                    }`}
+                  >
+                    <Text className="text-white text-center font-bold text-lg">
+                      {updateTransactionMutation.isPending ? "Updating..." : "Update Transaction"}
+                    </Text>
+                  </Pressable>
 
-                    <Pressable
-                      onPress={handleDeleteTransaction}
-                      disabled={deleteTransactionMutation.isPending}
-                      className={`py-4 rounded-lg bg-red-600 ${
-                        deleteTransactionMutation.isPending && "opacity-50"
-                      }`}
-                    >
-                      <Text className="text-white text-center font-bold text-lg">
-                        {deleteTransactionMutation.isPending ? "Deleting..." : "Delete Transaction"}
-                      </Text>
-                    </Pressable>
-                  </>
-                )}
-              </View>
+                  <Pressable
+                    onPress={handleDeleteTransaction}
+                    disabled={deleteTransactionMutation.isPending}
+                    className={`py-4 rounded-lg bg-red-600 ${
+                      deleteTransactionMutation.isPending && "opacity-50"
+                    }`}
+                  >
+                    <Text className="text-white text-center font-bold text-lg">
+                      {deleteTransactionMutation.isPending ? "Deleting..." : "Delete Transaction"}
+                    </Text>
+                  </Pressable>
+                </>
+              )}
             </View>
-          </KeyboardAvoidingView>
-        </View>
+          </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
