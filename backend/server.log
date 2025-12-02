@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 115ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 118ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
 Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1348.00ms]
+Checked 761 installs across 703 packages (no changes) [1340.00ms]
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
 Failed to find Response internal state key
@@ -73,275 +73,55 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Failed to find Response internal state key
-✅ Environment variables validated successfully
-🔐 [Auth] Initializing Better Auth...
-✅ [Auth] Better Auth initialized
-🔗 [Auth] Base URL: https://preview-bozmwbbbzufx.share.sandbox.dev
-🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-bozmwbbbzufx.share.sandbox.dev
-🔧 Initializing Hono application...
-🔐 Mounting Better Auth handler at /api/auth/*
-🎮 Mounting game routes at /api/game
-💰 Mounting player routes at /api/players
-🎲 Mounting dealer routes at /api/dealers
-💸 Mounting expense routes at /api/expenses
-⚙️  Starting server...
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Environment: development
-🚀 Server is running on port 3000
-🔗 Base URL: http://localhost:3000
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📚 Available endpoints:
-  🔐 Auth:     /api/auth/*
-  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
-  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
-  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
-  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
-  💚 Health:   GET /health
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
 🎮 [Game] Found active session: cmio3k5440000m2cwpgp35asb
---> GET /api/game/active [32m200[0m 5ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
+--> GET /api/game/active [32m200[0m 4ms
 <-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
 🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 3ms
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
+--> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 5ms
+<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
+💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
+💰 [Players] Found 11 transactions
+--> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
 🎮 [Game] Found active session: cmio3k5440000m2cwpgp35asb
---> GET /api/game/active [32m200[0m 1ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 0ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Nicole: $600
-💰 [Players] Transaction created: cmio3nn4l0001m2s2jsbs9ylp
---> POST /api/players/transaction [32m200[0m 7ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 1 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $600.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Nicole: $200
-💰 [Players] Transaction created: cmio3o4fi0003m2s27lns6dzp
---> POST /api/players/transaction [32m200[0m 2ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $600.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 3ms
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Shelley: $475
-💰 [Players] Transaction created: cmio3olf40005m2s29gboi77j
---> POST /api/players/transaction [32m200[0m 6ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 3 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1075.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 4ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Terry: $500
-💰 [Players] Transaction created: cmio3p0hh0007m2s2qn60hqqo
---> POST /api/players/transaction [32m200[0m 7ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1575.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 1ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 4 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Mike: $400
-💰 [Players] Transaction created: cmio3pdlh0009m2s2b4t4rpqc
---> POST /api/players/transaction [32m200[0m 1ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 5 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1975.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Mike o: $500
-💰 [Players] Transaction created: cmio3pqkv000bm2s25evqz475
---> POST /api/players/transaction [32m200[0m 6ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 6 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $2475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Mickey: $700
-💰 [Players] Transaction created: cmio3qa9h000dm2s276x111ev
---> POST /api/players/transaction [32m200[0m 2ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 7 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3175.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Gabby: $300
-💰 [Players] Transaction created: cmio3qumr000fm2s20vtj2e0l
---> POST /api/players/transaction [32m200[0m 16ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 3ms
-💰 [Players] Found 8 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Sing: $300
-💰 [Players] Transaction created: cmio3r3i3000hm2s2zcb19aqr
---> POST /api/players/transaction [32m200[0m 1ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 9 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Frank: $2000
-💰 [Players] Transaction created: cmio3rinl000jm2s2m7rdxq38
---> POST /api/players/transaction [32m200[0m 41ms
-<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
-💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
-💰 [Players] Found 10 transactions
---> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 1ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for Danny: $1000
-💰 [Players] Transaction created: cmio3ryef000lm2s2szbtdv9i
---> POST /api/players/transaction [32m200[0m 10ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
+--> GET /api/game/active [32m200[0m 2ms
 <-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
 💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
 💰 [Players] Found 11 transactions
 --> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
+<-- POST /api/players/transaction
+💰 [Players] Adding buy-in for Danny: $1000
+💰 [Players] Transaction created: cmio4otcm0001m2mcy04dtra0
+--> POST /api/players/transaction [32m200[0m 7ms
+<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
+🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
+<-- GET /api/players/transactions/cmio3k5440000m2cwpgp35asb
+💰 [Players] Getting transactions for session: cmio3k5440000m2cwpgp35asb
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
+--> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
+💰 [Players] Found 12 transactions
+--> GET /api/players/transactions/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
 <-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
 🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Found 0 dealer downs
---> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cmio3k5440000m2cwpgp35asb
---> GET /api/game/active [32m200[0m 1ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for Z: Tips $77, Rake $172
-🎲 [Dealers] Dealer down created: cmio3svej000nm2s23wmpo67z
---> POST /api/dealers/down [32m200[0m 2ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Found 1 dealer downs
---> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for S: Tips $57, Rake $95
-🎲 [Dealers] Dealer down created: cmio3ta57000pm2s2mbvrff72
---> POST /api/dealers/down [32m200[0m 10ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Found 2 dealer downs
---> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 0ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for Z: Tips $53, Rake $125
-🎲 [Dealers] Dealer down created: cmio3tnfy000rm2s2hnuovffh
---> POST /api/dealers/down [32m200[0m 26ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-🎲 [Dealers] Found 3 dealer downs
---> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 1ms
-<-- POST /api/dealers/down
-🎲 [Dealers] Adding down for S: Tips $38, Rake $65
-🎲 [Dealers] Dealer down created: cmio42vzk000tm2s25p9xksco
---> POST /api/dealers/down [32m200[0m 4ms
-<-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
-🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
 🎲 [Dealers] Found 4 dealer downs
---> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-<-- GET /api/expenses/cmio3k5440000m2cwpgp35asb
-💸 [Expenses] Getting expenses for session: cmio3k5440000m2cwpgp35asb
+--> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 3ms
 🎮 [Game] Found active session: cmio3k5440000m2cwpgp35asb
---> GET /api/game/active [32m200[0m 3ms
-💸 [Expenses] Found 0 expenses
---> GET /api/expenses/cmio3k5440000m2cwpgp35asb [32m200[0m 2ms
-<-- POST /api/expenses
-💸 [Expenses] Adding expense: Cook - $80
-💸 [Expenses] Expense created: cmio49aeo000vm2s2hxc0lvoh
---> POST /api/expenses [32m200[0m 3ms
+--> GET /api/game/active [32m200[0m 2ms
+<-- POST /api/dealers/down
+🎲 [Dealers] Adding down for Z: Tips $70, Rake $135
+🎲 [Dealers] Dealer down created: cmio566090003m2mco7qx7vvt
+--> POST /api/dealers/down [32m200[0m 3ms
 <-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
 🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/expenses/cmio3k5440000m2cwpgp35asb
-💸 [Expenses] Getting expenses for session: cmio3k5440000m2cwpgp35asb
-💸 [Expenses] Found 1 expenses
---> GET /api/expenses/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
-🎮 [Game] Summary calculated - Net profit: $-80.00, Till balance: $3395.00
---> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 3ms
-<-- DELETE /api/expenses/cmio49aeo000vm2s2hxc0lvoh
-💸 [Expenses] Deleting expense: cmio49aeo000vm2s2hxc0lvoh
-💸 [Expenses] Expense deleted: cmio49aeo000vm2s2hxc0lvoh
---> DELETE /api/expenses/cmio49aeo000vm2s2hxc0lvoh [32m200[0m 4ms
-<-- GET /api/game/cmio3k5440000m2cwpgp35asb/summary
-🎮 [Game] Getting summary for session: cmio3k5440000m2cwpgp35asb
-<-- GET /api/expenses/cmio3k5440000m2cwpgp35asb
-💸 [Expenses] Getting expenses for session: cmio3k5440000m2cwpgp35asb
-💸 [Expenses] Found 0 expenses
---> GET /api/expenses/cmio3k5440000m2cwpgp35asb [32m200[0m 1ms
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $3475.00
 --> GET /api/game/cmio3k5440000m2cwpgp35asb/summary [32m200[0m 2ms
+<-- GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb
+🎲 [Dealers] Getting downs for session: cmio3k5440000m2cwpgp35asb
+🎲 [Dealers] Found 5 dealer downs
+--> GET /api/dealers/downs/cmio3k5440000m2cwpgp35asb [32m200[0m 0ms
