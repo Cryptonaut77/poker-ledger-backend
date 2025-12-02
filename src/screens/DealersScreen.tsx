@@ -211,13 +211,20 @@ const DealersScreen = ({ navigation }: Props) => {
 
   // Add dealer down mutation
   const addDownMutation = useMutation({
-    mutationFn: (data: AddDealerDownRequest) => api.post("/api/dealers/down", data),
-    onSuccess: () => {
+    mutationFn: (data: AddDealerDownRequest) => {
+      console.log('[DealersScreen] mutation starting with data:', data);
+      return api.post("/api/dealers/down", data);
+    },
+    onSuccess: (data) => {
+      console.log('[DealersScreen] mutation success:', data);
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       setModalVisible(false);
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error) => {
+      console.error('[DealersScreen] mutation error:', error);
     },
   });
 
@@ -283,12 +290,34 @@ const DealersScreen = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    if (!dealerName.trim() || !sessionId) return;
+    console.log('[DealersScreen] handleSubmit called');
+    console.log('[DealersScreen] dealerName:', dealerName);
+    console.log('[DealersScreen] tips:', tips);
+    console.log('[DealersScreen] rake:', rake);
+    console.log('[DealersScreen] sessionId:', sessionId);
+
+    if (!dealerName.trim() || !sessionId) {
+      console.log('[DealersScreen] Validation failed - missing dealerName or sessionId');
+      return;
+    }
 
     const numTips = parseFloat(tips) || 0;
     const numRake = parseFloat(rake) || 0;
 
-    if (numTips < 0 || numRake < 0) return;
+    console.log('[DealersScreen] numTips:', numTips);
+    console.log('[DealersScreen] numRake:', numRake);
+
+    if (numTips < 0 || numRake < 0) {
+      console.log('[DealersScreen] Validation failed - negative values');
+      return;
+    }
+
+    console.log('[DealersScreen] Calling mutation with data:', {
+      dealerName: dealerName.trim(),
+      tips: numTips,
+      rake: numRake,
+      gameSessionId: sessionId,
+    });
 
     addDownMutation.mutate({
       dealerName: dealerName.trim(),
