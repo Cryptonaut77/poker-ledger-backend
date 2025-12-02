@@ -32,7 +32,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
             <NavigationContainer>
               <RootStackNavigator />
