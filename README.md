@@ -205,6 +205,14 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Database Schema Fix - Round 2 (Dec 2, 2024)
+Fixed recurring database schema synchronization issue:
+- Database schema was out of sync again with the `tableName` column missing
+- Ran `bunx prisma db push` to synchronize database with Prisma schema
+- Regenerated Prisma Client with updated schema
+- Backend server automatically hot-reloaded with the fix
+- App is now working properly - buy-in tab and all features functional
+
 ### Dealer Payment Toggle (Dec 1, 2024)
 Added ability to toggle dealer tips between paid and unpaid status:
 - New "Mark as Unpaid" button appears for paid dealer downs
@@ -228,10 +236,6 @@ Fixed critical database schema synchronization issue that was preventing the app
 - Regenerated Prisma Client to ensure type safety
 - Pulled database schema to verify synchronization with `prisma db pull`
 - Backend server automatically reloaded with updated schema
-
-**Database is now stable:** The schema and database are fully synchronized. The columns `tableName` in `game_session` and `tipsPaid` in `dealer_down` are properly created and will persist across restarts.
-
-The app is now fully functional and accepting new player buy-ins, dealer downs, and expenses without errors.
 
 ## Troubleshooting
 
