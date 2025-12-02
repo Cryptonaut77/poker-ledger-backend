@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, ChevronDown, ChevronRight, Trash2, DollarSign, Pencil } from "lucide-react-native";
@@ -278,15 +279,22 @@ const PlayersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <View className="absolute bottom-28 right-4 flex-row gap-2">
-        <Pressable
+      <View style={{ position: 'absolute', bottom: 112, right: 16, flexDirection: 'row', gap: 8, zIndex: 999 }}>
+        <TouchableOpacity
           onPress={() => {
+            console.log('[PlayersScreen] Cashout FAB pressed');
             setTransactionType("cashout");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
-          className="bg-red-600 w-14 h-14 rounded-full items-center justify-center"
+          activeOpacity={0.7}
           style={{
+            backgroundColor: '#dc2626',
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -295,16 +303,23 @@ const PlayersScreen = ({ navigation }: Props) => {
           }}
         >
           <DollarSign size={24} color="#fff" />
-          <Text className="text-white text-[10px] font-bold">OUT</Text>
-        </Pressable>
-        <Pressable
+          <Text style={{ color: '#fff', fontSize: 10, fontWeight: 'bold' }}>OUT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           onPress={() => {
+            console.log('[PlayersScreen] Buy-in FAB pressed');
             setTransactionType("buy-in");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
           }}
-          className="bg-emerald-600 w-14 h-14 rounded-full items-center justify-center"
+          activeOpacity={0.7}
           style={{
+            backgroundColor: '#059669',
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            alignItems: 'center',
+            justifyContent: 'center',
             shadowColor: "#000",
             shadowOffset: { width: 0, height: 4 },
             shadowOpacity: 0.3,
@@ -313,7 +328,7 @@ const PlayersScreen = ({ navigation }: Props) => {
           }}
         >
           <Plus size={28} color="#fff" />
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       {/* Add Transaction Modal */}

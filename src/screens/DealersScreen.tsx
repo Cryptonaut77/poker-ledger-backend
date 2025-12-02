@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, CheckCircle, Circle, Edit3, ChevronDown, ChevronRight } from "lucide-react-native";
@@ -435,22 +436,33 @@ const DealersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <Pressable
+      <TouchableOpacity
         onPress={() => {
+          console.log('[DealersScreen] FAB pressed');
           setModalVisible(true);
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         }}
-        className="absolute bottom-28 right-4 bg-amber-600 w-16 h-16 rounded-full items-center justify-center"
+        activeOpacity={0.7}
         style={{
+          position: 'absolute',
+          bottom: 112,
+          right: 16,
+          backgroundColor: '#d97706',
+          width: 64,
+          height: 64,
+          borderRadius: 32,
+          alignItems: 'center',
+          justifyContent: 'center',
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 4 },
           shadowOpacity: 0.3,
           shadowRadius: 4.65,
           elevation: 8,
+          zIndex: 999,
         }}
       >
         <Plus size={32} color="#fff" />
-      </Pressable>
+      </TouchableOpacity>
 
       {/* Add Dealer Down Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
