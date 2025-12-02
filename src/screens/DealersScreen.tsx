@@ -219,6 +219,10 @@ const DealersScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error) => {
+      console.error("[DealersScreen] Failed to add dealer down:", error);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   // Update dealer down mutation
@@ -283,12 +287,32 @@ const DealersScreen = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    if (!dealerName.trim() || !sessionId) return;
+    console.log("[DealersScreen] handleSubmit called", { dealerName, tips, rake, sessionId });
+
+    if (!dealerName.trim()) {
+      console.log("[DealersScreen] No dealer name, returning");
+      return;
+    }
+
+    if (!sessionId) {
+      console.log("[DealersScreen] No sessionId, returning");
+      return;
+    }
 
     const numTips = parseFloat(tips) || 0;
     const numRake = parseFloat(rake) || 0;
 
-    if (numTips < 0 || numRake < 0) return;
+    if (numTips < 0 || numRake < 0) {
+      console.log("[DealersScreen] Invalid tips/rake values, returning");
+      return;
+    }
+
+    console.log("[DealersScreen] Calling addDownMutation.mutate", {
+      dealerName: dealerName.trim(),
+      tips: numTips,
+      rake: numRake,
+      gameSessionId: sessionId,
+    });
 
     addDownMutation.mutate({
       dealerName: dealerName.trim(),
