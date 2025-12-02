@@ -226,7 +226,10 @@ Fixed critical database schema synchronization issue that was preventing the app
 - Used `prisma db push` to synchronize the database schema with Prisma models
 - Applied missing `tableName` and `tipsPaid` columns to database tables
 - Regenerated Prisma Client to ensure type safety
+- Pulled database schema to verify synchronization with `prisma db pull`
 - Backend server automatically reloaded with updated schema
+
+**Database is now stable:** The schema and database are fully synchronized. The columns `tableName` in `game_session` and `tipsPaid` in `dealer_down` are properly created and will persist across restarts.
 
 The app is now fully functional and accepting new player buy-ins, dealer downs, and expenses without errors.
 
