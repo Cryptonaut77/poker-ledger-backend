@@ -15,13 +15,18 @@ const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
 
-  // Fetch active game session
+  // Fetch active game session - with retry and refetch options
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
+    retry: 3,
+    staleTime: 30000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
-  const sessionId = gameData?.session.id;
+  // Safe session ID extraction with null check
+  const sessionId = gameData?.session?.id;
 
   // Fetch game summary
   const {

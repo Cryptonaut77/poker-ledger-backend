@@ -54,8 +54,10 @@ const PlayersScreen = ({ navigation }: Props) => {
     retry: 3,
     staleTime: 30000, // Consider data stale after 30 seconds
     refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
+  // Safe session ID extraction with null check
   const sessionId = gameData?.session?.id;
 
   // Fetch player transactions

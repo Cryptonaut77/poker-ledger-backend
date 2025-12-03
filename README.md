@@ -213,6 +213,16 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Button Reliability Fix (Dec 3, 2024)
+Fixed a critical issue where input buttons (Player Buy-in, Dealer Down, etc.) would stop working during live game tracking:
+- **Root cause**: Session ID could become stale/undefined, causing all mutations to silently fail
+- **Fixed session handling**: All screens now use safe optional chaining (`gameData?.session?.id`) instead of unsafe access
+- **Added session recovery**: When session is missing, the app now automatically refetches it before submitting data
+- **Enhanced QueryClient**: Added global retry logic with exponential backoff for all queries and mutations
+- **Better error handling**: All mutations now show clear error alerts when operations fail
+- **Improved reliability**: Added `refetchOnReconnect` to automatically refresh data after network reconnection
+- Screens affected: PlayersScreen, DealersScreen, ExpensesScreen, DashboardScreen
+
 ### Separate Tips and Rake Tracking (Dec 2, 2024)
 Major improvement to dealer management - tips and rake are now tracked independently:
 - **Separate tabs**: "Pay Dealers" for tips and "Claim Rake" for house rake

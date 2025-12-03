@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, CheckCircle, Circle, Edit3, ChevronDown, ChevronRight, DollarSign, Wallet } from "lucide-react-native";
@@ -316,13 +317,18 @@ const DealersScreen = ({ navigation }: Props) => {
   const [rake, setRake] = useState("");
   const [expandedDealers, setExpandedDealers] = useState<Set<string>>(new Set());
 
-  // Fetch active game session
-  const { data: gameData } = useQuery({
+  // Fetch active game session - with retry and refetch options to prevent stale data
+  const { data: gameData, refetch: refetchGame } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
+    retry: 3,
+    staleTime: 30000, // Consider data stale after 30 seconds
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
-  const sessionId = gameData?.session.id;
+  // Safe session ID extraction with null check
+  const sessionId = gameData?.session?.id;
 
   // Fetch dealer downs
   const { data: downsData } = useQuery({
@@ -381,6 +387,11 @@ const DealersScreen = ({ navigation }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error: Error) => {
+      console.error("[DealersScreen] Failed to mark tips as paid:", error.message);
+      Alert.alert("Error", "Failed to mark tips as paid. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   // Mark tips as unpaid mutation
@@ -390,6 +401,11 @@ const DealersScreen = ({ navigation }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error: Error) => {
+      console.error("[DealersScreen] Failed to mark tips as unpaid:", error.message);
+      Alert.alert("Error", "Failed to mark tips as unpaid. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
 
@@ -401,6 +417,11 @@ const DealersScreen = ({ navigation }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error: Error) => {
+      console.error("[DealersScreen] Failed to claim rake:", error.message);
+      Alert.alert("Error", "Failed to claim rake. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   // Unclaim rake mutation
@@ -410,6 +431,11 @@ const DealersScreen = ({ navigation }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error: Error) => {
+      console.error("[DealersScreen] Failed to unclaim rake:", error.message);
+      Alert.alert("Error", "Failed to unclaim rake. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
 
@@ -428,7 +454,7 @@ const DealersScreen = ({ navigation }: Props) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("[DealersScreen] handleSubmit called", { dealerName, tips, rake, sessionId });
 
     if (!dealerName.trim()) {
@@ -436,8 +462,21 @@ const DealersScreen = ({ navigation }: Props) => {
       return;
     }
 
-    if (!sessionId) {
-      console.log("[DealersScreen] No sessionId, returning");
+    // If no sessionId, try to refetch the game session
+    let currentSessionId = sessionId;
+    if (!currentSessionId) {
+      console.log("[DealersScreen] No sessionId, attempting to refetch game session");
+      try {
+        const result = await refetchGame();
+        currentSessionId = result.data?.session?.id;
+      } catch (e) {
+        console.error("[DealersScreen] Failed to refetch game session:", e);
+      }
+    }
+
+    if (!currentSessionId) {
+      console.log("[DealersScreen] No sessionId after refetch, showing error");
+      Alert.alert("Error", "No active game session. Please restart the app.");
       return;
     }
 
@@ -453,14 +492,14 @@ const DealersScreen = ({ navigation }: Props) => {
       dealerName: dealerName.trim(),
       tips: numTips,
       rake: numRake,
-      gameSessionId: sessionId,
+      gameSessionId: currentSessionId,
     });
 
     addDownMutation.mutate({
       dealerName: dealerName.trim(),
       tips: numTips,
       rake: numRake,
-      gameSessionId: sessionId,
+      gameSessionId: currentSessionId,
     });
   };
 

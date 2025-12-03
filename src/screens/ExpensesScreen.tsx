@@ -8,6 +8,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, Edit2 } from "lucide-react-native";
@@ -35,13 +36,18 @@ const ExpensesScreen = ({ navigation }: Props) => {
   const [category, setCategory] = useState<"food" | "drinks" | "other">("food");
   const [notes, setNotes] = useState("");
 
-  // Fetch active game session
-  const { data: gameData } = useQuery({
+  // Fetch active game session - with retry and refetch options
+  const { data: gameData, refetch: refetchGame } = useQuery({
     queryKey: ["activeGame"],
     queryFn: () => api.get<GetActiveGameResponse>("/api/game/active"),
+    retry: 3,
+    staleTime: 30000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
-  const sessionId = gameData?.session.id;
+  // Safe session ID extraction with null check
+  const sessionId = gameData?.session?.id;
 
   // Fetch expenses
   const { data: expensesData } = useQuery({
@@ -60,6 +66,11 @@ const ExpensesScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error: Error) => {
+      console.error("[ExpensesScreen] Failed to add expense:", error.message);
+      Alert.alert("Error", "Failed to add expense. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   // Update expense mutation
@@ -74,6 +85,11 @@ const ExpensesScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error: Error) => {
+      console.error("[ExpensesScreen] Failed to update expense:", error.message);
+      Alert.alert("Error", "Failed to update expense. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   // Delete expense mutation
@@ -87,6 +103,11 @@ const ExpensesScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
+    onError: (error: Error) => {
+      console.error("[ExpensesScreen] Failed to delete expense:", error.message);
+      Alert.alert("Error", "Failed to delete expense. Please try again.");
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
   });
 
   const resetForm = () => {
@@ -96,8 +117,26 @@ const ExpensesScreen = ({ navigation }: Props) => {
     setNotes("");
   };
 
-  const handleSubmit = () => {
-    if (!description.trim() || !amount || !sessionId) return;
+  const handleSubmit = async () => {
+    if (!description.trim() || !amount) return;
+
+    // If no sessionId, try to refetch the game session
+    let currentSessionId = sessionId;
+    if (!currentSessionId) {
+      console.log("[ExpensesScreen] No sessionId, attempting to refetch game session");
+      try {
+        const result = await refetchGame();
+        currentSessionId = result.data?.session?.id;
+      } catch (e) {
+        console.error("[ExpensesScreen] Failed to refetch game session:", e);
+      }
+    }
+
+    if (!currentSessionId) {
+      console.log("[ExpensesScreen] No sessionId after refetch, showing error");
+      Alert.alert("Error", "No active game session. Please restart the app.");
+      return;
+    }
 
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) return;
@@ -107,7 +146,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
       amount: numAmount,
       category,
       notes: notes.trim() || undefined,
-      gameSessionId: sessionId,
+      gameSessionId: currentSessionId,
     });
   };
 
