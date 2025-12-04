@@ -17,26 +17,46 @@ const dealersRouter = new Hono<AppType>();
 // POST /api/dealers/down - Add dealer down
 // ============================================
 dealersRouter.post("/down", zValidator("json", addDealerDownRequestSchema), async (c) => {
-  const data = c.req.valid("json");
-  console.log(`🎲 [Dealers] Adding down for ${data.dealerName}: Tips $${data.tips}, Rake $${data.rake}`);
+  try {
+    const data = c.req.valid("json");
+    console.log(`🎲 [Dealers] Adding down for ${data.dealerName}: Tips $${data.tips}, Rake $${data.rake}, Session: ${data.gameSessionId}`);
 
-  const dealerDown = await db.dealerDown.create({
-    data: {
-      dealerName: data.dealerName,
-      tips: data.tips,
-      rake: data.rake,
-      gameSessionId: data.gameSessionId,
-    },
-  });
+    // Verify game session exists
+    const gameSession = await db.gameSession.findUnique({
+      where: { id: data.gameSessionId },
+    });
 
-  console.log(`🎲 [Dealers] Dealer down created: ${dealerDown.id}`);
+    if (!gameSession) {
+      console.error(`🎲 [Dealers] Game session not found: ${data.gameSessionId}`);
+      return c.json({ error: "Game session not found" }, 404);
+    }
 
-  return c.json({
-    dealerDown: {
-      ...dealerDown,
-      timestamp: dealerDown.timestamp.toISOString(),
-    },
-  } satisfies AddDealerDownResponse);
+    if (!gameSession.isActive) {
+      console.error(`🎲 [Dealers] Game session is not active: ${data.gameSessionId}`);
+      return c.json({ error: "Game session is not active" }, 400);
+    }
+
+    const dealerDown = await db.dealerDown.create({
+      data: {
+        dealerName: data.dealerName,
+        tips: data.tips,
+        rake: data.rake,
+        gameSessionId: data.gameSessionId,
+      },
+    });
+
+    console.log(`🎲 [Dealers] Dealer down created: ${dealerDown.id}`);
+
+    return c.json({
+      dealerDown: {
+        ...dealerDown,
+        timestamp: dealerDown.timestamp.toISOString(),
+      },
+    } satisfies AddDealerDownResponse);
+  } catch (error: any) {
+    console.error("🎲 [Dealers] Error adding dealer down:", error);
+    return c.json({ error: error.message || "Failed to add dealer down" }, 500);
+  }
 });
 
 // ============================================

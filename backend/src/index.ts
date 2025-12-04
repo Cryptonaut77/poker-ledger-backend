@@ -26,6 +26,21 @@ app.use(
   }),
 );
 
+// Global error handler
+app.onError((err, c) => {
+  console.error("🚨 [ERROR]", err);
+  console.error("🚨 [ERROR] Stack:", err.stack);
+
+  // Return a proper error response
+  return c.json(
+    {
+      error: err.message || "Internal server error",
+      details: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    },
+    500
+  );
+});
+
 /** Authentication middleware
  * Extracts session from request headers and attaches user/session to context
  * All routes can access c.get("user") and c.get("session")
