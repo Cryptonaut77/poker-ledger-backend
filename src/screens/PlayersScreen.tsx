@@ -14,7 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, ChevronDown, ChevronRight, Trash2, DollarSign, Pencil } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type {
   GetActiveGameResponse,
@@ -81,8 +81,11 @@ const PlayersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[Players] Error adding transaction:", error.message);
-      Alert.alert("Error", "Failed to add transaction. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to add transaction. Please try again.";
+      console.error("[Players] Error adding transaction:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });

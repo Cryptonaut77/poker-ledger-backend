@@ -14,7 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, CheckCircle, Circle, Edit3, ChevronDown, ChevronRight, DollarSign, Wallet } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type {
   GetActiveGameResponse,
@@ -347,8 +347,12 @@ const DealersScreen = ({ navigation }: Props) => {
       resetForm();
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
-    onError: (error) => {
-      console.error("[DealersScreen] Failed to add dealer down:", error);
+    onError: (error: Error) => {
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to add dealer down. Please try again.";
+      console.error("[DealersScreen] Failed to add dealer down:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -388,8 +392,11 @@ const DealersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[DealersScreen] Failed to mark tips as paid:", error.message);
-      Alert.alert("Error", "Failed to mark tips as paid. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to mark tips as paid. Please try again.";
+      console.error("[DealersScreen] Failed to mark tips as paid:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -403,8 +410,11 @@ const DealersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[DealersScreen] Failed to mark tips as unpaid:", error.message);
-      Alert.alert("Error", "Failed to mark tips as unpaid. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to mark tips as unpaid. Please try again.";
+      console.error("[DealersScreen] Failed to mark tips as unpaid:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -418,8 +428,11 @@ const DealersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[DealersScreen] Failed to claim rake:", error.message);
-      Alert.alert("Error", "Failed to claim rake. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to claim rake. Please try again.";
+      console.error("[DealersScreen] Failed to claim rake:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -433,8 +446,11 @@ const DealersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[DealersScreen] Failed to unclaim rake:", error.message);
-      Alert.alert("Error", "Failed to unclaim rake. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to unclaim rake. Please try again.";
+      console.error("[DealersScreen] Failed to unclaim rake:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });

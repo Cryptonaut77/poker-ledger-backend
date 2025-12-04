@@ -13,6 +13,54 @@ import { fetch } from "expo/fetch";
 import { authClient } from "./authClient";
 
 /**
+ * Error types to help identify the source of problems
+ */
+export type ApiErrorType =
+  | "NETWORK_ERROR"      // Can't reach the server (sandbox down, no internet)
+  | "SERVER_ERROR"       // Server returned 500+ (backend code issue)
+  | "VALIDATION_ERROR"   // Server returned 400 (bad request data)
+  | "NOT_FOUND"          // Server returned 404 (missing resource)
+  | "AUTH_ERROR"         // Server returned 401/403 (authentication issue)
+  | "UNKNOWN_ERROR";     // Something unexpected happened
+
+/**
+ * Custom API Error with type classification
+ */
+export class ApiError extends Error {
+  type: ApiErrorType;
+  statusCode?: number;
+  details?: string;
+
+  constructor(type: ApiErrorType, message: string, statusCode?: number, details?: string) {
+    super(message);
+    this.name = "ApiError";
+    this.type = type;
+    this.statusCode = statusCode;
+    this.details = details;
+  }
+
+  /**
+   * Get a user-friendly error message based on error type
+   */
+  getUserMessage(): string {
+    switch (this.type) {
+      case "NETWORK_ERROR":
+        return "Unable to connect to server. This is likely a temporary issue with the Vibecode sandbox. Please wait a moment and try again.";
+      case "SERVER_ERROR":
+        return `Server error (code ${this.statusCode}). This may be a bug in the app code. Details: ${this.details || "No details available"}`;
+      case "VALIDATION_ERROR":
+        return `Invalid data submitted. ${this.details || "Please check your input and try again."}`;
+      case "NOT_FOUND":
+        return "The requested data was not found. It may have been deleted.";
+      case "AUTH_ERROR":
+        return "Authentication error. Please restart the app.";
+      default:
+        return `An unexpected error occurred: ${this.message}`;
+    }
+  }
+}
+
+/**
  * Backend URL Configuration
  *
  * The backend URL is dynamically set by the Vibecode environment at runtime.
@@ -80,21 +128,66 @@ const fetchFn = async <T>(path: string, options: FetchOptions): Promise<T> => {
     // Step 3: Error handling - Check if the response was successful
     if (!response.ok) {
       // Parse the error details from the response body
-      const errorData = await response.json();
-      // Throw a descriptive error with status code, status text, and server error data
-      throw new Error(
-        `[api.ts]: ${response.status} ${response.statusText} ${JSON.stringify(errorData)}`,
-      );
+      let errorData: any = {};
+      try {
+        errorData = await response.json();
+      } catch {
+        // Response might not be JSON
+      }
+
+      // Classify the error based on status code
+      const status = response.status;
+      let errorType: ApiErrorType;
+
+      if (status === 400) {
+        errorType = "VALIDATION_ERROR";
+      } else if (status === 401 || status === 403) {
+        errorType = "AUTH_ERROR";
+      } else if (status === 404) {
+        errorType = "NOT_FOUND";
+      } else if (status >= 500) {
+        errorType = "SERVER_ERROR";
+      } else {
+        errorType = "UNKNOWN_ERROR";
+      }
+
+      const details = errorData?.error || errorData?.message || JSON.stringify(errorData);
+      console.error(`[API ${errorType}] ${method} ${path} - Status ${status}: ${details}`);
+
+      throw new ApiError(errorType, `${method} ${path} failed`, status, details);
     }
 
     // Step 4: Parse and return the successful response as JSON
     // The response is cast to the expected type T for type safety
     return response.json() as Promise<T>;
   } catch (error: any) {
-    // Log the error for debugging purposes
-    console.log(`[api.ts]: ${error}`);
-    // Re-throw the error so the calling code can handle it appropriately
-    throw error;
+    // If it's already an ApiError, re-throw it
+    if (error instanceof ApiError) {
+      throw error;
+    }
+
+    // Check if this is a network error (can't reach server)
+    const isNetworkError =
+      error.message?.includes("Network request failed") ||
+      error.message?.includes("Failed to fetch") ||
+      error.message?.includes("network") ||
+      error.message?.includes("ECONNREFUSED") ||
+      error.message?.includes("timeout") ||
+      error.name === "TypeError";
+
+    if (isNetworkError) {
+      console.error(`[API NETWORK_ERROR] ${method} ${path} - ${error.message}`);
+      throw new ApiError(
+        "NETWORK_ERROR",
+        "Cannot connect to server",
+        undefined,
+        error.message
+      );
+    }
+
+    // Unknown error
+    console.error(`[API UNKNOWN_ERROR] ${method} ${path} - ${error.message}`);
+    throw new ApiError("UNKNOWN_ERROR", error.message);
   }
 };
 

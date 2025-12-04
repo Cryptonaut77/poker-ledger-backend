@@ -122,6 +122,16 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **DealerDown** - Dealer tips and rake per down
 - **Expense** - Tracked expenses by category
 
+### Error Handling
+The app includes intelligent error classification to help identify issues:
+- **Network Errors**: "Unable to connect to server" - indicates sandbox/connectivity issues
+- **Server Errors**: Includes error code and details - indicates potential code bugs
+- **Validation Errors**: Invalid data submitted - indicates user input issues
+- **Not Found Errors**: Data was deleted or doesn't exist
+- **Auth Errors**: Authentication problems - restart app to fix
+
+This helps distinguish between temporary infrastructure issues (Vibecode sandbox) and actual app bugs.
+
 ## Design
 
 The app features a sophisticated poker room aesthetic:

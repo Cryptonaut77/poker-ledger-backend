@@ -14,7 +14,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, X, Trash2, Edit2 } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
-import { api } from "@/lib/api";
+import { api, ApiError } from "@/lib/api";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type {
   GetActiveGameResponse,
@@ -67,8 +67,11 @@ const ExpensesScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[ExpensesScreen] Failed to add expense:", error.message);
-      Alert.alert("Error", "Failed to add expense. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to add expense. Please try again.";
+      console.error("[ExpensesScreen] Failed to add expense:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -86,8 +89,11 @@ const ExpensesScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      console.error("[ExpensesScreen] Failed to update expense:", error.message);
-      Alert.alert("Error", "Failed to update expense. Please try again.");
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to update expense. Please try again.";
+      console.error("[ExpensesScreen] Failed to update expense:", errorMessage);
+      Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
