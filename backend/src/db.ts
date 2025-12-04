@@ -20,7 +20,8 @@ async function initSqlitePragmas(prisma: PrismaClient) {
   await prisma.$queryRawUnsafe("PRAGMA journal_mode = WAL;");
   await prisma.$queryRawUnsafe("PRAGMA foreign_keys = ON;");
   await prisma.$queryRawUnsafe("PRAGMA busy_timeout = 10000;");
-  await prisma.$queryRawUnsafe("PRAGMA synchronous = NORMAL;");
+  // FULL sync mode ensures data is written to disk immediately - prevents data loss on crashes
+  await prisma.$queryRawUnsafe("PRAGMA synchronous = FULL;");
   await prisma.$queryRawUnsafe("PRAGMA cache_size = -32768;");
   await prisma.$queryRawUnsafe("PRAGMA temp_store = MEMORY;");
   await prisma.$queryRawUnsafe("PRAGMA optimize;");
