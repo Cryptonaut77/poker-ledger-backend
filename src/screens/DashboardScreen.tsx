@@ -39,7 +39,13 @@ const DashboardScreen = ({ navigation }: Props) => {
     queryKey: ["gameSummary", sessionId],
     queryFn: () => api.get<GameSummary>(`/api/game/${sessionId}/summary`),
     enabled: !!sessionId,
-    retry: 5,
+    retry: (failureCount, error) => {
+      // Don't retry on 404 errors (session not found)
+      if (error && typeof error === "object" && "status" in error && error.status === 404) {
+        return false;
+      }
+      return failureCount < 3;
+    },
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     staleTime: 30000,
   });
@@ -82,12 +88,21 @@ const DashboardScreen = ({ navigation }: Props) => {
   // Delete game mutation
   const deleteGameMutation = useMutation({
     mutationFn: () => api.delete(`/api/game/${sessionId}`),
+    onMutate: async () => {
+      // Cancel any outgoing queries for the session being deleted
+      await queryClient.cancelQueries({ queryKey: ["gameSummary", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["playerTransactions", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["dealerDowns", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["expenses", sessionId] });
+    },
     onSuccess: () => {
+      // Remove the deleted session's cached data
+      queryClient.removeQueries({ queryKey: ["gameSummary", sessionId] });
+      queryClient.removeQueries({ queryKey: ["playerTransactions", sessionId] });
+      queryClient.removeQueries({ queryKey: ["dealerDowns", sessionId] });
+      queryClient.removeQueries({ queryKey: ["expenses", sessionId] });
+      // Invalidate to get fresh data
       queryClient.invalidateQueries({ queryKey: ["activeGame"] });
-      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
-      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
-      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
-      queryClient.invalidateQueries({ queryKey: ["expenses"] });
       setManageModalVisible(false);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
@@ -96,12 +111,21 @@ const DashboardScreen = ({ navigation }: Props) => {
   // Start new game mutation
   const startNewGameMutation = useMutation({
     mutationFn: () => api.post("/api/game/new", {}),
+    onMutate: async () => {
+      // Cancel any outgoing queries for the old session
+      await queryClient.cancelQueries({ queryKey: ["gameSummary", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["playerTransactions", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["dealerDowns", sessionId] });
+      await queryClient.cancelQueries({ queryKey: ["expenses", sessionId] });
+    },
     onSuccess: () => {
+      // Remove old session's cached data
+      queryClient.removeQueries({ queryKey: ["gameSummary", sessionId] });
+      queryClient.removeQueries({ queryKey: ["playerTransactions", sessionId] });
+      queryClient.removeQueries({ queryKey: ["dealerDowns", sessionId] });
+      queryClient.removeQueries({ queryKey: ["expenses", sessionId] });
+      // Invalidate to get fresh data
       queryClient.invalidateQueries({ queryKey: ["activeGame"] });
-      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
-      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
-      queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
-      queryClient.invalidateQueries({ queryKey: ["expenses"] });
       setManageModalVisible(false);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
