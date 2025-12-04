@@ -265,11 +265,15 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)}`);
 
+  // Return clean session object without nested relations to match contract
   return c.json({
     session: {
-      ...session,
+      id: session.id,
+      name: session.name,
+      tableName: session.tableName,
       startedAt: session.startedAt.toISOString(),
       endedAt: session.endedAt?.toISOString() ?? null,
+      isActive: session.isActive,
       createdAt: session.createdAt.toISOString(),
       updatedAt: session.updatedAt.toISOString(),
     },
