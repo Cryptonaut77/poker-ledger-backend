@@ -223,6 +223,16 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Enhanced Error Handling & Logging (Dec 4, 2024)
+Improved error handling and debugging for dealer down operations:
+- **Better 502 error handling**: 502 Bad Gateway errors now classified as NETWORK_ERROR instead of SERVER_ERROR
+- **Enhanced logging**: Added detailed console logs throughout the dealer down submission flow
+- **Better user feedback**: More specific error messages and validation alerts
+- **Session validation**: Improved session ID validation with clearer error messages
+- **Mutation logging**: Added detailed logging to track mutation lifecycle (called, successful, failed)
+- **Error details**: Error messages now include full details for easier debugging
+- These improvements help identify whether errors are due to network/proxy issues or actual app bugs
+
 ### Backend Error Handling Improvement (Dec 4, 2024)
 Enhanced backend error handling to provide better debugging information:
 - **Global error handler**: Added comprehensive error handler to Hono app that logs errors and returns proper JSON responses
@@ -230,7 +240,6 @@ Enhanced backend error handling to provide better debugging information:
 - **Better error messages**: Backend now returns specific error messages (e.g., "Game session not found") instead of generic "Internal Server Error"
 - **Improved debugging**: All errors are now logged with full stack traces in development mode
 - **Frontend compatibility**: Error handling integrates with existing ApiError class for user-friendly error messages
-- This fix resolves the 502 error that occurred when trying to add dealer downs with invalid session IDs
 
 ### Button Reliability Fix (Dec 3, 2024)
 Fixed a critical issue where input buttons (Player Buy-in, Dealer Down, etc.) would stop working during live game tracking:

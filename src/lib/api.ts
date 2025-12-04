@@ -145,6 +145,9 @@ const fetchFn = async <T>(path: string, options: FetchOptions): Promise<T> => {
         errorType = "AUTH_ERROR";
       } else if (status === 404) {
         errorType = "NOT_FOUND";
+      } else if (status === 502) {
+        // 502 Bad Gateway - typically means the backend server is not responding
+        errorType = "NETWORK_ERROR";
       } else if (status >= 500) {
         errorType = "SERVER_ERROR";
       } else {

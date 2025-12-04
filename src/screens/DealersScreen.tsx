@@ -339,8 +339,12 @@ const DealersScreen = ({ navigation }: Props) => {
 
   // Add dealer down mutation
   const addDownMutation = useMutation({
-    mutationFn: (data: AddDealerDownRequest) => api.post("/api/dealers/down", data),
+    mutationFn: (data: AddDealerDownRequest) => {
+      console.log("[DealersScreen] Mutation function called with data:", data);
+      return api.post("/api/dealers/down", data);
+    },
     onSuccess: () => {
+      console.log("[DealersScreen] Mutation successful");
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       setModalVisible(false);
@@ -351,7 +355,9 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to add dealer down. Please try again.";
-      console.error("[DealersScreen] Failed to add dealer down:", errorMessage);
+      console.error("[DealersScreen] Mutation failed:", error);
+      console.error("[DealersScreen] Error message:", errorMessage);
+      console.error("[DealersScreen] Error details:", error instanceof ApiError ? error.details : "N/A");
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
@@ -474,7 +480,8 @@ const DealersScreen = ({ navigation }: Props) => {
     console.log("[DealersScreen] handleSubmit called", { dealerName, tips, rake, sessionId });
 
     if (!dealerName.trim()) {
-      console.log("[DealersScreen] No dealer name, returning");
+      console.log("[DealersScreen] No dealer name, showing alert");
+      Alert.alert("Missing Information", "Please enter a dealer name");
       return;
     }
 
@@ -485,14 +492,15 @@ const DealersScreen = ({ navigation }: Props) => {
       try {
         const result = await refetchGame();
         currentSessionId = result.data?.session?.id;
+        console.log("[DealersScreen] Refetched sessionId:", currentSessionId);
       } catch (e) {
         console.error("[DealersScreen] Failed to refetch game session:", e);
       }
     }
 
     if (!currentSessionId) {
-      console.log("[DealersScreen] No sessionId after refetch, showing error");
-      Alert.alert("Error", "No active game session. Please restart the app.");
+      console.error("[DealersScreen] No sessionId after refetch, showing error");
+      Alert.alert("Error", "No active game session found. Please try refreshing the app.");
       return;
     }
 
@@ -500,23 +508,21 @@ const DealersScreen = ({ navigation }: Props) => {
     const numRake = parseFloat(rake) || 0;
 
     if (numTips < 0 || numRake < 0) {
-      console.log("[DealersScreen] Invalid tips/rake values, returning");
+      console.log("[DealersScreen] Invalid tips/rake values");
+      Alert.alert("Invalid Amount", "Tips and rake must be positive numbers");
       return;
     }
 
-    console.log("[DealersScreen] Calling addDownMutation.mutate", {
+    const requestData = {
       dealerName: dealerName.trim(),
       tips: numTips,
       rake: numRake,
       gameSessionId: currentSessionId,
-    });
+    };
 
-    addDownMutation.mutate({
-      dealerName: dealerName.trim(),
-      tips: numTips,
-      rake: numRake,
-      gameSessionId: currentSessionId,
-    });
+    console.log("[DealersScreen] Submitting dealer down:", requestData);
+
+    addDownMutation.mutate(requestData);
   };
 
   const handleUpdate = () => {
