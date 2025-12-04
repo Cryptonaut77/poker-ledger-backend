@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 128ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 202ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1409.00ms]
+Checked 761 installs across 703 packages (no changes) [1.51s]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -81,88 +81,15 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Failed to find Response internal state key
-✅ Environment variables validated successfully
-🔐 [Auth] Initializing Better Auth...
-✅ [Auth] Better Auth initialized
-🔗 [Auth] Base URL: https://preview-vgkkojflguoe.share.sandbox.dev
-🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-vgkkojflguoe.share.sandbox.dev
-🔧 Initializing Hono application...
-🔐 Mounting Better Auth handler at /api/auth/*
-🎮 Mounting game routes at /api/game
-💰 Mounting player routes at /api/players
-🎲 Mounting dealer routes at /api/dealers
-💸 Mounting expense routes at /api/expenses
-⚙️  Starting server...
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📍 Environment: development
-🚀 Server is running on port 3000
-🔗 Base URL: http://localhost:3000
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-📚 Available endpoints:
-  🔐 Auth:     /api/auth/*
-  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
-  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
-  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
-  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
-  💚 Health:   GET /health
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 <-- GET /api/game/active
 🎮 [Game] Getting active game session
-🎮 [Game] Found active session: cmiohbloq0000m2i5upsn0f6r
+🎮 [Game] Found active session: cmiqr6u5i0002m20s16m973n7
 --> GET /api/game/active [32m200[0m 4ms
-<-- GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary
-🎮 [Game] Getting summary for session: cmiohbloq0000m2i5upsn0f6r
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00
---> GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary [32m200[0m 3ms
-<-- GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Getting transactions for session: cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Found 1 transactions
---> GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r [32m200[0m 2ms
-<-- GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Getting transactions for session: cmiohbloq0000m2i5upsn0f6r
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-💰 [Players] Found 1 transactions
---> GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r [32m200[0m 3ms
-🎮 [Game] Found active session: cmiohbloq0000m2i5upsn0f6r
---> GET /api/game/active [32m200[0m 3ms
-<-- POST /api/players/transaction
-💰 [Players] Adding buy-in for O: $500
-💰 [Players] Transaction created: cmiqr6gbt0001m20s76gximg9
---> POST /api/players/transaction [32m200[0m 9ms
-<-- GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Getting transactions for session: cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Found 2 transactions
---> GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r [32m200[0m 2ms
-<-- GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary
-🎮 [Game] Getting summary for session: cmiohbloq0000m2i5upsn0f6r
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00
---> GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary [32m200[0m 2ms
-<-- DELETE /api/game/cmiohbloq0000m2i5upsn0f6r
-🎮 [Game] Deleting session: cmiohbloq0000m2i5upsn0f6r
-🎮 [Game] Session deleted: cmiohbloq0000m2i5upsn0f6r
---> DELETE /api/game/cmiohbloq0000m2i5upsn0f6r [32m200[0m 2ms
-<-- GET /api/game/active
-🎮 [Game] Getting active game session
-🎮 [Game] No active session found, creating new one
-🎮 [Game] Created new session: cmiqr6u5i0002m20s16m973n7
---> GET /api/game/active [32m200[0m 2ms
-<-- GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary
-🎮 [Game] Getting summary for session: cmiohbloq0000m2i5upsn0f6r
-❌ [Game] Session not found: cmiohbloq0000m2i5upsn0f6r
---> GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary [33m404[0m 1ms
-<-- GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Getting transactions for session: cmiohbloq0000m2i5upsn0f6r
-💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r [32m200[0m 1ms
 <-- GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7
 💰 [Players] Getting transactions for session: cmiqr6u5i0002m20s16m973n7
 💰 [Players] Found 0 transactions
---> GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7 [32m200[0m 1ms
+--> GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7 [32m200[0m 2ms
 <-- GET /api/game/cmiqr6u5i0002m20s16m973n7/summary
 🎮 [Game] Getting summary for session: cmiqr6u5i0002m20s16m973n7
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
---> GET /api/game/cmiqr6u5i0002m20s16m973n7/summary [32m200[0m 1ms
+--> GET /api/game/cmiqr6u5i0002m20s16m973n7/summary [32m200[0m 4ms
