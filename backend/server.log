@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 116ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 113ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
 Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [2.08s]
+Checked 761 installs across 703 packages (no changes) [1317.00ms]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -53,3 +53,43 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-vgkkojflguoe.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-vgkkojflguoe.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<-- GET /api/game/active
+🎮 [Game] Getting active game session
+🎮 [Game] Found active session: cmiohbloq0000m2i5upsn0f6r
+--> GET /api/game/active [32m200[0m 5ms
+<-- GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary
+🎮 [Game] Getting summary for session: cmiohbloq0000m2i5upsn0f6r
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
+--> GET /api/game/cmiohbloq0000m2i5upsn0f6r/summary [32m200[0m 3ms
+<-- GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r
+💰 [Players] Getting transactions for session: cmiohbloq0000m2i5upsn0f6r
+💰 [Players] Found 0 transactions
+--> GET /api/players/transactions/cmiohbloq0000m2i5upsn0f6r [32m200[0m 2ms
