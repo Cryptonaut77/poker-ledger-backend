@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 218ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 214ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
 Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1489.00ms]
+Checked 761 installs across 703 packages (no changes) [1.57s]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -25,6 +25,34 @@ Datasource "db": SQLite database "dev.db" at "file:dev.db"
 No pending migrations to apply.
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-gllejmtweppq.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-gllejmtweppq.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 Failed to find Response internal state key
 ✅ Environment variables validated successfully
 🔐 [Auth] Initializing Better Auth...
@@ -97,11 +125,35 @@ Failed to find Response internal state key
 🎮 [Game] Request method: GET
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
 ✅ [RESPONSE] GET http://40.65.92.130:3000/api/game/cmiqr6u5i0002m20s16m973n7/summary - Status: 200
---> GET /api/game/cmiqr6u5i0002m20s16m973n7/summary [32m200[0m 3ms
+--> GET /api/game/cmiqr6u5i0002m20s16m973n7/summary [32m200[0m 2ms
 <-- GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7
 📨 [REQUEST] GET http://40.65.92.130:3000/api/players/transactions/cmiqr6u5i0002m20s16m973n7
 📨 [REQUEST] Path: /api/players/transactions/cmiqr6u5i0002m20s16m973n7
 💰 [Players] Getting transactions for session: cmiqr6u5i0002m20s16m973n7
 💰 [Players] Found 0 transactions
 ✅ [RESPONSE] GET http://40.65.92.130:3000/api/players/transactions/cmiqr6u5i0002m20s16m973n7 - Status: 200
---> GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7 [32m200[0m 2ms
+--> GET /api/players/transactions/cmiqr6u5i0002m20s16m973n7 [32m200[0m 1ms
+<-- GET /api/game/cmiqr6u5i0002m20s16m973n7/summary
+📨 [REQUEST] GET http://40.65.92.130:3000/api/game/cmiqr6u5i0002m20s16m973n7/summary
+📨 [REQUEST] Path: /api/game/cmiqr6u5i0002m20s16m973n7/summary
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmiqr6u5i0002m20s16m973n7
+🎮 [Game] Request URL: http://40.65.92.130:3000/api/game/cmiqr6u5i0002m20s16m973n7/summary
+🎮 [Game] Request method: GET
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00
+✅ [RESPONSE] GET http://40.65.92.130:3000/api/game/cmiqr6u5i0002m20s16m973n7/summary - Status: 200
+--> GET /api/game/cmiqr6u5i0002m20s16m973n7/summary [32m200[0m 2ms
+<-- GET /api/dealers/downs/cmiqr6u5i0002m20s16m973n7
+📨 [REQUEST] GET http://40.65.92.130:3000/api/dealers/downs/cmiqr6u5i0002m20s16m973n7
+📨 [REQUEST] Path: /api/dealers/downs/cmiqr6u5i0002m20s16m973n7
+🎲 [Dealers] Getting downs for session: cmiqr6u5i0002m20s16m973n7
+<-- GET /api/game/active
+📨 [REQUEST] GET http://40.65.92.130:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🎮 [Game] Getting active game session
+🎲 [Dealers] Found 10 dealer downs
+✅ [RESPONSE] GET http://40.65.92.130:3000/api/dealers/downs/cmiqr6u5i0002m20s16m973n7 - Status: 200
+--> GET /api/dealers/downs/cmiqr6u5i0002m20s16m973n7 [32m200[0m 3ms
+🎮 [Game] Found active session: cmiqr6u5i0002m20s16m973n7
+✅ [RESPONSE] GET http://40.65.92.130:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 1ms
