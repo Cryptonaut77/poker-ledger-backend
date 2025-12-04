@@ -28,7 +28,7 @@ const DashboardScreen = ({ navigation }: Props) => {
   // Safe session ID extraction with null check
   const sessionId = gameData?.session?.id;
 
-  // Fetch game summary
+  // Fetch game summary with retry for network resilience
   const {
     data: summary,
     isLoading: isLoadingSummary,
@@ -38,6 +38,9 @@ const DashboardScreen = ({ navigation }: Props) => {
     queryKey: ["gameSummary", sessionId],
     queryFn: () => api.get<GameSummary>(`/api/game/${sessionId}/summary`),
     enabled: !!sessionId,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    staleTime: 30000,
   });
 
   // Fetch player transactions to calculate payment method breakdown
@@ -45,6 +48,8 @@ const DashboardScreen = ({ navigation }: Props) => {
     queryKey: ["playerTransactions", sessionId],
     queryFn: () => api.get<GetPlayerTransactionsResponse>(`/api/players/transactions/${sessionId}`),
     enabled: !!sessionId,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 
   // Calculate buy-ins by payment method
