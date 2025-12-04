@@ -34,11 +34,12 @@ const DashboardScreen = ({ navigation }: Props) => {
     isLoading: isLoadingSummary,
     refetch,
     isRefetching,
+    error: summaryError,
   } = useQuery({
     queryKey: ["gameSummary", sessionId],
     queryFn: () => api.get<GameSummary>(`/api/game/${sessionId}/summary`),
     enabled: !!sessionId,
-    retry: 3,
+    retry: 5,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
     staleTime: 30000,
   });
@@ -48,7 +49,7 @@ const DashboardScreen = ({ navigation }: Props) => {
     queryKey: ["playerTransactions", sessionId],
     queryFn: () => api.get<GetPlayerTransactionsResponse>(`/api/players/transactions/${sessionId}`),
     enabled: !!sessionId,
-    retry: 3,
+    retry: 5,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 

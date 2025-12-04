@@ -16,6 +16,15 @@ const app = new Hono<AppType>();
 
 console.log("🔧 Initializing Hono application...");
 app.use("*", logger());
+
+// Add custom request logger to debug 502 issues
+app.use("*", async (c, next) => {
+  console.log(`📨 [REQUEST] ${c.req.method} ${c.req.url}`);
+  console.log(`📨 [REQUEST] Path: ${c.req.path}`);
+  await next();
+  console.log(`✅ [RESPONSE] ${c.req.method} ${c.req.url} - Status: ${c.res.status}`);
+});
+
 app.use(
   "/*",
   cors({

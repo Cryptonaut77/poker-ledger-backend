@@ -123,12 +123,14 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **Expense** - Tracked expenses by category
 
 ### Error Handling
-The app includes intelligent error classification to help identify issues:
+The app includes intelligent error classification and automatic retry logic:
 - **Network Errors**: "Unable to connect to server" - indicates sandbox/connectivity issues
 - **Server Errors**: Includes error code and details - indicates potential code bugs
 - **Validation Errors**: Invalid data submitted - indicates user input issues
 - **Not Found Errors**: Data was deleted or doesn't exist
 - **Auth Errors**: Authentication problems - restart app to fix
+
+**Automatic Retry**: All API requests automatically retry up to 5 times with exponential backoff (1s, 2s, 4s, 8s, 10s) to handle temporary network issues like 502 errors from the Vibecode proxy.
 
 This helps distinguish between temporary infrastructure issues (Vibecode sandbox) and actual app bugs.
 

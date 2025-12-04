@@ -155,7 +155,12 @@ const fetchFn = async <T>(path: string, options: FetchOptions): Promise<T> => {
       }
 
       const details = errorData?.error || errorData?.message || JSON.stringify(errorData);
-      console.error(`[API ${errorType}] ${method} ${path} - Status ${status}: ${details}`);
+
+      // Only log errors that aren't going to be retried (React Query handles retries)
+      // This reduces noise in the console for temporary 502 errors
+      if (status !== 502) {
+        console.error(`[API ${errorType}] ${method} ${path} - Status ${status}: ${details}`);
+      }
 
       throw new ApiError(errorType, `${method} ${path} failed`, status, details);
     }

@@ -204,7 +204,10 @@ gameRouter.post("/new", async (c) => {
 // ============================================
 gameRouter.get("/:sessionId/summary", async (c) => {
   const sessionId = c.req.param("sessionId");
+  console.log(`🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============`);
   console.log(`🎮 [Game] Getting summary for session: ${sessionId}`);
+  console.log(`🎮 [Game] Request URL: ${c.req.url}`);
+  console.log(`🎮 [Game] Request method: ${c.req.method}`);
 
   const session = await db.gameSession.findUnique({
     where: { id: sessionId },
