@@ -2,8 +2,8 @@ import { createMiddleware } from "hono/factory";
 import { type AppType } from "../types";
 import { db } from "../db";
 
-// DEV MODE: Skip authentication for development
-const DEV_SKIP_AUTH = true;
+// Set to false for production - requires user authentication
+const DEV_SKIP_AUTH = false;
 const DEV_USER_EMAIL = "dev@example.com";
 
 /**

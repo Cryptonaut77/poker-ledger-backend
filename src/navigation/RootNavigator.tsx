@@ -20,8 +20,8 @@ import { useSession } from "@/lib/useSession";
  */
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const RootNavigator = () => {
-  // DEV MODE: Skip authentication for development
-  const DEV_SKIP_AUTH = true;
+  // Set to false for production - requires user authentication
+  const DEV_SKIP_AUTH = false;
 
   const { data: session, isPending } = useSession();
 
