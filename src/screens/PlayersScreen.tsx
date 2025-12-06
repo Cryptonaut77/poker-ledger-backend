@@ -661,13 +661,13 @@ const PlayerCard = ({
         <View className="flex-row gap-2">
           <View className="flex-1 bg-slate-800 rounded-lg p-3">
             <Text className="text-slate-400 text-xs mb-1">Buy-ins</Text>
-            <Text className="text-emerald-400 text-base font-bold">
+            <Text className="text-blue-400 text-base font-bold">
               {formatCurrency(player.totalBuyIns)}
             </Text>
           </View>
           <View className="flex-1 bg-slate-800 rounded-lg p-3">
             <Text className="text-slate-400 text-xs mb-1">Cashouts</Text>
-            <Text className="text-red-400 text-base font-bold">
+            <Text className={`text-base font-bold ${player.netAmount < 0 ? "text-emerald-400" : "text-red-400"}`}>
               {formatCurrency(player.totalCashouts)}
             </Text>
           </View>
@@ -681,7 +681,25 @@ const PlayerCard = ({
       {/* Transaction Details (expandable) */}
       {isExpanded && (
         <View className="border-t border-slate-800 bg-slate-950/50">
-          {player.transactions.map((transaction, index) => (
+          {player.transactions.map((transaction, index) => {
+            // Determine color for transaction
+            // Buy-ins are blue, cashouts are green (win) or red (loss)
+            const isBuyIn = transaction.type === "buy-in";
+            const isWin = player.netAmount < 0; // Negative net means player won (cashed out more)
+
+            const badgeBgColor = isBuyIn
+              ? "rgba(59, 130, 246, 0.2)" // blue for buy-in
+              : isWin
+                ? "rgba(16, 185, 129, 0.2)" // green for win
+                : "rgba(239, 68, 68, 0.2)"; // red for loss
+
+            const textColorClass = isBuyIn
+              ? "text-blue-400"
+              : isWin
+                ? "text-emerald-400"
+                : "text-red-400";
+
+            return (
             <View
               key={transaction.id}
               className={`px-4 py-3 ${
@@ -694,16 +712,11 @@ const PlayerCard = ({
                     <View
                       className="px-2 py-1 rounded"
                       style={{
-                        backgroundColor:
-                          transaction.type === "buy-in"
-                            ? "rgba(16, 185, 129, 0.2)"
-                            : "rgba(239, 68, 68, 0.2)",
+                        backgroundColor: badgeBgColor,
                       }}
                     >
                       <Text
-                        className={`text-[10px] font-bold ${
-                          transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
-                        }`}
+                        className={`text-[10px] font-bold ${textColorClass}`}
                       >
                         {transaction.type.toUpperCase()}
                       </Text>
@@ -732,9 +745,7 @@ const PlayerCard = ({
                 </View>
                 <View className="flex-row items-center gap-2">
                   <Text
-                    className={`text-lg font-bold ${
-                      transaction.type === "buy-in" ? "text-emerald-400" : "text-red-400"
-                    }`}
+                    className={`text-lg font-bold ${textColorClass}`}
                   >
                     {formatCurrency(transaction.amount)}
                   </Text>
@@ -750,7 +761,7 @@ const PlayerCard = ({
                 </View>
               </View>
             </View>
-          ))}
+          )})}
         </View>
       )}
     </View>
