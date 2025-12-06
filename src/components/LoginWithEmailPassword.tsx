@@ -3,12 +3,14 @@ import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Dices, Check, Eye, EyeOff } from "lucide-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 import { authClient } from "@/lib/authClient";
 import { useSession } from "@/lib/useSession";
 
 const REMEMBERED_EMAIL_KEY = "poker_remembered_email";
+const REMEMBERED_PASSWORD_KEY = "poker_remembered_password";
+const REMEMBER_CREDENTIALS_KEY = "poker_remember_credentials";
 
 export default function LoginWithEmailPassword() {
   const [email, setEmail] = useState("");
@@ -16,23 +18,32 @@ export default function LoginWithEmailPassword() {
   const [name, setName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [rememberEmail, setRememberEmail] = useState(true);
+  const [rememberCredentials, setRememberCredentials] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const { data: session } = useSession();
 
-  // Load remembered email on mount
+  // Load remembered credentials on mount
   useEffect(() => {
-    const loadRememberedEmail = async () => {
+    const loadRememberedCredentials = async () => {
       try {
-        const savedEmail = await AsyncStorage.getItem(REMEMBERED_EMAIL_KEY);
+        const savedEmail = await SecureStore.getItemAsync(REMEMBERED_EMAIL_KEY);
+        const savedPassword = await SecureStore.getItemAsync(REMEMBERED_PASSWORD_KEY);
+        const shouldRemember = await SecureStore.getItemAsync(REMEMBER_CREDENTIALS_KEY);
+
         if (savedEmail) {
           setEmail(savedEmail);
         }
+        if (savedPassword) {
+          setPassword(savedPassword);
+        }
+        if (shouldRemember !== null) {
+          setRememberCredentials(shouldRemember === "true");
+        }
       } catch (error) {
-        console.log("Failed to load remembered email:", error);
+        console.log("Failed to load remembered credentials:", error);
       }
     };
-    loadRememberedEmail();
+    loadRememberedCredentials();
   }, []);
 
   const handleSignIn = async () => {
@@ -43,11 +54,15 @@ export default function LoginWithEmailPassword() {
 
     setIsLoading(true);
     try {
-      // Save email if remember is enabled
-      if (rememberEmail) {
-        await AsyncStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+      // Save credentials if remember is enabled
+      if (rememberCredentials) {
+        await SecureStore.setItemAsync(REMEMBERED_EMAIL_KEY, email);
+        await SecureStore.setItemAsync(REMEMBERED_PASSWORD_KEY, password);
+        await SecureStore.setItemAsync(REMEMBER_CREDENTIALS_KEY, "true");
       } else {
-        await AsyncStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        await SecureStore.deleteItemAsync(REMEMBERED_EMAIL_KEY);
+        await SecureStore.deleteItemAsync(REMEMBERED_PASSWORD_KEY);
+        await SecureStore.setItemAsync(REMEMBER_CREDENTIALS_KEY, "false");
       }
 
       console.log("[Auth] Attempting sign in for:", email);
@@ -63,8 +78,6 @@ export default function LoginWithEmailPassword() {
       if (result.error) {
         console.log("[Auth] Sign in error:", result.error);
         Alert.alert("Sign In Failed", result.error.message || "Please check your credentials");
-      } else {
-        setPassword("");
       }
     } catch (error) {
       console.error("[Auth] Sign in exception:", error);
@@ -227,16 +240,16 @@ export default function LoginWithEmailPassword() {
                 </View>
               </View>
 
-              {/* Remember Email Checkbox */}
+              {/* Remember Credentials Checkbox */}
               {!isSignUp && (
                 <Pressable
-                  onPress={() => setRememberEmail(!rememberEmail)}
+                  onPress={() => setRememberCredentials(!rememberCredentials)}
                   className="flex-row items-center gap-3 py-2"
                 >
-                  <View className={`w-6 h-6 rounded border-2 items-center justify-center ${rememberEmail ? "bg-emerald-600 border-emerald-600" : "border-slate-500"}`}>
-                    {rememberEmail && <Check size={16} color="#fff" />}
+                  <View className={`w-6 h-6 rounded border-2 items-center justify-center ${rememberCredentials ? "bg-emerald-600 border-emerald-600" : "border-slate-500"}`}>
+                    {rememberCredentials && <Check size={16} color="#fff" />}
                   </View>
-                  <Text className="text-slate-300">Remember my email</Text>
+                  <Text className="text-slate-300">Remember my login</Text>
                 </Pressable>
               )}
             </View>
