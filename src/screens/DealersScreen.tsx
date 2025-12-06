@@ -355,9 +355,9 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to add dealer down. Please try again.";
-      console.error("[DealersScreen] Mutation failed:", error);
-      console.error("[DealersScreen] Error message:", errorMessage);
-      console.error("[DealersScreen] Error details:", error instanceof ApiError ? error.details : "N/A");
+      console.log("[DealersScreen] Mutation failed:", error?.message || String(error));
+      console.log("[DealersScreen] Error message:", errorMessage);
+      console.log("[DealersScreen] Error details:", error instanceof ApiError ? error.details : error?.message || "Unknown");
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
@@ -401,7 +401,7 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to mark tips as paid. Please try again.";
-      console.error("[DealersScreen] Failed to mark tips as paid:", errorMessage);
+      console.log("[DealersScreen] Failed to mark tips as paid:", error?.message || String(error));
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
@@ -419,7 +419,7 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to mark tips as unpaid. Please try again.";
-      console.error("[DealersScreen] Failed to mark tips as unpaid:", errorMessage);
+      console.log("[DealersScreen] Failed to mark tips as unpaid:", error?.message || String(error));
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
@@ -437,7 +437,7 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to claim rake. Please try again.";
-      console.error("[DealersScreen] Failed to claim rake:", errorMessage);
+      console.log("[DealersScreen] Failed to claim rake:", error?.message || String(error));
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
@@ -455,7 +455,7 @@ const DealersScreen = ({ navigation }: Props) => {
       const errorMessage = error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to unclaim rake. Please try again.";
-      console.error("[DealersScreen] Failed to unclaim rake:", errorMessage);
+      console.log("[DealersScreen] Failed to unclaim rake:", error?.message || String(error));
       Alert.alert("Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
