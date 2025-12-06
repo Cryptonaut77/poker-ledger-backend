@@ -620,6 +620,30 @@ const PlayerCard = ({
     });
     return Array.from(methods);
   }, [player.transactions]);
+
+  // Get the primary payment method (the one with highest buy-in total)
+  const primaryPaymentMethod = React.useMemo(() => {
+    const methodTotals: Record<string, number> = {};
+    player.transactions.forEach(t => {
+      if (t.type === "buy-in") {
+        methodTotals[t.paymentMethod] = (methodTotals[t.paymentMethod] || 0) + t.amount;
+      }
+    });
+
+    let maxMethod = "cash";
+    let maxAmount = 0;
+    Object.entries(methodTotals).forEach(([method, amount]) => {
+      if (amount > maxAmount) {
+        maxAmount = amount;
+        maxMethod = method;
+      }
+    });
+    return maxMethod;
+  }, [player.transactions]);
+
+  // Get the color for the net amount based on primary payment method
+  const netColor = paymentMethodColors[primaryPaymentMethod] || paymentMethodColors.cash;
+
   return (
     <View className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
       {/* Player Summary (always visible) */}
@@ -648,9 +672,8 @@ const PlayerCard = ({
           <View className="items-end">
             <Text className="text-slate-400 text-xs mb-1">Net</Text>
             <Text
-              className={`text-2xl font-bold ${
-                player.netAmount <= 0 ? "text-emerald-400" : "text-red-400"
-              }`}
+              className="text-2xl font-bold"
+              style={{ color: netColor }}
             >
               {formatCurrency(Math.abs(player.netAmount))}
             </Text>
