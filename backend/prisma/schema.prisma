@@ -9,16 +9,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  email         String    @unique
+  id            String        @id
+  email         String        @unique
   name          String?
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean       @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
   Profile       Profile?
   accounts      Account[]
   sessions      Session[]
+  gameSessions  GameSession[]
 
   @@map("user")
 }
@@ -83,6 +84,8 @@ model GameSession {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   tableName          String              @default("Main Table")
+  userId             String
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   dealerDowns        DealerDown[]
   expenses           Expense[]
   playerTransactions PlayerTransaction[]
