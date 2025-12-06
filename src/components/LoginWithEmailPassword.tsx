@@ -50,19 +50,25 @@ export default function LoginWithEmailPassword() {
         await AsyncStorage.removeItem(REMEMBERED_EMAIL_KEY);
       }
 
+      console.log("[Auth] Attempting sign in for:", email);
+      console.log("[Auth] Backend URL:", process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL);
+
       const result = await authClient.signIn.email({
         email,
         password,
       });
 
+      console.log("[Auth] Sign in result:", JSON.stringify(result, null, 2));
+
       if (result.error) {
+        console.log("[Auth] Sign in error:", result.error);
         Alert.alert("Sign In Failed", result.error.message || "Please check your credentials");
       } else {
         setPassword("");
       }
     } catch (error) {
-      Alert.alert("Error", "An unexpected error occurred");
-      console.error(error);
+      console.error("[Auth] Sign in exception:", error);
+      Alert.alert("Error", "An unexpected error occurred. Check logs for details.");
     } finally {
       setIsLoading(false);
     }
@@ -76,13 +82,19 @@ export default function LoginWithEmailPassword() {
 
     setIsLoading(true);
     try {
+      console.log("[Auth] Attempting sign up for:", email);
+      console.log("[Auth] Backend URL:", process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL);
+
       const result = await authClient.signUp.email({
         email,
         password,
         name,
       });
 
+      console.log("[Auth] Sign up result:", JSON.stringify(result, null, 2));
+
       if (result.error) {
+        console.log("[Auth] Sign up error:", result.error);
         Alert.alert("Sign Up Failed", result.error.message || "Please try again");
       } else {
         Alert.alert("Welcome!", "Your account has been created. You're now signed in.");
@@ -91,8 +103,8 @@ export default function LoginWithEmailPassword() {
         setName("");
       }
     } catch (error) {
-      Alert.alert("Error", "An unexpected error occurred");
-      console.error(error);
+      console.error("[Auth] Sign up exception:", error);
+      Alert.alert("Error", "An unexpected error occurred. Check logs for details.");
     } finally {
       setIsLoading(false);
     }
