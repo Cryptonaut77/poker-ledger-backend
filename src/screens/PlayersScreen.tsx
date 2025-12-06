@@ -413,7 +413,7 @@ const PlayersScreen = ({ navigation }: Props) => {
                           paymentMethod === method ? "text-white" : "text-slate-400"
                         }`}
                       >
-                        {method === "credit" ? "IOU" : method === "electronic" ? "Electronic" : "Cash"}
+                        {method === "credit" ? (transactionType === "cashout" ? "IOU" : "Credit") : method === "electronic" ? "Electronic" : "Cash"}
                       </Text>
                     </Pressable>
                   ))}
@@ -535,7 +535,7 @@ const PlayersScreen = ({ navigation }: Props) => {
                               paymentMethod === method ? "text-white" : "text-slate-400"
                             }`}
                           >
-                            {method === "credit" ? "IOU" : method === "electronic" ? "Electronic" : "Cash"}
+                            {method === "credit" ? (editingTransaction?.type === "cashout" ? "IOU" : "Credit") : method === "electronic" ? "Electronic" : "Cash"}
                           </Text>
                         </Pressable>
                       ))}
@@ -718,7 +718,7 @@ const PlayerCard = ({
                         className="text-[10px] font-medium"
                         style={{ color: paymentMethodColors[transaction.paymentMethod] }}
                       >
-                        {transaction.paymentMethod === "credit" ? "IOU" : transaction.paymentMethod === "electronic" ? "Electronic" : "Cash"}
+                        {transaction.paymentMethod === "credit" ? (transaction.type === "cashout" ? "IOU" : "Credit") : transaction.paymentMethod === "electronic" ? "Electronic" : "Cash"}
                       </Text>
                     </View>
                   </View>

@@ -33,7 +33,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
-- Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit)
+- Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit/IOU)
+- **Context-aware labels**: Buy-ins show "Credit" while cashouts show "IOU" for the same payment method
 - Track cashouts
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
