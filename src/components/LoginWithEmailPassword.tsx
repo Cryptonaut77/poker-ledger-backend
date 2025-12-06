@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Dices, Check, Square } from "lucide-react-native";
+import { Dices, Check, Eye, EyeOff } from "lucide-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { authClient } from "@/lib/authClient";
@@ -17,6 +17,7 @@ export default function LoginWithEmailPassword() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rememberEmail, setRememberEmail] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const { data: session } = useSession();
 
   // Load remembered email on mount
@@ -191,15 +192,27 @@ export default function LoginWithEmailPassword() {
 
               <View>
                 <Text className="text-sm font-medium mb-2 text-slate-300">Password</Text>
-                <TextInput
-                  value={password}
-                  onChangeText={setPassword}
-                  placeholder="Enter your password"
-                  placeholderTextColor="#64748b"
-                  secureTextEntry
-                  className="border border-slate-600 rounded-xl p-4 bg-slate-800 text-white"
-                  editable={!isLoading}
-                />
+                <View className="flex-row items-center border border-slate-600 rounded-xl bg-slate-800">
+                  <TextInput
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#64748b"
+                    secureTextEntry={!showPassword}
+                    className="flex-1 p-4 text-white"
+                    editable={!isLoading}
+                  />
+                  <Pressable
+                    onPress={() => setShowPassword(!showPassword)}
+                    className="px-4 py-4"
+                  >
+                    {showPassword ? (
+                      <EyeOff size={20} color="#94a3b8" />
+                    ) : (
+                      <Eye size={20} color="#94a3b8" />
+                    )}
+                  </Pressable>
+                </View>
               </View>
 
               {/* Remember Email Checkbox */}
