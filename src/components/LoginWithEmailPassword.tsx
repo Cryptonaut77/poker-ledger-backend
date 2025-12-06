@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Dices } from "lucide-react-native";
+import { Dices, Check, Square } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { authClient } from "@/lib/authClient";
 import { useSession } from "@/lib/useSession";
+
+const REMEMBERED_EMAIL_KEY = "poker_remembered_email";
 
 export default function LoginWithEmailPassword() {
   const [email, setEmail] = useState("");
@@ -13,7 +16,23 @@ export default function LoginWithEmailPassword() {
   const [name, setName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(true);
   const { data: session } = useSession();
+
+  // Load remembered email on mount
+  useEffect(() => {
+    const loadRememberedEmail = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem(REMEMBERED_EMAIL_KEY);
+        if (savedEmail) {
+          setEmail(savedEmail);
+        }
+      } catch (error) {
+        console.log("Failed to load remembered email:", error);
+      }
+    };
+    loadRememberedEmail();
+  }, []);
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -23,6 +42,13 @@ export default function LoginWithEmailPassword() {
 
     setIsLoading(true);
     try {
+      // Save email if remember is enabled
+      if (rememberEmail) {
+        await AsyncStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+      } else {
+        await AsyncStorage.removeItem(REMEMBERED_EMAIL_KEY);
+      }
+
       const result = await authClient.signIn.email({
         email,
         password,
@@ -31,7 +57,6 @@ export default function LoginWithEmailPassword() {
       if (result.error) {
         Alert.alert("Sign In Failed", result.error.message || "Please check your credentials");
       } else {
-        setEmail("");
         setPassword("");
       }
     } catch (error) {
@@ -176,6 +201,19 @@ export default function LoginWithEmailPassword() {
                   editable={!isLoading}
                 />
               </View>
+
+              {/* Remember Email Checkbox */}
+              {!isSignUp && (
+                <Pressable
+                  onPress={() => setRememberEmail(!rememberEmail)}
+                  className="flex-row items-center gap-3 py-2"
+                >
+                  <View className={`w-6 h-6 rounded border-2 items-center justify-center ${rememberEmail ? "bg-emerald-600 border-emerald-600" : "border-slate-500"}`}>
+                    {rememberEmail && <Check size={16} color="#fff" />}
+                  </View>
+                  <Text className="text-slate-300">Remember my email</Text>
+                </Pressable>
+              )}
             </View>
 
             {/* Submit Button */}
