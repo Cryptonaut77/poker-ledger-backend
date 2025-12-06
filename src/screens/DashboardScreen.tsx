@@ -264,28 +264,28 @@ const DashboardScreen = ({ navigation }: Props) => {
             <View className="gap-3">
               <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
                 <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <View className="w-3 h-3 rounded-full bg-blue-500" />
                   <Text className="text-slate-300 font-medium">Cash (In Till)</Text>
                 </View>
-                <Text className="text-emerald-400 text-xl font-bold">
+                <Text className="text-blue-400 text-xl font-bold">
                   {formatCurrency(paymentBreakdown.cash)}
                 </Text>
               </View>
               <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
                 <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-blue-500" />
+                  <View className="w-3 h-3 rounded-full bg-amber-500" />
                   <Text className="text-slate-300 font-medium">Electronic</Text>
                 </View>
-                <Text className="text-blue-400 text-xl font-bold">
+                <Text className="text-amber-400 text-xl font-bold">
                   {formatCurrency(paymentBreakdown.electronic)}
                 </Text>
               </View>
               <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
                 <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-amber-500" />
+                  <View className="w-3 h-3 rounded-full bg-red-500" />
                   <Text className="text-slate-300 font-medium">Credit (Owed)</Text>
                 </View>
-                <Text className="text-amber-400 text-xl font-bold">
+                <Text className="text-red-400 text-xl font-bold">
                   {formatCurrency(paymentBreakdown.credit)}
                 </Text>
               </View>

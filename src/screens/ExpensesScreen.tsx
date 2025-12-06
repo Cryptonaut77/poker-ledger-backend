@@ -582,8 +582,8 @@ const ExpenseCard = ({
   categoryEmoji: Record<string, string>;
 }) => {
   const paymentMethodColors: Record<string, string> = {
-    cash: "#10b981",
-    electronic: "#3b82f6",
+    cash: "#3b82f6",      // blue
+    electronic: "#f59e0b", // yellow/amber
   };
 
   return (

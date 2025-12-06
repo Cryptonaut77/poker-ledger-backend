@@ -270,9 +270,9 @@ const PlayersScreen = ({ navigation }: Props) => {
   };
 
   const paymentMethodColors: Record<string, string> = {
-    cash: "#10b981",
-    electronic: "#3b82f6",
-    credit: "#f59e0b",
+    cash: "#3b82f6",      // blue
+    electronic: "#f59e0b", // yellow/amber
+    credit: "#ef4444",     // red
   };
 
   return (
