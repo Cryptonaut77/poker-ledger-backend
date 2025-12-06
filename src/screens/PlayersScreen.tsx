@@ -649,7 +649,7 @@ const PlayerCard = ({
             <Text className="text-slate-400 text-xs mb-1">Net</Text>
             <Text
               className={`text-2xl font-bold ${
-                player.netAmount >= 0 ? "text-emerald-400" : "text-red-400"
+                player.netAmount <= 0 ? "text-emerald-400" : "text-red-400"
               }`}
             >
               {formatCurrency(Math.abs(player.netAmount))}
@@ -667,7 +667,7 @@ const PlayerCard = ({
           </View>
           <View className="flex-1 bg-slate-800 rounded-lg p-3">
             <Text className="text-slate-400 text-xs mb-1">Cashouts</Text>
-            <Text className={`text-base font-bold ${player.netAmount < 0 ? "text-emerald-400" : "text-red-400"}`}>
+            <Text className={`text-base font-bold ${player.netAmount <= 0 ? "text-emerald-400" : "text-red-400"}`}>
               {formatCurrency(player.totalCashouts)}
             </Text>
           </View>
@@ -685,7 +685,7 @@ const PlayerCard = ({
             // Determine color for transaction
             // Buy-ins are blue, cashouts are green (win) or red (loss)
             const isBuyIn = transaction.type === "buy-in";
-            const isWin = player.netAmount < 0; // Negative net means player won (cashed out more)
+            const isWin = player.netAmount <= 0; // Negative or zero net means player won or broke even
 
             const badgeBgColor = isBuyIn
               ? "rgba(59, 130, 246, 0.2)" // blue for buy-in
