@@ -20,10 +20,13 @@ import { useSession } from "@/lib/useSession";
  */
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const RootNavigator = () => {
+  // DEV MODE: Skip authentication for development
+  const DEV_SKIP_AUTH = true;
+
   const { data: session, isPending } = useSession();
 
-  // Show loading spinner while checking auth state
-  if (isPending) {
+  // Show loading spinner while checking auth state (skip in dev mode)
+  if (!DEV_SKIP_AUTH && isPending) {
     return (
       <View className="flex-1 bg-slate-900 items-center justify-center">
         <ActivityIndicator size="large" color="#10b981" />
@@ -31,8 +34,8 @@ const RootNavigator = () => {
     );
   }
 
-  // If not logged in, show only the login screen
-  if (!session) {
+  // If not logged in, show only the login screen (skip in dev mode)
+  if (!DEV_SKIP_AUTH && !session) {
     return (
       <RootStack.Navigator>
         <RootStack.Screen
@@ -44,7 +47,7 @@ const RootNavigator = () => {
     );
   }
 
-  // User is authenticated, show main app
+  // User is authenticated (or dev mode), show main app
   return (
     <RootStack.Navigator>
       <RootStack.Screen
