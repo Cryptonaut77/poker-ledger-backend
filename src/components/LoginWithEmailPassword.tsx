@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Dices } from "lucide-react-native";
 
 import { authClient } from "@/lib/authClient";
 import { useSession } from "@/lib/useSession";
@@ -29,7 +31,6 @@ export default function LoginWithEmailPassword() {
       if (result.error) {
         Alert.alert("Sign In Failed", result.error.message || "Please check your credentials");
       } else {
-        Alert.alert("Success", "Signed in successfully!");
         setEmail("");
         setPassword("");
       }
@@ -58,11 +59,10 @@ export default function LoginWithEmailPassword() {
       if (result.error) {
         Alert.alert("Sign Up Failed", result.error.message || "Please try again");
       } else {
-        Alert.alert("Success", "Account created successfully!");
+        Alert.alert("Welcome!", "Your account has been created. You're now signed in.");
         setEmail("");
         setPassword("");
         setName("");
-        setIsSignUp(false);
       }
     } catch (error) {
       Alert.alert("Error", "An unexpected error occurred");
@@ -75,100 +75,133 @@ export default function LoginWithEmailPassword() {
   const handleSignOut = async () => {
     try {
       await authClient.signOut();
-      Alert.alert("Success", "Signed out successfully!");
     } catch (error) {
       Alert.alert("Error", "Failed to sign out");
       console.error(error);
     }
   };
 
-  // If user is already logged in, show sign out button
+  // If user is already logged in, show account info and sign out button
   if (session) {
     return (
-      <KeyboardAwareScrollView>
-        <View className="w-full p-6 gap-4">
-          <View className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <Text className="text-lg font-semibold mb-1">Signed in as:</Text>
-            <Text className="text-base">{session.user.name}</Text>
-            <Text className="text-sm text-gray-600">{session.user.email}</Text>
-          </View>
-          <Pressable onPress={handleSignOut} className="bg-red-500 p-4 rounded-lg items-center">
-            <Text className="text-white font-semibold text-base">Sign Out</Text>
-          </Pressable>
-        </View>
-      </KeyboardAwareScrollView>
+      <View className="flex-1 bg-slate-900">
+        <SafeAreaView edges={["top"]} className="flex-1">
+          <KeyboardAwareScrollView className="flex-1">
+            <View className="w-full p-6 gap-6">
+              <View className="items-center pt-8 pb-4">
+                <View className="w-20 h-20 rounded-full bg-emerald-600 items-center justify-center mb-4">
+                  <Text className="text-3xl font-bold text-white">
+                    {session.user.name?.charAt(0).toUpperCase() || "U"}
+                  </Text>
+                </View>
+                <Text className="text-2xl font-bold text-white">{session.user.name}</Text>
+                <Text className="text-slate-400 mt-1">{session.user.email}</Text>
+              </View>
+
+              <View className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <Text className="text-slate-400 text-sm mb-1">Account Status</Text>
+                <Text className="text-emerald-400 font-semibold">Active</Text>
+              </View>
+
+              <Pressable
+                onPress={handleSignOut}
+                className="bg-red-600 p-4 rounded-xl items-center active:bg-red-700"
+              >
+                <Text className="text-white font-semibold text-base">Sign Out</Text>
+              </Pressable>
+            </View>
+          </KeyboardAwareScrollView>
+        </SafeAreaView>
+      </View>
     );
   }
 
   return (
-    <KeyboardAwareScrollView>
-      <View className="w-full p-6 gap-4">
-        <Text className="text-2xl font-bold text-center mb-2">
-          {isSignUp ? "Create Account" : "Sign In"}
-        </Text>
+    <View className="flex-1 bg-slate-900">
+      <SafeAreaView edges={["top"]} className="flex-1">
+        <KeyboardAwareScrollView className="flex-1">
+          <View className="w-full p-6 gap-5">
+            {/* Header */}
+            <View className="items-center pt-12 pb-6">
+              <View className="w-20 h-20 rounded-2xl bg-emerald-600 items-center justify-center mb-4">
+                <Dices size={40} color="#fff" />
+              </View>
+              <Text className="text-3xl font-bold text-white mb-2">Poker Manager</Text>
+              <Text className="text-slate-400 text-center">
+                {isSignUp ? "Create an account to get started" : "Sign in to manage your games"}
+              </Text>
+            </View>
 
-        {isSignUp && (
-          <View>
-            <Text className="text-sm font-medium mb-2 text-gray-700">Name</Text>
-            <TextInput
-              value={name}
-              onChangeText={setName}
-              placeholder="Enter your name"
-              placeholderTextColor="#9CA3AF"
-              className="border border-gray-300 rounded-lg p-4 bg-white"
-              autoCapitalize="words"
-              editable={!isLoading}
-            />
+            {/* Form */}
+            <View className="gap-4">
+              {isSignUp && (
+                <View>
+                  <Text className="text-sm font-medium mb-2 text-slate-300">Name</Text>
+                  <TextInput
+                    value={name}
+                    onChangeText={setName}
+                    placeholder="Enter your name"
+                    placeholderTextColor="#64748b"
+                    className="border border-slate-600 rounded-xl p-4 bg-slate-800 text-white"
+                    autoCapitalize="words"
+                    editable={!isLoading}
+                  />
+                </View>
+              )}
+
+              <View>
+                <Text className="text-sm font-medium mb-2 text-slate-300">Email</Text>
+                <TextInput
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="Enter your email"
+                  placeholderTextColor="#64748b"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  className="border border-slate-600 rounded-xl p-4 bg-slate-800 text-white"
+                  editable={!isLoading}
+                />
+              </View>
+
+              <View>
+                <Text className="text-sm font-medium mb-2 text-slate-300">Password</Text>
+                <TextInput
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="Enter your password"
+                  placeholderTextColor="#64748b"
+                  secureTextEntry
+                  className="border border-slate-600 rounded-xl p-4 bg-slate-800 text-white"
+                  editable={!isLoading}
+                />
+              </View>
+            </View>
+
+            {/* Submit Button */}
+            <Pressable
+              onPress={isSignUp ? handleSignUp : handleSignIn}
+              disabled={isLoading}
+              className={`p-4 rounded-xl items-center mt-2 ${isLoading ? "bg-emerald-800" : "bg-emerald-600 active:bg-emerald-700"}`}
+            >
+              <Text className="text-white font-semibold text-base">
+                {isLoading ? "Please wait..." : isSignUp ? "Create Account" : "Sign In"}
+              </Text>
+            </Pressable>
+
+            {/* Toggle Sign Up / Sign In */}
+            <Pressable
+              onPress={() => setIsSignUp(!isSignUp)}
+              disabled={isLoading}
+              className="items-center py-4"
+            >
+              <Text className="text-emerald-400 text-sm">
+                {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
+              </Text>
+            </Pressable>
           </View>
-        )}
-
-        <View>
-          <Text className="text-sm font-medium mb-2 text-gray-700">Email</Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Enter your email"
-            placeholderTextColor="#9CA3AF"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            className="border border-gray-300 rounded-lg p-4 bg-white"
-            editable={!isLoading}
-          />
-        </View>
-
-        <View>
-          <Text className="text-sm font-medium mb-2 text-gray-700">Password</Text>
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Enter your password"
-            placeholderTextColor="#9CA3AF"
-            secureTextEntry
-            className="border border-gray-300 rounded-lg p-4 bg-white"
-            editable={!isLoading}
-          />
-        </View>
-
-        <Pressable
-          onPress={isSignUp ? handleSignUp : handleSignIn}
-          disabled={isLoading}
-          className={`p-4 rounded-lg items-center ${isLoading ? "bg-blue-300" : "bg-blue-500"}`}
-        >
-          <Text className="text-white font-semibold text-base">
-            {isLoading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
-          </Text>
-        </Pressable>
-
-        <Pressable
-          onPress={() => setIsSignUp(!isSignUp)}
-          disabled={isLoading}
-          className="items-center"
-        >
-          <Text className="text-blue-500 text-sm">
-            {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
-          </Text>
-        </Pressable>
-      </View>
-    </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    </View>
   );
 }

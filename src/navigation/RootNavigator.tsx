@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as Haptics from "expo-haptics";
 import { LayoutDashboard, Users, Dices, Receipt, Archive } from "lucide-react-native";
+import { ActivityIndicator, View } from "react-native";
 
 import type { BottomTabParamList, RootStackParamList } from "@/navigation/types";
 import DashboardScreen from "@/screens/DashboardScreen";
@@ -10,13 +11,40 @@ import DealersScreen from "@/screens/DealersScreen";
 import ExpensesScreen from "@/screens/ExpensesScreen";
 import GameHistoryScreen from "@/screens/GameHistoryScreen";
 import LoginModalScreen from "@/screens/LoginModalScreen";
+import { useSession } from "@/lib/useSession";
 
 /**
  * RootStackNavigator
  * The root navigator for the app, which contains the bottom tab navigator
+ * Requires authentication - shows login screen if user is not logged in
  */
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const RootNavigator = () => {
+  const { data: session, isPending } = useSession();
+
+  // Show loading spinner while checking auth state
+  if (isPending) {
+    return (
+      <View className="flex-1 bg-slate-900 items-center justify-center">
+        <ActivityIndicator size="large" color="#10b981" />
+      </View>
+    );
+  }
+
+  // If not logged in, show only the login screen
+  if (!session) {
+    return (
+      <RootStack.Navigator>
+        <RootStack.Screen
+          name="LoginModalScreen"
+          component={LoginModalScreen}
+          options={{ headerShown: false }}
+        />
+      </RootStack.Navigator>
+    );
+  }
+
+  // User is authenticated, show main app
   return (
     <RootStack.Navigator>
       <RootStack.Screen
@@ -27,7 +55,7 @@ const RootNavigator = () => {
       <RootStack.Screen
         name="LoginModalScreen"
         component={LoginModalScreen}
-        options={{ presentation: "modal", title: "Login" }}
+        options={{ presentation: "modal", title: "Account" }}
       />
     </RootStack.Navigator>
   );

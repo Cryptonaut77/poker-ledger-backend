@@ -4,6 +4,13 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ## Features
 
+### 🔐 User Authentication (Required)
+- Email and password sign up/sign in
+- Each user has their own private game data
+- Secure session management with Better Auth
+- Beautiful dark-themed login screen
+- Account management with sign out capability
+
 ### 🎮 Game Session Management
 - Automatic game session creation
 - Real-time game tracking
@@ -228,6 +235,16 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### User Authentication Required (Dec 6, 2024)
+Major security update - the app now requires user accounts:
+- **Login required**: Users must sign in or create an account before accessing the app
+- **Private data**: Each user's game sessions, transactions, and history are completely private
+- **Database update**: GameSession model now links to User via userId field
+- **Protected API routes**: All backend routes require authentication and verify data ownership
+- **Improved login screen**: Beautiful dark-themed full-screen login experience
+- **Account management**: View account info and sign out from the Account screen
+- **Data isolation**: Users can only see and modify their own game data
 
 ### Enhanced Error Handling & Logging (Dec 4, 2024)
 Improved error handling and debugging for dealer down operations:

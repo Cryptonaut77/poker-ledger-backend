@@ -11,19 +11,24 @@ import {
 } from "@/shared/contracts";
 import { type AppType } from "../types";
 import { db } from "../db";
+import { requireAuth } from "../middleware/requireAuth";
 
 const gameRouter = new Hono<AppType>();
+
+// Apply auth middleware to all game routes
+gameRouter.use("*", requireAuth);
 
 // ============================================
 // GET /api/game/active - Get or create active game session
 // ============================================
 gameRouter.get("/active", async (c) => {
-  console.log("🎮 [Game] Getting active game session");
+  const user = c.get("user")!;
+  console.log(`🎮 [Game] Getting active game session for user: ${user.email}`);
 
   try {
-    // Find active game session
+    // Find active game session for this user
     let session = await db.gameSession.findFirst({
-      where: { isActive: true },
+      where: { isActive: true, userId: user.id },
       orderBy: { startedAt: "desc" },
     });
 
@@ -35,6 +40,7 @@ gameRouter.get("/active", async (c) => {
           name: "Poker Game",
           tableName: "Main Table",
           isActive: true,
+          userId: user.id,
         },
       });
       console.log(`🎮 [Game] Created new session: ${session.id}`);
@@ -61,10 +67,11 @@ gameRouter.get("/active", async (c) => {
 // GET /api/game/history - Get all inactive game sessions
 // ============================================
 gameRouter.get("/history", async (c) => {
-  console.log("🎮 [Game] Getting game history");
+  const user = c.get("user")!;
+  console.log(`🎮 [Game] Getting game history for user: ${user.email}`);
 
   const sessions = await db.gameSession.findMany({
-    where: { isActive: false },
+    where: { isActive: false, userId: user.id },
     orderBy: { endedAt: "desc" },
     include: {
       playerTransactions: true,
@@ -121,8 +128,18 @@ gameRouter.get("/history", async (c) => {
 // POST /api/game/end - End current game session
 // ============================================
 gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
+  const user = c.get("user")!;
   const { sessionId } = c.req.valid("json");
-  console.log(`🎮 [Game] Ending session: ${sessionId}`);
+  console.log(`🎮 [Game] Ending session: ${sessionId} for user: ${user.email}`);
+
+  // Verify the session belongs to this user
+  const existingSession = await db.gameSession.findFirst({
+    where: { id: sessionId, userId: user.id },
+  });
+
+  if (!existingSession) {
+    return c.json({ error: "Game session not found" }, 404);
+  }
 
   const session = await db.gameSession.update({
     where: { id: sessionId },
@@ -150,8 +167,18 @@ gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
 // DELETE /api/game/:sessionId - Delete a game session
 // ============================================
 gameRouter.delete("/:sessionId", async (c) => {
+  const user = c.get("user")!;
   const sessionId = c.req.param("sessionId");
-  console.log(`🎮 [Game] Deleting session: ${sessionId}`);
+  console.log(`🎮 [Game] Deleting session: ${sessionId} for user: ${user.email}`);
+
+  // Verify the session belongs to this user
+  const existingSession = await db.gameSession.findFirst({
+    where: { id: sessionId, userId: user.id },
+  });
+
+  if (!existingSession) {
+    return c.json({ error: "Game session not found" }, 404);
+  }
 
   await db.gameSession.delete({
     where: { id: sessionId },
@@ -166,11 +193,12 @@ gameRouter.delete("/:sessionId", async (c) => {
 // POST /api/game/new - Start a new game session
 // ============================================
 gameRouter.post("/new", async (c) => {
-  console.log("🎮 [Game] Creating new game session");
+  const user = c.get("user")!;
+  console.log(`🎮 [Game] Creating new game session for user: ${user.email}`);
 
-  // First, end any active sessions
+  // First, end any active sessions for this user
   await db.gameSession.updateMany({
-    where: { isActive: true },
+    where: { isActive: true, userId: user.id },
     data: {
       isActive: false,
       endedAt: new Date(),
@@ -183,6 +211,7 @@ gameRouter.post("/new", async (c) => {
       name: "Poker Game",
       tableName: "Main Table",
       isActive: true,
+      userId: user.id,
     },
   });
 
@@ -203,14 +232,15 @@ gameRouter.post("/new", async (c) => {
 // GET /api/game/:sessionId/summary - Get game session summary
 // ============================================
 gameRouter.get("/:sessionId/summary", async (c) => {
+  const user = c.get("user")!;
   const sessionId = c.req.param("sessionId");
   console.log(`🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============`);
-  console.log(`🎮 [Game] Getting summary for session: ${sessionId}`);
+  console.log(`🎮 [Game] Getting summary for session: ${sessionId}, user: ${user.email}`);
   console.log(`🎮 [Game] Request URL: ${c.req.url}`);
   console.log(`🎮 [Game] Request method: ${c.req.method}`);
 
-  const session = await db.gameSession.findUnique({
-    where: { id: sessionId },
+  const session = await db.gameSession.findFirst({
+    where: { id: sessionId, userId: user.id },
     include: {
       playerTransactions: true,
       dealerDowns: true,
