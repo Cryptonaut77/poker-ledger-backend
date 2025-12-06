@@ -247,6 +247,13 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Network Status Banner (Dec 6, 2024)
+Added a visual indicator for connection issues:
+- **Network status banner**: Shows when connection is interrupted
+- **Retry button**: Manually retry connection when offline
+- **Auto-hide**: Banner automatically hides when connection is restored
+- **Data safety**: All data is safely stored in the cloud database - connection issues are temporary
+
 ### User Authentication Required (Dec 6, 2024)
 Major security update - the app now requires user accounts:
 - **Login required**: Users must sign in or create an account before accessing the app

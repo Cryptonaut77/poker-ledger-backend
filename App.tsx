@@ -6,6 +6,9 @@ import { queryClient } from "@/lib/queryClient";
 import RootStackNavigator from "@/navigation/RootNavigator";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { QueryClientProvider } from "@tanstack/react-query";
+import NetworkStatusBanner from "@/components/NetworkStatusBanner";
+import { View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -28,16 +31,31 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 */
 
+// Inner component that can use hooks
+function AppContent() {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0f172a" }}>
+      <View style={{ height: insets.top, backgroundColor: "#0f172a" }} />
+      <NetworkStatusBanner />
+      <View style={{ flex: 1 }}>
+        <NavigationContainer>
+          <RootStackNavigator />
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </View>
+    </View>
+  );
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <KeyboardProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <NavigationContainer>
-              <RootStackNavigator />
-              <StatusBar style="auto" />
-            </NavigationContainer>
+            <AppContent />
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </KeyboardProvider>
