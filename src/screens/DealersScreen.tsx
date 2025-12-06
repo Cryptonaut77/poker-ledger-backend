@@ -337,12 +337,14 @@ const DealersScreen = ({ navigation }: Props) => {
     enabled: !!sessionId,
   });
 
-  // Add dealer down mutation
+  // Add dealer down mutation with automatic retry
   const addDownMutation = useMutation({
     mutationFn: (data: AddDealerDownRequest) => {
       console.log("[DealersScreen] Mutation function called with data:", data);
       return api.post("/api/dealers/down", data);
     },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     onSuccess: () => {
       console.log("[DealersScreen] Mutation successful");
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
@@ -352,13 +354,22 @@ const DealersScreen = ({ navigation }: Props) => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      const errorMessage = error instanceof ApiError
+      const isNetworkError = error instanceof ApiError && error.type === "NETWORK_ERROR";
+      const errorMessage = isNetworkError
+        ? "Connection issue - your data was saved locally. The app will sync when connection is restored. You can also try again."
+        : error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to add dealer down. Please try again.";
       console.log("[DealersScreen] Mutation failed:", error?.message || String(error));
-      console.log("[DealersScreen] Error message:", errorMessage);
       console.log("[DealersScreen] Error details:", error instanceof ApiError ? error.details : error?.message || "Unknown");
-      Alert.alert("Error", errorMessage);
+      Alert.alert(
+        isNetworkError ? "Connection Issue" : "Error",
+        errorMessage,
+        [
+          { text: "OK", style: "cancel" },
+          ...(isNetworkError ? [{ text: "Retry", onPress: () => addDownMutation.reset() }] : []),
+        ]
+      );
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -392,17 +403,22 @@ const DealersScreen = ({ navigation }: Props) => {
   // Mark tips as paid mutation
   const markTipsPaidMutation = useMutation({
     mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/pay`, {}),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      const errorMessage = error instanceof ApiError
+      const isNetworkError = error instanceof ApiError && error.type === "NETWORK_ERROR";
+      const errorMessage = isNetworkError
+        ? "Connection interrupted. Please try again."
+        : error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to mark tips as paid. Please try again.";
       console.log("[DealersScreen] Failed to mark tips as paid:", error?.message || String(error));
-      Alert.alert("Error", errorMessage);
+      Alert.alert(isNetworkError ? "Connection Issue" : "Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -410,17 +426,22 @@ const DealersScreen = ({ navigation }: Props) => {
   // Mark tips as unpaid mutation
   const markTipsUnpaidMutation = useMutation({
     mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/unpay`, {}),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      const errorMessage = error instanceof ApiError
+      const isNetworkError = error instanceof ApiError && error.type === "NETWORK_ERROR";
+      const errorMessage = isNetworkError
+        ? "Connection interrupted. Please try again."
+        : error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to mark tips as unpaid. Please try again.";
       console.log("[DealersScreen] Failed to mark tips as unpaid:", error?.message || String(error));
-      Alert.alert("Error", errorMessage);
+      Alert.alert(isNetworkError ? "Connection Issue" : "Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -428,17 +449,22 @@ const DealersScreen = ({ navigation }: Props) => {
   // Claim rake mutation
   const claimRakeMutation = useMutation({
     mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/claim-rake`, {}),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      const errorMessage = error instanceof ApiError
+      const isNetworkError = error instanceof ApiError && error.type === "NETWORK_ERROR";
+      const errorMessage = isNetworkError
+        ? "Connection interrupted. Please try again."
+        : error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to claim rake. Please try again.";
       console.log("[DealersScreen] Failed to claim rake:", error?.message || String(error));
-      Alert.alert("Error", errorMessage);
+      Alert.alert(isNetworkError ? "Connection Issue" : "Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });
@@ -446,17 +472,22 @@ const DealersScreen = ({ navigation }: Props) => {
   // Unclaim rake mutation
   const unclaimRakeMutation = useMutation({
     mutationFn: (id: string) => api.put<MarkDealerTipsPaidResponse>(`/api/dealers/down/${id}/unclaim-rake`, {}),
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealerDowns"] });
       queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
     onError: (error: Error) => {
-      const errorMessage = error instanceof ApiError
+      const isNetworkError = error instanceof ApiError && error.type === "NETWORK_ERROR";
+      const errorMessage = isNetworkError
+        ? "Connection interrupted. Please try again."
+        : error instanceof ApiError
         ? error.getUserMessage()
         : "Failed to unclaim rake. Please try again.";
       console.log("[DealersScreen] Failed to unclaim rake:", error?.message || String(error));
-      Alert.alert("Error", errorMessage);
+      Alert.alert(isNetworkError ? "Connection Issue" : "Error", errorMessage);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     },
   });

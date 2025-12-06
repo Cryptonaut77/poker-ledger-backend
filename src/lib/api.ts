@@ -45,7 +45,7 @@ export class ApiError extends Error {
   getUserMessage(): string {
     switch (this.type) {
       case "NETWORK_ERROR":
-        return "Unable to connect to server. This is likely a temporary issue with the Vibecode sandbox. Please wait a moment and try again.";
+        return "Connection interrupted. This happens occasionally - please try again in a moment.";
       case "SERVER_ERROR":
         return `Server error (code ${this.statusCode}). This may be a bug in the app code. Details: ${this.details || "No details available"}`;
       case "VALIDATION_ERROR":
