@@ -409,11 +409,11 @@ const PlayersScreen = ({ navigation }: Props) => {
                       }`}
                     >
                       <Text
-                        className={`text-center font-medium capitalize ${
+                        className={`text-center font-medium ${
                           paymentMethod === method ? "text-white" : "text-slate-400"
                         }`}
                       >
-                        {method}
+                        {method === "credit" ? "IOU" : method === "electronic" ? "Electronic" : "Cash"}
                       </Text>
                     </Pressable>
                   ))}
@@ -531,11 +531,11 @@ const PlayersScreen = ({ navigation }: Props) => {
                           }`}
                         >
                           <Text
-                            className={`text-center font-medium capitalize ${
+                            className={`text-center font-medium ${
                               paymentMethod === method ? "text-white" : "text-slate-400"
                             }`}
                           >
-                            {method}
+                            {method === "credit" ? "IOU" : method === "electronic" ? "Electronic" : "Cash"}
                           </Text>
                         </Pressable>
                       ))}
@@ -715,10 +715,10 @@ const PlayerCard = ({
                       }}
                     >
                       <Text
-                        className="text-[10px] font-medium capitalize"
+                        className="text-[10px] font-medium"
                         style={{ color: paymentMethodColors[transaction.paymentMethod] }}
                       >
-                        {transaction.paymentMethod}
+                        {transaction.paymentMethod === "credit" ? "IOU" : transaction.paymentMethod === "electronic" ? "Electronic" : "Cash"}
                       </Text>
                     </View>
                   </View>
