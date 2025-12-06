@@ -123,6 +123,8 @@ model Expense {
   description   String
   amount        Float
   category      String
+  paymentMethod String      @default("cash")
+  paidOut       Boolean     @default(false)
   notes         String?
   timestamp     DateTime    @default(now())
   gameSessionId String

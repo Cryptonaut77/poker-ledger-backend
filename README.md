@@ -48,6 +48,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### 💸 Expense Tracking
 - Log comped food, drinks, and other expenses
 - Categorize expenses for easy reporting
+- **Payment method selection**: Choose between Cash or Electronic when logging expenses
+- Visual payment method indicators with colored dots (green=cash, blue=electronic)
 - Add notes for detailed record-keeping
 - Edit expenses with blue edit icon
 - Delete expenses from edit modal
@@ -196,9 +198,11 @@ The app automatically creates a game session when you first open it. All transac
 1. Navigate to the Expenses tab
 2. Tap the "+" button
 3. Enter description, amount, and category
-4. Add optional notes
-5. Submit to log the expense
-6. Tap the blue edit icon on any expense to edit or delete it
+4. Select payment method (Cash or Electronic)
+5. Add optional notes
+6. Submit to log the expense
+7. Tap the blue edit icon on any expense to edit or delete it
+8. Expense cards display both category and payment method badges
 
 ### Viewing Summary
 The Dashboard tab provides a real-time overview of:

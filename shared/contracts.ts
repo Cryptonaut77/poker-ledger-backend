@@ -54,6 +54,8 @@ export const expenseSchema = z.object({
   description: z.string(),
   amount: z.number(),
   category: z.enum(["food", "drinks", "other"]),
+  paymentMethod: z.enum(["cash", "electronic"]),
+  paidOut: z.boolean(),
   notes: z.string().nullable(),
   timestamp: z.string(),
   gameSessionId: z.string(),
@@ -191,6 +193,7 @@ export const addExpenseRequestSchema = z.object({
   description: z.string().min(1),
   amount: z.number().positive(),
   category: z.enum(["food", "drinks", "other"]),
+  paymentMethod: z.enum(["cash", "electronic"]),
   notes: z.string().optional(),
   gameSessionId: z.string(),
 });
@@ -211,6 +214,7 @@ export const updateExpenseRequestSchema = z.object({
   description: z.string().min(1),
   amount: z.number().positive(),
   category: z.enum(["food", "drinks", "other"]),
+  paymentMethod: z.enum(["cash", "electronic"]),
   notes: z.string().optional(),
 });
 export type UpdateExpenseRequest = z.infer<typeof updateExpenseRequestSchema>;

@@ -17,13 +17,14 @@ const expensesRouter = new Hono<AppType>();
 // ============================================
 expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) => {
   const data = c.req.valid("json");
-  console.log(`💸 [Expenses] Adding expense: ${data.description} - $${data.amount}`);
+  console.log(`💸 [Expenses] Adding expense: ${data.description} - $${data.amount} (${data.paymentMethod})`);
 
   const expense = await db.expense.create({
     data: {
       description: data.description,
       amount: data.amount,
       category: data.category,
+      paymentMethod: data.paymentMethod,
       notes: data.notes ?? null,
       gameSessionId: data.gameSessionId,
     },
@@ -37,6 +38,8 @@ expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) 
       description: expense.description,
       amount: expense.amount,
       category: expense.category as "food" | "drinks" | "other",
+      paymentMethod: expense.paymentMethod as "cash" | "electronic",
+      paidOut: expense.paidOut,
       notes: expense.notes,
       timestamp: expense.timestamp.toISOString(),
       gameSessionId: expense.gameSessionId,
@@ -64,6 +67,8 @@ expensesRouter.get("/:sessionId", async (c) => {
       description: e.description,
       amount: e.amount,
       category: e.category as "food" | "drinks" | "other",
+      paymentMethod: e.paymentMethod as "cash" | "electronic",
+      paidOut: e.paidOut,
       notes: e.notes,
       timestamp: e.timestamp.toISOString(),
       gameSessionId: e.gameSessionId,
@@ -101,6 +106,7 @@ expensesRouter.put("/:id", zValidator("json", updateExpenseRequestSchema), async
       description: data.description,
       amount: data.amount,
       category: data.category,
+      paymentMethod: data.paymentMethod,
       notes: data.notes ?? null,
     },
   });
@@ -113,6 +119,8 @@ expensesRouter.put("/:id", zValidator("json", updateExpenseRequestSchema), async
       description: expense.description,
       amount: expense.amount,
       category: expense.category as "food" | "drinks" | "other",
+      paymentMethod: expense.paymentMethod as "cash" | "electronic",
+      paidOut: expense.paidOut,
       notes: expense.notes,
       timestamp: expense.timestamp.toISOString(),
       gameSessionId: expense.gameSessionId,

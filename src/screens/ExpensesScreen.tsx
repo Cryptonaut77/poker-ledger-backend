@@ -34,6 +34,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<"food" | "drinks" | "other">("food");
+  const [paymentMethod, setPaymentMethod] = useState<"cash" | "electronic">("cash");
   const [notes, setNotes] = useState("");
 
   // Fetch active game session - with retry and refetch options
@@ -120,6 +121,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
     setDescription("");
     setAmount("");
     setCategory("food");
+    setPaymentMethod("cash");
     setNotes("");
   };
 
@@ -151,6 +153,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
       description: description.trim(),
       amount: numAmount,
       category,
+      paymentMethod,
       notes: notes.trim() || undefined,
       gameSessionId: currentSessionId,
     });
@@ -168,6 +171,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
         description: description.trim(),
         amount: numAmount,
         category,
+        paymentMethod,
         notes: notes.trim() || undefined,
       },
     });
@@ -178,6 +182,7 @@ const ExpensesScreen = ({ navigation }: Props) => {
     setDescription(expense.description);
     setAmount(expense.amount.toString());
     setCategory(expense.category);
+    setPaymentMethod(expense.paymentMethod);
     setNotes(expense.notes || "");
     setEditModalVisible(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -316,6 +321,50 @@ const ExpensesScreen = ({ navigation }: Props) => {
               </View>
 
               <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
+                <View className="flex-row gap-2">
+                  <Pressable
+                    onPress={() => {
+                      setPaymentMethod("cash");
+                      Haptics.selectionAsync();
+                    }}
+                    className={`flex-1 py-3 rounded-lg border ${
+                      paymentMethod === "cash"
+                        ? "bg-emerald-600 border-emerald-500"
+                        : "bg-slate-800 border-slate-700"
+                    }`}
+                  >
+                    <Text
+                      className={`text-center font-medium ${
+                        paymentMethod === "cash" ? "text-white" : "text-slate-400"
+                      }`}
+                    >
+                      Cash
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      setPaymentMethod("electronic");
+                      Haptics.selectionAsync();
+                    }}
+                    className={`flex-1 py-3 rounded-lg border ${
+                      paymentMethod === "electronic"
+                        ? "bg-blue-600 border-blue-500"
+                        : "bg-slate-800 border-slate-700"
+                    }`}
+                  >
+                    <Text
+                      className={`text-center font-medium ${
+                        paymentMethod === "electronic" ? "text-white" : "text-slate-400"
+                      }`}
+                    >
+                      Electronic
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+
+              <View>
                 <Text className="text-slate-400 text-sm mb-2 font-medium">Notes (Optional)</Text>
                 <TextInput
                   value={notes}
@@ -426,6 +475,50 @@ const ExpensesScreen = ({ navigation }: Props) => {
               </View>
 
               <View>
+                <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
+                <View className="flex-row gap-2">
+                  <Pressable
+                    onPress={() => {
+                      setPaymentMethod("cash");
+                      Haptics.selectionAsync();
+                    }}
+                    className={`flex-1 py-3 rounded-lg border ${
+                      paymentMethod === "cash"
+                        ? "bg-emerald-600 border-emerald-500"
+                        : "bg-slate-800 border-slate-700"
+                    }`}
+                  >
+                    <Text
+                      className={`text-center font-medium ${
+                        paymentMethod === "cash" ? "text-white" : "text-slate-400"
+                      }`}
+                    >
+                      Cash
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      setPaymentMethod("electronic");
+                      Haptics.selectionAsync();
+                    }}
+                    className={`flex-1 py-3 rounded-lg border ${
+                      paymentMethod === "electronic"
+                        ? "bg-blue-600 border-blue-500"
+                        : "bg-slate-800 border-slate-700"
+                    }`}
+                  >
+                    <Text
+                      className={`text-center font-medium ${
+                        paymentMethod === "electronic" ? "text-white" : "text-slate-400"
+                      }`}
+                    >
+                      Electronic
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+
+              <View>
                 <Text className="text-slate-400 text-sm mb-2 font-medium">Notes (Optional)</Text>
                 <TextInput
                   value={notes}
@@ -488,11 +581,22 @@ const ExpenseCard = ({
   categoryColors: Record<string, string>;
   categoryEmoji: Record<string, string>;
 }) => {
+  const paymentMethodColors: Record<string, string> = {
+    cash: "#10b981",
+    electronic: "#3b82f6",
+  };
+
   return (
     <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
       <View className="flex-row items-start justify-between mb-2">
         <View className="flex-1">
-          <Text className="text-white text-lg font-bold">{expense.description}</Text>
+          <View className="flex-row items-center gap-2">
+            <Text className="text-white text-lg font-bold">{expense.description}</Text>
+            <View
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: paymentMethodColors[expense.paymentMethod] }}
+            />
+          </View>
           <Text className="text-slate-500 text-xs">{formatTime(expense.timestamp)}</Text>
         </View>
         <Pressable
@@ -507,16 +611,29 @@ const ExpenseCard = ({
       </View>
 
       <View className="flex-row items-center justify-between">
-        <View
-          className="px-3 py-1 rounded-full"
-          style={{ backgroundColor: `${categoryColors[expense.category]}20` }}
-        >
-          <Text
-            className="text-xs font-medium capitalize"
-            style={{ color: categoryColors[expense.category] }}
+        <View className="flex-row items-center gap-2">
+          <View
+            className="px-3 py-1 rounded-full"
+            style={{ backgroundColor: `${categoryColors[expense.category]}20` }}
           >
-            {categoryEmoji[expense.category]} {expense.category}
-          </Text>
+            <Text
+              className="text-xs font-medium capitalize"
+              style={{ color: categoryColors[expense.category] }}
+            >
+              {categoryEmoji[expense.category]} {expense.category}
+            </Text>
+          </View>
+          <View
+            className="px-2 py-1 rounded-full"
+            style={{ backgroundColor: `${paymentMethodColors[expense.paymentMethod]}20` }}
+          >
+            <Text
+              className="text-xs font-medium capitalize"
+              style={{ color: paymentMethodColors[expense.paymentMethod] }}
+            >
+              {expense.paymentMethod}
+            </Text>
+          </View>
         </View>
         <Text className="text-red-400 text-2xl font-bold">{formatCurrency(expense.amount)}</Text>
       </View>
