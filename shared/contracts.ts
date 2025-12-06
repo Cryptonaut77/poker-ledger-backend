@@ -32,6 +32,7 @@ export const playerTransactionSchema = z.object({
   notes: z.string().nullable(),
   timestamp: z.string(),
   gameSessionId: z.string(),
+  createdByInitials: z.string().nullable().optional(),
 });
 export type PlayerTransaction = z.infer<typeof playerTransactionSchema>;
 
@@ -45,6 +46,7 @@ export const dealerDownSchema = z.object({
   rakeClaimed: z.boolean(),
   timestamp: z.string(),
   gameSessionId: z.string(),
+  createdByInitials: z.string().nullable().optional(),
 });
 export type DealerDown = z.infer<typeof dealerDownSchema>;
 
@@ -59,6 +61,7 @@ export const expenseSchema = z.object({
   notes: z.string().nullable(),
   timestamp: z.string(),
   gameSessionId: z.string(),
+  createdByInitials: z.string().nullable().optional(),
 });
 export type Expense = z.infer<typeof expenseSchema>;
 

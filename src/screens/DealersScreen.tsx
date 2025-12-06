@@ -121,6 +121,11 @@ const DealerTipsCard: React.FC<{
                           <Text className="text-amber-400 text-xs font-medium">Unpaid</Text>
                         </View>
                       )}
+                      {down.createdByInitials && (
+                        <View className="bg-slate-700 px-2 py-0.5 rounded-md">
+                          <Text className="text-slate-300 text-xs font-medium">{down.createdByInitials}</Text>
+                        </View>
+                      )}
                     </View>
                     <Text className="text-slate-500 text-xs">{formatTime(down.timestamp)}</Text>
                   </View>

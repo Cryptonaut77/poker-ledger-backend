@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, Power, Trash2, PlusCircle } from "lucide-react-native";
+import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, Power, Trash2, PlusCircle, UserPlus } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -176,15 +176,26 @@ const DashboardScreen = ({ navigation }: Props) => {
         >
           <View className="flex-row items-center justify-between mb-2">
             <Text className="text-white text-3xl font-bold">Poker Game</Text>
-            <Pressable
-              onPress={() => {
-                setManageModalVisible(true);
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              }}
-              className="bg-slate-800 px-4 py-2 rounded-lg"
-            >
-              <Text className="text-white font-semibold">Manage</Text>
-            </Pressable>
+            <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("ShareGameScreen");
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }}
+                className="bg-blue-600 p-2 rounded-lg"
+              >
+                <UserPlus size={20} color="#fff" />
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setManageModalVisible(true);
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                }}
+                className="bg-slate-800 px-4 py-2 rounded-lg"
+              >
+                <Text className="text-white font-semibold">Manage</Text>
+              </Pressable>
+            </View>
           </View>
           {summary?.session && (
             <View className="flex-row items-center gap-2">

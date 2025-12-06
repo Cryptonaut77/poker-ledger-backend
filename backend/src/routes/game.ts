@@ -26,11 +26,20 @@ gameRouter.get("/active", async (c) => {
   console.log(`🎮 [Game] Getting active game session for user: ${user.email}`);
 
   try {
-    // Find active game session for this user
+    // First, check if user owns an active game
     let session = await db.gameSession.findFirst({
       where: { isActive: true, userId: user.id },
       orderBy: { startedAt: "desc" },
     });
+
+    // If not, check if user is a member of an active game
+    if (!session) {
+      const membership = await db.gameSessionMember.findFirst({
+        where: { userId: user.id, gameSession: { isActive: true } },
+        include: { gameSession: true },
+      });
+      session = membership?.gameSession ?? null;
+    }
 
     // Create new session if none exists
     if (!session) {
@@ -239,8 +248,15 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   console.log(`🎮 [Game] Request URL: ${c.req.url}`);
   console.log(`🎮 [Game] Request method: ${c.req.method}`);
 
+  // Check if user has access (owner or member)
   const session = await db.gameSession.findFirst({
-    where: { id: sessionId, userId: user.id },
+    where: {
+      id: sessionId,
+      OR: [
+        { userId: user.id },
+        { members: { some: { userId: user.id } } },
+      ],
+    },
     include: {
       playerTransactions: true,
       dealerDowns: true,

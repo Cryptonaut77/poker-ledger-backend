@@ -597,7 +597,10 @@ const ExpenseCard = ({
               style={{ backgroundColor: paymentMethodColors[expense.paymentMethod] }}
             />
           </View>
-          <Text className="text-slate-500 text-xs">{formatTime(expense.timestamp)}</Text>
+          <Text className="text-slate-500 text-xs">
+            {formatTime(expense.timestamp)}
+            {expense.createdByInitials && ` • ${expense.createdByInitials}`}
+          </Text>
         </View>
         <Pressable
           onPress={() => {

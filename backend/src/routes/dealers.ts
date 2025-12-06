@@ -26,13 +26,19 @@ dealersRouter.post("/down", zValidator("json", addDealerDownRequestSchema), asyn
     const data = c.req.valid("json");
     console.log(`🎲 [Dealers] Adding down for ${data.dealerName}: Tips $${data.tips}, Rake $${data.rake}, Session: ${data.gameSessionId} (user: ${user.email})`);
 
-    // Verify game session exists and belongs to this user
+    // Verify game session exists and user has access (owner or member)
     const gameSession = await db.gameSession.findFirst({
-      where: { id: data.gameSessionId, userId: user.id },
+      where: {
+        id: data.gameSessionId,
+        OR: [
+          { userId: user.id },
+          { members: { some: { userId: user.id } } },
+        ],
+      },
     });
 
     if (!gameSession) {
-      console.error(`🎲 [Dealers] Game session not found: ${data.gameSessionId}`);
+      console.error(`🎲 [Dealers] Game session not found or no access: ${data.gameSessionId}`);
       return c.json({ error: "Game session not found" }, 404);
     }
 
@@ -41,16 +47,21 @@ dealersRouter.post("/down", zValidator("json", addDealerDownRequestSchema), asyn
       return c.json({ error: "Game session is not active" }, 400);
     }
 
+    // Get user initials (from user record or generate from name)
+    const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) : user.email.slice(0, 2).toUpperCase());
+
     const dealerDown = await db.dealerDown.create({
       data: {
         dealerName: data.dealerName,
         tips: data.tips,
         rake: data.rake,
         gameSessionId: data.gameSessionId,
+        createdById: user.id,
+        createdByInitials: initials,
       },
     });
 
-    console.log(`🎲 [Dealers] Dealer down created: ${dealerDown.id}`);
+    console.log(`🎲 [Dealers] Dealer down created: ${dealerDown.id} by ${initials}`);
 
     return c.json({
       dealerDown: {
@@ -72,9 +83,15 @@ dealersRouter.get("/downs/:sessionId", async (c) => {
   const sessionId = c.req.param("sessionId");
   console.log(`🎲 [Dealers] Getting downs for session: ${sessionId} (user: ${user.email})`);
 
-  // Verify the game session belongs to this user
+  // Verify user has access (owner or member)
   const gameSession = await db.gameSession.findFirst({
-    where: { id: sessionId, userId: user.id },
+    where: {
+      id: sessionId,
+      OR: [
+        { userId: user.id },
+        { members: { some: { userId: user.id } } },
+      ],
+    },
   });
 
   if (!gameSession) {

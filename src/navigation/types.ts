@@ -12,6 +12,7 @@ declare global {
 export type RootStackParamList = {
   Tabs: NavigatorScreenParams<BottomTabParamList> | undefined;
   LoginModalScreen: undefined;
+  ShareGameScreen: undefined;
 };
 
 export type BottomTabParamList = {

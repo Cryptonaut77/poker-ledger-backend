@@ -27,14 +27,23 @@ playersRouter.post(
     const data = c.req.valid("json");
     console.log(`💰 [Players] Adding ${data.type} for ${data.playerName}: $${data.amount} (user: ${user.email})`);
 
-    // Verify the game session belongs to this user
+    // Verify user has access (owner or member)
     const gameSession = await db.gameSession.findFirst({
-      where: { id: data.gameSessionId, userId: user.id },
+      where: {
+        id: data.gameSessionId,
+        OR: [
+          { userId: user.id },
+          { members: { some: { userId: user.id } } },
+        ],
+      },
     });
 
     if (!gameSession) {
       return c.json({ error: "Game session not found" }, 404);
     }
+
+    // Get user initials
+    const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) : user.email.slice(0, 2).toUpperCase());
 
     const transaction = await db.playerTransaction.create({
       data: {
@@ -44,10 +53,12 @@ playersRouter.post(
         paymentMethod: data.paymentMethod,
         notes: data.notes ?? null,
         gameSessionId: data.gameSessionId,
+        createdById: user.id,
+        createdByInitials: initials,
       },
     });
 
-    console.log(`💰 [Players] Transaction created: ${transaction.id}`);
+    console.log(`💰 [Players] Transaction created: ${transaction.id} by ${initials}`);
 
     return c.json({
       transaction: {
@@ -59,6 +70,7 @@ playersRouter.post(
         notes: transaction.notes,
         timestamp: transaction.timestamp.toISOString(),
         gameSessionId: transaction.gameSessionId,
+        createdByInitials: transaction.createdByInitials,
       },
     } satisfies AddPlayerTransactionResponse);
   },
@@ -72,9 +84,15 @@ playersRouter.get("/transactions/:sessionId", async (c) => {
   const sessionId = c.req.param("sessionId");
   console.log(`💰 [Players] Getting transactions for session: ${sessionId} (user: ${user.email})`);
 
-  // Verify the game session belongs to this user
+  // Verify user has access (owner or member)
   const gameSession = await db.gameSession.findFirst({
-    where: { id: sessionId, userId: user.id },
+    where: {
+      id: sessionId,
+      OR: [
+        { userId: user.id },
+        { members: { some: { userId: user.id } } },
+      ],
+    },
   });
 
   if (!gameSession) {
@@ -98,6 +116,7 @@ playersRouter.get("/transactions/:sessionId", async (c) => {
       notes: t.notes,
       timestamp: t.timestamp.toISOString(),
       gameSessionId: t.gameSessionId,
+      createdByInitials: t.createdByInitials,
     })),
   } satisfies GetPlayerTransactionsResponse);
 });

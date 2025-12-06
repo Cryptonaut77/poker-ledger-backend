@@ -11,6 +11,7 @@ import DealersScreen from "@/screens/DealersScreen";
 import ExpensesScreen from "@/screens/ExpensesScreen";
 import GameHistoryScreen from "@/screens/GameHistoryScreen";
 import LoginModalScreen from "@/screens/LoginModalScreen";
+import ShareGameScreen from "@/screens/ShareGameScreen";
 import { useSession } from "@/lib/useSession";
 
 /**
@@ -59,6 +60,11 @@ const RootNavigator = () => {
         name="LoginModalScreen"
         component={LoginModalScreen}
         options={{ presentation: "modal", title: "Account" }}
+      />
+      <RootStack.Screen
+        name="ShareGameScreen"
+        component={ShareGameScreen}
+        options={{ headerShown: false, presentation: "modal" }}
       />
     </RootStack.Navigator>
   );

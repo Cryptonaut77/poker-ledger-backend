@@ -12,6 +12,7 @@ model User {
   id            String        @id
   email         String        @unique
   name          String?
+  initials      String?       // User's initials for tracking entries
   emailVerified Boolean       @default(false)
   image         String?
   createdAt     DateTime      @default(now())
@@ -19,7 +20,8 @@ model User {
   Profile       Profile?
   accounts      Account[]
   sessions      Session[]
-  gameSessions  GameSession[]
+  gameSessions  GameSession[] // Games this user owns
+  sharedGames   GameSessionMember[] // Games shared with this user
 
   @@map("user")
 }
@@ -84,13 +86,30 @@ model GameSession {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   tableName          String              @default("Main Table")
+  shareCode          String?             @unique // 6-character code for sharing
+  shareCodeExpiresAt DateTime?           // When the share code expires
   userId             String
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members            GameSessionMember[] // Users who have access to this game
   dealerDowns        DealerDown[]
   expenses           Expense[]
   playerTransactions PlayerTransaction[]
 
   @@map("game_session")
+}
+
+// Join table for users who have access to a game session
+model GameSessionMember {
+  id            String      @id @default(cuid())
+  role          String      @default("editor") // "owner" or "editor"
+  joinedAt      DateTime    @default(now())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameSessionId])
+  @@map("game_session_member")
 }
 
 model PlayerTransaction {
@@ -101,6 +120,8 @@ model PlayerTransaction {
   paymentMethod String
   notes         String?
   timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
   gameSessionId String
   gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
 
@@ -115,6 +136,8 @@ model DealerDown {
   tipsPaid      Boolean     @default(false)
   rakeClaimed   Boolean     @default(false)
   timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
   gameSessionId String
   gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
 
@@ -130,6 +153,8 @@ model Expense {
   paidOut       Boolean     @default(false)
   notes         String?
   timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
   gameSessionId String
   gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
 

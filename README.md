@@ -10,6 +10,16 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Secure session management with Better Auth
 - Beautiful dark-themed login screen
 - Account management with sign out capability
+- **Remember email** - Option to save email for quick login
+
+### 🔗 Team Collaboration (NEW!)
+- **Share codes** - Generate a 6-character code to invite coworkers to your game
+- **Join games** - Enter a share code to join a game as an editor
+- **Team members list** - View all members who have access to the game
+- **User initials** - Every entry shows who created it (initials displayed)
+- **Owner controls** - Only game owner can generate/revoke share codes
+- **Remove members** - Owner can remove team members at any time
+- **24-hour expiry** - Share codes expire after 24 hours for security
 
 ### 🎮 Game Session Management
 - Automatic game session creation

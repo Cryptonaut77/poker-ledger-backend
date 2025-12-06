@@ -24,14 +24,23 @@ expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) 
   const data = c.req.valid("json");
   console.log(`💸 [Expenses] Adding expense: ${data.description} - $${data.amount} (${data.paymentMethod}) (user: ${user.email})`);
 
-  // Verify the game session belongs to this user
+  // Verify user has access (owner or member)
   const gameSession = await db.gameSession.findFirst({
-    where: { id: data.gameSessionId, userId: user.id },
+    where: {
+      id: data.gameSessionId,
+      OR: [
+        { userId: user.id },
+        { members: { some: { userId: user.id } } },
+      ],
+    },
   });
 
   if (!gameSession) {
     return c.json({ error: "Game session not found" }, 404);
   }
+
+  // Get user initials
+  const initials = user.initials || (user.name ? user.name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) : user.email.slice(0, 2).toUpperCase());
 
   const expense = await db.expense.create({
     data: {
@@ -41,10 +50,12 @@ expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) 
       paymentMethod: data.paymentMethod,
       notes: data.notes ?? null,
       gameSessionId: data.gameSessionId,
+      createdById: user.id,
+      createdByInitials: initials,
     },
   });
 
-  console.log(`💸 [Expenses] Expense created: ${expense.id}`);
+  console.log(`💸 [Expenses] Expense created: ${expense.id} by ${initials}`);
 
   return c.json({
     expense: {
@@ -57,6 +68,7 @@ expensesRouter.post("/", zValidator("json", addExpenseRequestSchema), async (c) 
       notes: expense.notes,
       timestamp: expense.timestamp.toISOString(),
       gameSessionId: expense.gameSessionId,
+      createdByInitials: expense.createdByInitials,
     },
   } satisfies AddExpenseResponse);
 });
@@ -69,9 +81,15 @@ expensesRouter.get("/:sessionId", async (c) => {
   const sessionId = c.req.param("sessionId");
   console.log(`💸 [Expenses] Getting expenses for session: ${sessionId} (user: ${user.email})`);
 
-  // Verify the game session belongs to this user
+  // Verify user has access (owner or member)
   const gameSession = await db.gameSession.findFirst({
-    where: { id: sessionId, userId: user.id },
+    where: {
+      id: sessionId,
+      OR: [
+        { userId: user.id },
+        { members: { some: { userId: user.id } } },
+      ],
+    },
   });
 
   if (!gameSession) {
@@ -96,6 +114,7 @@ expensesRouter.get("/:sessionId", async (c) => {
       notes: e.notes,
       timestamp: e.timestamp.toISOString(),
       gameSessionId: e.gameSessionId,
+      createdByInitials: e.createdByInitials,
     })),
   } satisfies GetExpensesResponse);
 });

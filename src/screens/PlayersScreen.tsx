@@ -724,6 +724,7 @@ const PlayerCard = ({
                   </View>
                   <Text className="text-slate-500 text-xs">
                     {formatDate(transaction.timestamp)} • {formatTime(transaction.timestamp)}
+                    {transaction.createdByInitials && ` • ${transaction.createdByInitials}`}
                   </Text>
                   {transaction.notes && (
                     <Text className="text-slate-500 text-xs mt-1">{transaction.notes}</Text>

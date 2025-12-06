@@ -9,6 +9,7 @@ import { gameRouter } from "./routes/game";
 import { playersRouter } from "./routes/players";
 import { dealersRouter } from "./routes/dealers";
 import { expensesRouter } from "./routes/expenses";
+import { shareRouter } from "./routes/share";
 import { type AppType } from "./types";
 
 // AppType context adds user and session to the context, will be null if the user or session is null
@@ -78,6 +79,9 @@ app.route("/api/dealers", dealersRouter);
 
 console.log("💸 Mounting expense routes at /api/expenses");
 app.route("/api/expenses", expensesRouter);
+
+console.log("🔗 Mounting share routes at /api/share");
+app.route("/api/share", shareRouter);
 
 // Health check endpoint
 // Used by load balancers and monitoring tools to verify service is running
