@@ -49,6 +49,8 @@ const CurrencySelectionModal = ({
   onSelect,
   selectedCurrency = "USD",
 }: CurrencySelectionModalProps) => {
+  console.log("[CurrencyModal] Rendering - visible:", visible, "selectedCurrency:", selectedCurrency);
+
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View className="flex-1 justify-end">
@@ -75,6 +77,7 @@ const CurrencySelectionModal = ({
                 <Pressable
                   key={currency.code}
                   onPress={() => {
+                    console.log("[CurrencyModal] Currency pressed:", currency.code);
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     onSelect(currency);
                   }}

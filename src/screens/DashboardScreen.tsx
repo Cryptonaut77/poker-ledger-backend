@@ -178,11 +178,13 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   // Handle currency selection and start new game
   const handleStartNewGame = () => {
+    console.log("[Currency] Opening currency selection modal");
     setManageModalVisible(false);
     setCurrencyModalVisible(true);
   };
 
   const handleCurrencySelect = (currency: Currency) => {
+    console.log("[Currency] Currency selected:", currency.code);
     setSelectedCurrency(currency.code);
     startNewGameMutation.mutate(currency.code);
   };
