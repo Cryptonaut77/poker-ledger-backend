@@ -286,7 +286,7 @@ const DashboardScreen = ({ navigation }: Props) => {
                   <Text className="text-slate-300 font-medium">Credit (Owed)</Text>
                 </View>
                 <Text className="text-red-400 text-xl font-bold">
-                  {formatCurrency(paymentBreakdown.credit)}
+                  {summary ? formatCurrency(summary.creditBalance) : "$0.00"}
                 </Text>
               </View>
             </View>

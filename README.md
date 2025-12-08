@@ -261,12 +261,12 @@ Added smart credit settlement for player cashouts:
   - Original cashout amount
   - Credit owed
   - Actual cash to pay
-- **Dual transactions**: System creates two transactions for transparency
-  - Credit cashout to reduce credit balance
-  - Cash cashout for remaining amount
-- **Real-time tracking**: Credit balance updates automatically as transactions are added
-- **Till Balance accuracy**: Only actual cash paid affects Till Balance, not credit settlements
-- **Example**: Player buys in $500 on credit, cashes out $800 → Credit cleared ($500), Cash paid ($300)
+- **Dual transactions**: System creates two clear transactions
+  - IOU cashout: Credit paid back (e.g., $500 credit cleared)
+  - Cash cashout: Profit paid in cash (e.g., $300 profit)
+- **Dashboard updates**: Credit balance automatically resets to zero after settlement
+- **Till Balance accuracy**: Only actual cash paid affects Till Balance
+- **Example**: Player buys in $500 on credit, cashes out $800 → IOU $500 (credit paid), Cash $300 (profit)
 
 ### QR Code Sharing (Dec 8, 2024)
 Added QR code generation for easy game sharing:

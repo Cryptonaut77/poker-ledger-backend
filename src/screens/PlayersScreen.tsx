@@ -251,7 +251,7 @@ const PlayersScreen = ({ navigation }: Props) => {
             type: "cashout",
             amount: creditToSettle,
             paymentMethod: "credit",
-            notes: `Credit settlement - ${formatCurrency(creditToSettle)} credit cleared from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            notes: `Credit paid back from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
             gameSessionId: currentSessionId,
           });
         }
@@ -263,7 +263,7 @@ const PlayersScreen = ({ navigation }: Props) => {
             type: "cashout",
             amount: cashToPay,
             paymentMethod: "cash",
-            notes: `Cash paid after credit settlement - ${formatCurrency(creditToSettle)} credit cleared, ${formatCurrency(cashToPay)} paid in cash from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            notes: `Cash profit from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
             gameSessionId: currentSessionId,
           });
         }
