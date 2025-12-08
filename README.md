@@ -36,6 +36,11 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
 - Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit/IOU)
 - **Context-aware labels**: Buy-ins show "Credit" while cashouts show "IOU" for the same payment method
+- **Automatic credit settlement**: When a player who bought in on credit cashes out, the credit is automatically settled
+  - Shows credit settlement breakdown in cashout modal
+  - Calculates actual cash to pay after credit settlement
+  - Creates separate transactions for credit settlement and cash payment
+  - Credit balance tracked per player and updates automatically
 - Track cashouts
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
@@ -248,6 +253,20 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Automatic Credit Settlement (Dec 8, 2024)
+Added smart credit settlement for player cashouts:
+- **Automatic calculation**: When a player with credit balance cashes out, credit is automatically settled first
+- **Visual breakdown**: Cashout modal shows detailed settlement calculation
+  - Original cashout amount
+  - Credit owed
+  - Actual cash to pay
+- **Dual transactions**: System creates two transactions for transparency
+  - Credit cashout to reduce credit balance
+  - Cash cashout for remaining amount
+- **Real-time tracking**: Credit balance updates automatically as transactions are added
+- **Till Balance accuracy**: Only actual cash paid affects Till Balance, not credit settlements
+- **Example**: Player buys in $500 on credit, cashes out $800 → Credit cleared ($500), Cash paid ($300)
 
 ### QR Code Sharing (Dec 8, 2024)
 Added QR code generation for easy game sharing:

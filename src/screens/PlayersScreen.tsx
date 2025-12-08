@@ -31,6 +31,7 @@ type PlayerSummary = {
   totalBuyIns: number;
   totalCashouts: number;
   netAmount: number;
+  creditBalance: number; // Amount owed by player (from credit buy-ins)
   transactionCount: number;
   transactions: PlayerTransaction[];
 };
@@ -46,6 +47,7 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<PlayerTransaction | null>(null);
+  const [selectedPlayerCredit, setSelectedPlayerCredit] = useState<number>(0);
 
   // Fetch active game session - refetch frequently to prevent stale data
   const { data: gameData, refetch: refetchGame } = useQuery({
@@ -128,17 +130,30 @@ const PlayersScreen = ({ navigation }: Props) => {
         existing.transactionCount++;
         if (transaction.type === "buy-in") {
           existing.totalBuyIns += transaction.amount;
+          // Track credit buy-ins
+          if (transaction.paymentMethod === "credit") {
+            existing.creditBalance += transaction.amount;
+          }
         } else {
           existing.totalCashouts += transaction.amount;
+          // Credit cashouts reduce the credit balance
+          if (transaction.paymentMethod === "credit") {
+            existing.creditBalance -= transaction.amount;
+          }
         }
         existing.netAmount = existing.totalBuyIns - existing.totalCashouts;
       } else {
+        const isBuyInCredit = transaction.type === "buy-in" && transaction.paymentMethod === "credit";
+        const isCashoutCredit = transaction.type === "cashout" && transaction.paymentMethod === "credit";
+        const initialCredit = isBuyInCredit ? transaction.amount : (isCashoutCredit ? -transaction.amount : 0);
+
         playerMap.set(transaction.playerName, {
           name: transaction.playerName,
           totalBuyIns: transaction.type === "buy-in" ? transaction.amount : 0,
           totalCashouts: transaction.type === "cashout" ? transaction.amount : 0,
           netAmount:
             transaction.type === "buy-in" ? transaction.amount : -transaction.amount,
+          creditBalance: initialCredit,
           transactionCount: 1,
           transactions: [transaction],
         });
@@ -165,6 +180,16 @@ const PlayersScreen = ({ navigation }: Props) => {
 
   const handlePlayerNameChange = (text: string) => {
     setPlayerName(text);
+
+    // If this is a cashout, check if the player has credit balance
+    if (transactionType === "cashout") {
+      const player = playerSummaries.find(p => p.name.toLowerCase() === text.trim().toLowerCase());
+      if (player) {
+        setSelectedPlayerCredit(player.creditBalance);
+      } else {
+        setSelectedPlayerCredit(0);
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -206,16 +231,69 @@ const PlayersScreen = ({ navigation }: Props) => {
       return;
     }
 
-    console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
+    // Handle credit settlement for cashouts
+    if (transactionType === "cashout" && selectedPlayerCredit > 0) {
+      const creditToSettle = Math.min(numAmount, selectedPlayerCredit);
+      const cashToPay = Math.max(0, numAmount - selectedPlayerCredit);
 
-    addTransactionMutation.mutate({
-      playerName: playerName.trim(),
-      type: transactionType,
-      amount: numAmount,
-      paymentMethod,
-      notes: notes.trim() || undefined,
-      gameSessionId: currentSessionId,
-    });
+      console.log("[Players] Credit settlement", {
+        totalCashout: numAmount,
+        creditSettled: creditToSettle,
+        cashPaid: cashToPay
+      });
+
+      try {
+        // First, create a negative credit buy-in to settle the credit
+        if (creditToSettle > 0) {
+          await api.post("/api/players/transaction", {
+            playerName: playerName.trim(),
+            type: "cashout",
+            amount: creditToSettle,
+            paymentMethod: "credit",
+            notes: `Credit settlement (${formatCurrency(creditToSettle)} credit cleared)`,
+            gameSessionId: currentSessionId,
+          });
+        }
+
+        // Then, create the cash cashout for the remaining amount
+        if (cashToPay > 0) {
+          await api.post("/api/players/transaction", {
+            playerName: playerName.trim(),
+            type: "cashout",
+            amount: cashToPay,
+            paymentMethod: "cash",
+            notes: notes.trim() ? `Cash paid after credit settlement. ${notes.trim()}` : "Cash paid after credit settlement",
+            gameSessionId: currentSessionId,
+          });
+        }
+
+        // Refresh data
+        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+        setModalVisible(false);
+        resetForm();
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (error) {
+        const errorMessage = error instanceof ApiError
+          ? error.getUserMessage()
+          : "Failed to process cashout with credit settlement.";
+        console.error("[Players] Error with credit settlement:", errorMessage);
+        Alert.alert("Error", errorMessage);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
+    } else {
+      // Normal transaction (no credit settlement)
+      console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
+
+      addTransactionMutation.mutate({
+        playerName: playerName.trim(),
+        type: transactionType,
+        amount: numAmount,
+        paymentMethod,
+        notes: notes.trim() || undefined,
+        gameSessionId: currentSessionId,
+      });
+    }
   };
 
   const handleEditTransaction = (transaction: PlayerTransaction) => {
@@ -391,6 +469,35 @@ const PlayersScreen = ({ navigation }: Props) => {
                   style={{ minHeight: 48 }}
                 />
               </View>
+
+              {/* Credit Settlement Info for Cashouts */}
+              {transactionType === "cashout" && selectedPlayerCredit > 0 && amount && parseFloat(amount) > 0 && (
+                <View className="bg-amber-900/20 border border-amber-700/50 rounded-lg p-4">
+                  <Text className="text-amber-400 text-sm font-bold mb-2">Credit Settlement</Text>
+                  <View className="gap-2">
+                    <View className="flex-row justify-between">
+                      <Text className="text-slate-300 text-sm">Cashout Amount:</Text>
+                      <Text className="text-white text-sm font-semibold">{formatCurrency(parseFloat(amount))}</Text>
+                    </View>
+                    <View className="flex-row justify-between">
+                      <Text className="text-slate-300 text-sm">Credit Owed:</Text>
+                      <Text className="text-amber-400 text-sm font-semibold">-{formatCurrency(selectedPlayerCredit)}</Text>
+                    </View>
+                    <View className="border-t border-amber-700/30 my-1" />
+                    <View className="flex-row justify-between">
+                      <Text className="text-white text-sm font-bold">Cash to Pay:</Text>
+                      <Text className="text-emerald-400 text-base font-bold">
+                        {formatCurrency(Math.max(0, parseFloat(amount) - selectedPlayerCredit))}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text className="text-slate-400 text-xs mt-2">
+                    {parseFloat(amount) <= selectedPlayerCredit
+                      ? "Credit will be reduced. No cash payment needed."
+                      : "Credit will be cleared and remaining paid in cash."}
+                  </Text>
+                </View>
+              )}
 
               <View>
                 <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
