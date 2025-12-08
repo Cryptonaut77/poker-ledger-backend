@@ -10,9 +10,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Copy, UserPlus, Users, RefreshCw, Trash2, X, Check } from "lucide-react-native";
+import { Copy, UserPlus, Users, RefreshCw, Trash2, X, Check, QrCode } from "lucide-react-native";
 import * as Clipboard from "expo-clipboard";
 import * as Haptics from "expo-haptics";
+import QRCode from "react-native-qrcode-svg";
 
 import { api } from "@/lib/api";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -42,6 +43,7 @@ const ShareGameScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [joinCode, setJoinCode] = useState("");
   const [showJoinForm, setShowJoinForm] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
 
   // Fetch current share info
   const { data: shareData, isLoading } = useQuery({
@@ -177,6 +179,19 @@ const ShareGameScreen = ({ navigation }: Props) => {
                     {formatExpiry(shareData.shareCodeExpiresAt)}
                   </Text>
 
+                  {/* QR Code Section */}
+                  {showQRCode && (
+                    <View className="bg-white rounded-lg p-6 items-center mb-4">
+                      <QRCode
+                        value={shareData.shareCode}
+                        size={200}
+                        backgroundColor="white"
+                        color="black"
+                      />
+                      <Text className="text-slate-700 text-xs mt-3 font-medium">Scan to join game</Text>
+                    </View>
+                  )}
+
                   <View className="flex-row gap-2">
                     <Pressable
                       onPress={copyShareCode}
@@ -184,6 +199,16 @@ const ShareGameScreen = ({ navigation }: Props) => {
                     >
                       <Copy size={18} color="#fff" />
                       <Text className="text-white font-semibold">Copy</Text>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setShowQRCode(!showQRCode);
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                      }}
+                      className={`flex-1 ${showQRCode ? 'bg-slate-700' : 'bg-blue-600'} py-3 rounded-lg flex-row items-center justify-center gap-2`}
+                    >
+                      <QrCode size={18} color="#fff" />
+                      <Text className="text-white font-semibold">{showQRCode ? 'Hide QR' : 'QR Code'}</Text>
                     </Pressable>
                     <Pressable
                       onPress={shareCode}

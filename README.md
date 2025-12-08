@@ -14,6 +14,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ### 🔗 Team Collaboration (NEW!)
 - **Share codes** - Generate a 6-character code to invite coworkers to your game
+- **QR code sharing** - Display a scannable QR code for easy access to your game
 - **Join games** - Enter a share code to join a game as an editor
 - **Team members list** - View all members who have access to the game
 - **User initials** - Every entry shows who created it (initials displayed)
@@ -105,6 +106,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - **ExpensesScreen** (`src/screens/ExpensesScreen.tsx`) - Expense management
 - **GameHistoryScreen** (`src/screens/GameHistoryScreen.tsx`) - View past saved games
 - **LoginModalScreen** (`src/screens/LoginModalScreen.tsx`) - Authentication
+- **ShareGameScreen** (`src/screens/ShareGameScreen.tsx`) - Team collaboration and QR code sharing
 
 ### Backend API Routes
 - **Game Routes** (`/api/game/*`)
@@ -246,6 +248,20 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### QR Code Sharing (Dec 8, 2024)
+Added QR code generation for easy game sharing:
+- **QR Code button**: Toggle to display/hide a scannable QR code on the Share Game screen
+- **Instant access**: Team members can scan the QR code to get the share code
+- **Clean design**: QR code displays on a white background for optimal scanning
+- **Easy toggle**: Tap "QR Code" button to show, tap "Hide QR" to dismiss
+- Located in the Share Game screen alongside Copy and Share buttons
+
+### Centered Bottom Buttons (Dec 8, 2024)
+Improved button positioning on Players screen:
+- **Buy In and Cash Out buttons** now centered at bottom of screen
+- Prevents overlap with edit icons when player list is full
+- Better visual balance and accessibility
 
 ### Network Status Banner (Dec 6, 2024)
 Added a visual indicator for connection issues:
