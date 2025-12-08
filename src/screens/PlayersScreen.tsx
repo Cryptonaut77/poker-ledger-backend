@@ -304,7 +304,7 @@ const PlayersScreen = ({ navigation }: Props) => {
       </ScrollView>
 
       {/* Add Button */}
-      <View className="absolute bottom-28 right-4 flex-row gap-2">
+      <View className="absolute bottom-28 left-0 right-0 flex-row gap-2 justify-center">
         <Pressable
           onPress={() => {
             console.log("[Players] Cash-out button pressed");
