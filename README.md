@@ -252,10 +252,13 @@ Access your past saved games:
 ### QR Code Sharing (Dec 8, 2024)
 Added QR code generation for easy game sharing:
 - **QR Code button**: Toggle to display/hide a scannable QR code on the Share Game screen
-- **Instant access**: Team members can scan the QR code to get the share code
+- **Deep link integration**: QR codes contain a deep link that opens the app directly
+- **Auto-fill code**: When scanned, the share code is automatically filled in the join form
+- **Expo Go compatible**: Works with Expo Go app on both iOS and Android
 - **Clean design**: QR code displays on a white background for optimal scanning
 - **Easy toggle**: Tap "QR Code" button to show, tap "Hide QR" to dismiss
 - Located in the Share Game screen alongside Copy and Share buttons
+- **How it works**: Scan QR code → App opens → Join form appears with code pre-filled
 
 ### Centered Bottom Buttons (Dec 8, 2024)
 Improved button positioning on Players screen:

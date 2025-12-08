@@ -39,11 +39,20 @@ type JoinGameResponse = {
   ownerName: string | null;
 };
 
-const ShareGameScreen = ({ navigation }: Props) => {
+const ShareGameScreen = ({ navigation, route }: Props) => {
   const queryClient = useQueryClient();
   const [joinCode, setJoinCode] = useState("");
   const [showJoinForm, setShowJoinForm] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
+
+  // Check if we have a code from deep link (QR code scan)
+  React.useEffect(() => {
+    const params = route.params as { code?: string } | undefined;
+    if (params?.code) {
+      setJoinCode(params.code);
+      setShowJoinForm(true);
+    }
+  }, [route.params]);
 
   // Fetch current share info
   const { data: shareData, isLoading } = useQuery({
@@ -183,12 +192,15 @@ const ShareGameScreen = ({ navigation }: Props) => {
                   {showQRCode && (
                     <View className="bg-white rounded-lg p-6 items-center mb-4">
                       <QRCode
-                        value={shareData.shareCode}
+                        value={`vibecode://share?code=${shareData.shareCode}`}
                         size={200}
                         backgroundColor="white"
                         color="black"
                       />
                       <Text className="text-slate-700 text-xs mt-3 font-medium">Scan to join game</Text>
+                      <Text className="text-slate-500 text-[10px] mt-1 text-center">
+                        Or manually enter: {shareData.shareCode}
+                      </Text>
                     </View>
                   )}
 

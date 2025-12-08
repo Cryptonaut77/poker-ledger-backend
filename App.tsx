@@ -9,6 +9,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import NetworkStatusBanner from "@/components/NetworkStatusBanner";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Linking from "expo-linking";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -31,6 +32,32 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 */
 
+// Deep linking configuration
+const linking = {
+  prefixes: [Linking.createURL("/"), "vibecode://"],
+  config: {
+    screens: {
+      Tabs: {
+        path: "tabs",
+        screens: {
+          DashboardTab: "dashboard",
+          PlayersTab: "players",
+          DealersTab: "dealers",
+          ExpensesTab: "expenses",
+          HistoryTab: "history",
+        },
+      },
+      ShareGameScreen: {
+        path: "share",
+        parse: {
+          code: (code: string) => code,
+        },
+      },
+      LoginModalScreen: "login",
+    },
+  },
+};
+
 // Inner component that can use hooks
 function AppContent() {
   const insets = useSafeAreaInsets();
@@ -40,7 +67,7 @@ function AppContent() {
       <View style={{ height: insets.top, backgroundColor: "#0f172a" }} />
       <NetworkStatusBanner />
       <View style={{ flex: 1 }}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           <RootStackNavigator />
           <StatusBar style="auto" />
         </NavigationContainer>
