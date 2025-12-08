@@ -118,6 +118,7 @@ export const gameSummarySchema = z.object({
   netProfit: z.number(),
   tillBalance: z.number(),
   playerCount: z.number(),
+  creditBalance: z.number(), // Total credit owed by all players
 });
 export type GameSummary = z.infer<typeof gameSummarySchema>;
 

@@ -176,6 +176,7 @@ const PlayersScreen = ({ navigation }: Props) => {
     setAmount("");
     setPaymentMethod("cash");
     setNotes("");
+    setSelectedPlayerCredit(0);
   };
 
   const handlePlayerNameChange = (text: string) => {
@@ -243,26 +244,26 @@ const PlayersScreen = ({ navigation }: Props) => {
       });
 
       try {
-        // First, create a negative credit buy-in to settle the credit
+        // First, create a credit cashout to settle the credit
         if (creditToSettle > 0) {
           await api.post("/api/players/transaction", {
             playerName: playerName.trim(),
             type: "cashout",
             amount: creditToSettle,
             paymentMethod: "credit",
-            notes: `Credit settlement (${formatCurrency(creditToSettle)} credit cleared)`,
+            notes: `Credit settlement - ${formatCurrency(creditToSettle)} credit cleared from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
             gameSessionId: currentSessionId,
           });
         }
 
-        // Then, create the cash cashout for the remaining amount
+        // Then, create the cash cashout for the remaining amount (if any)
         if (cashToPay > 0) {
           await api.post("/api/players/transaction", {
             playerName: playerName.trim(),
             type: "cashout",
             amount: cashToPay,
             paymentMethod: "cash",
-            notes: notes.trim() ? `Cash paid after credit settlement. ${notes.trim()}` : "Cash paid after credit settlement",
+            notes: `Cash paid after credit settlement - ${formatCurrency(creditToSettle)} credit cleared, ${formatCurrency(cashToPay)} paid in cash from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
             gameSessionId: currentSessionId,
           });
         }

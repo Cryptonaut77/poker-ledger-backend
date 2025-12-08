@@ -300,19 +300,32 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   // Till balance = Physical cash in the till
   // Cash buy-ins add money (money IN)
-  // Cashouts remove money (paying players OUT)
+  // Cash cashouts remove money (paying players OUT)
   // Paid tips remove money (paying dealers OUT from player buy-ins)
   // Expenses remove money (paying for costs OUT)
+  // Credit transactions don't affect till (no physical cash movement)
   const cashBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
-  const tillBalance = cashBuyIns - totalCashouts - totalPaidTips - totalExpenses;
+  const cashCashouts = session.playerTransactions
+    .filter((t) => t.type === "cashout" && t.paymentMethod === "cash")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const tillBalance = cashBuyIns - cashCashouts - totalPaidTips - totalExpenses;
+
+  // Calculate total credit balance (credit buy-ins - credit cashouts)
+  const creditBuyIns = session.playerTransactions
+    .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const creditCashouts = session.playerTransactions
+    .filter((t) => t.type === "cashout" && t.paymentMethod === "credit")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const creditBalance = creditBuyIns - creditCashouts;
 
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
   const playerCount = uniquePlayers.size;
 
-  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)}`);
+  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)}, Credit balance: $${creditBalance.toFixed(2)}`);
 
   // Return clean session object without nested relations to match contract
   return c.json({
@@ -334,6 +347,7 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     netProfit,
     tillBalance,
     playerCount,
+    creditBalance,
   } satisfies GameSummary);
 });
 
