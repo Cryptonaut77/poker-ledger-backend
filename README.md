@@ -200,8 +200,7 @@ The app automatically creates a game session when you first open it. All transac
 2. Tap "Manage" button
 3. Tap "Start New Game"
 4. Select your preferred currency from the list
-5. Select your preferred language from the list
-6. New game starts with your chosen currency and language
+5. New game starts with your chosen currency - all amounts will be formatted accordingly
 
 ### Tracking Players
 1. Navigate to the Players tab
@@ -273,14 +272,6 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
-
-### Language Selection (Dec 8, 2024)
-Added ability to select language when starting a new game:
-- **24 languages supported**: English, Spanish, French, German, Italian, Portuguese, Russian, Japanese, Korean, Chinese (Simplified & Traditional), Arabic, Hindi, Dutch, Swedish, Norwegian, Danish, Finnish, Polish, Turkish, Thai, Vietnamese, Indonesian, Malay
-- **Two-step setup**: First select currency, then select language when starting a new game
-- **Native language names**: Languages displayed in their native script (e.g., "日本語" for Japanese, "Español" for Spanish)
-- **Per-game language**: Each game session stores its own language preference
-- **How it works**: Click "Start New Game" → Select currency → Select language → Game starts
 
 ### Currency Selection (Dec 8, 2024)
 Added ability to select local currency when starting a new game:
