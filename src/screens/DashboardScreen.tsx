@@ -10,6 +10,7 @@ import * as RevenueCat from "@/lib/revenuecatClient";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type { GetActiveGameResponse, GameSummary, GetPlayerTransactionsResponse } from "@/shared/contracts";
 import { CurrencySelectionModal, type Currency } from "@/components/CurrencySelectionModal";
+import { LanguageSelectionModal, type Language } from "@/components/LanguageSelectionModal";
 import { formatCurrency as formatCurrencyUtil } from "@/utils/currency";
 
 type Props = BottomTabScreenProps<"DashboardTab">;
@@ -18,7 +19,9 @@ const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
   const [currencyModalVisible, setCurrencyModalVisible] = React.useState(false);
+  const [languageModalVisible, setLanguageModalVisible] = React.useState(false);
   const [selectedCurrency, setSelectedCurrency] = React.useState<string>("USD");
+  const [selectedLanguage, setSelectedLanguage] = React.useState<string>("en");
 
   // Fetch active game session - with retry and refetch options
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
@@ -154,7 +157,8 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   // Start new game mutation
   const startNewGameMutation = useMutation({
-    mutationFn: (currency: string) => api.post("/api/game/new", { currency }),
+    mutationFn: ({ currency, language }: { currency: string; language: string }) =>
+      api.post("/api/game/new", { currency, language }),
     onMutate: async () => {
       // Cancel any outgoing queries for the old session
       await queryClient.cancelQueries({ queryKey: ["gameSummary", sessionId] });
@@ -172,6 +176,7 @@ const DashboardScreen = ({ navigation }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["activeGame"] });
       setManageModalVisible(false);
       setCurrencyModalVisible(false);
+      setLanguageModalVisible(false);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
   });
@@ -186,7 +191,14 @@ const DashboardScreen = ({ navigation }: Props) => {
   const handleCurrencySelect = (currency: Currency) => {
     console.log("[Currency] Currency selected:", currency.code);
     setSelectedCurrency(currency.code);
-    startNewGameMutation.mutate(currency.code);
+    setCurrencyModalVisible(false);
+    setLanguageModalVisible(true);
+  };
+
+  const handleLanguageSelect = (language: Language) => {
+    console.log("[Language] Language selected:", language.code);
+    setSelectedLanguage(language.code);
+    startNewGameMutation.mutate({ currency: selectedCurrency, language: language.code });
   };
 
   const isLoading = isLoadingGame || isLoadingSummary;
@@ -504,6 +516,14 @@ const DashboardScreen = ({ navigation }: Props) => {
         onClose={() => setCurrencyModalVisible(false)}
         onSelect={handleCurrencySelect}
         selectedCurrency={selectedCurrency}
+      />
+
+      {/* Language Selection Modal */}
+      <LanguageSelectionModal
+        visible={languageModalVisible}
+        onClose={() => setLanguageModalVisible(false)}
+        onSelect={handleLanguageSelect}
+        selectedLanguage={selectedLanguage}
       />
     </View>
   );

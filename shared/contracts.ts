@@ -20,6 +20,7 @@ export const gameSessionSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   currency: z.string().default("USD"),
+  language: z.string().default("en"),
 });
 export type GameSession = z.infer<typeof gameSessionSchema>;
 
@@ -93,6 +94,7 @@ export type DeleteGameResponse = z.infer<typeof deleteGameResponseSchema>;
 // POST /api/game/new - Start a new game session
 export const startNewGameRequestSchema = z.object({
   currency: z.string().optional().default("USD"),
+  language: z.string().optional().default("en"),
 });
 export type StartNewGameRequest = z.infer<typeof startNewGameRequestSchema>;
 

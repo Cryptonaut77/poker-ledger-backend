@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 138ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 129ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
 
 
-Checked 761 installs across 703 packages (no changes) [1392.00ms]
+Checked 761 installs across 703 packages (no changes) [1.51s]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -29,7 +29,7 @@ The database is already in sync with the Prisma schema.
 
 Running generate... (Use --skip-generate to skip the generators)
 [2K[1A[2K[GRunning generate... - Prisma Client
-[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 196ms
+[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 291ms
 
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
@@ -73,64 +73,53 @@ Failed to find Response internal state key
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
 🎮 [Game] Getting active game session for user: lagornot77@gmail.com
 🎮 [Game] User lagornot77@gmail.com has completed 1 games
-🎮 [Game] Found active session: cmixpwgxy0001m2wanl538lub
+🎮 [Game] Found active session: cmixrxwg00001m2rtdkb8snhj
 ✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/active - Status: 200
---> GET /api/game/active [32m200[0m 5ms
-<-- GET /api/game/cmixpwgxy0001m2wanl538lub/summary
-📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary
-📨 [REQUEST] Path: /api/game/cmixpwgxy0001m2wanl538lub/summary
+--> GET /api/game/active [32m200[0m 4ms
+<-- GET /api/game/cmixrxwg00001m2rtdkb8snhj/summary
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrxwg00001m2rtdkb8snhj/summary
+📨 [REQUEST] Path: /api/game/cmixrxwg00001m2rtdkb8snhj/summary
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
 🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmixpwgxy0001m2wanl538lub, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary
+🎮 [Game] Getting summary for session: cmixrxwg00001m2rtdkb8snhj, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixrxwg00001m2rtdkb8snhj/summary
 🎮 [Game] Request method: GET
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary - Status: 200
---> GET /api/game/cmixpwgxy0001m2wanl538lub/summary [32m200[0m 4ms
-<-- GET /api/players/transactions/cmixpwgxy0001m2wanl538lub
-📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixpwgxy0001m2wanl538lub
-📨 [REQUEST] Path: /api/players/transactions/cmixpwgxy0001m2wanl538lub
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrxwg00001m2rtdkb8snhj/summary - Status: 200
+--> GET /api/game/cmixrxwg00001m2rtdkb8snhj/summary [32m200[0m 5ms
+<-- GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj
+📨 [REQUEST] Path: /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmixpwgxy0001m2wanl538lub (user: lagornot77@gmail.com)
+💰 [Players] Getting transactions for session: cmixrxwg00001m2rtdkb8snhj (user: lagornot77@gmail.com)
 💰 [Players] Found 0 transactions
-✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixpwgxy0001m2wanl538lub - Status: 200
---> GET /api/players/transactions/cmixpwgxy0001m2wanl538lub [32m200[0m 3ms
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj - Status: 200
+--> GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj [32m200[0m 2ms
 <-- POST /api/game/new
 📨 [REQUEST] POST http://4.155.216.123:3000/api/game/new
 📨 [REQUEST] Path: /api/game/new
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] Creating new game session for user: lagornot77@gmail.com with currency: EUR
-🎮 [Game] New session created: cmixrxwg00001m2rtdkb8snhj with currency EUR
+🎮 [Game] Creating new game session for user: lagornot77@gmail.com with currency: USD
+🎮 [Game] New session created: cmixrzjpt0001m23u6sw0j9di with currency USD
 ✅ [RESPONSE] POST http://4.155.216.123:3000/api/game/new - Status: 200
---> POST /api/game/new [32m200[0m 24ms
+--> POST /api/game/new [32m200[0m 30ms
 <-- GET /api/game/active
 📨 [REQUEST] GET http://4.155.216.123:3000/api/game/active
 📨 [REQUEST] Path: /api/game/active
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
 🎮 [Game] Getting active game session for user: lagornot77@gmail.com
 🎮 [Game] User lagornot77@gmail.com has completed 1 games
-🎮 [Game] Found active session: cmixrxwg00001m2rtdkb8snhj
+🎮 [Game] Found active session: cmixrzjpt0001m23u6sw0j9di
 ✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/active - Status: 200
---> GET /api/game/active [32m200[0m 4ms
-<-- GET /api/game/cmixpwgxy0001m2wanl538lub/summary
-📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary
-📨 [REQUEST] Path: /api/game/cmixpwgxy0001m2wanl538lub/summary
+--> GET /api/game/active [32m200[0m 3ms
+<-- GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj
+📨 [REQUEST] Path: /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmixpwgxy0001m2wanl538lub, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixpwgxy0001m2wanl538lub/summary - Status: 200
---> GET /api/game/cmixpwgxy0001m2wanl538lub/summary [32m200[0m 2ms
-<-- GET /api/players/transactions/cmixpwgxy0001m2wanl538lub
-📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixpwgxy0001m2wanl538lub
-📨 [REQUEST] Path: /api/players/transactions/cmixpwgxy0001m2wanl538lub
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmixpwgxy0001m2wanl538lub (user: lagornot77@gmail.com)
+💰 [Players] Getting transactions for session: cmixrxwg00001m2rtdkb8snhj (user: lagornot77@gmail.com)
 💰 [Players] Found 0 transactions
-✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixpwgxy0001m2wanl538lub - Status: 200
---> GET /api/players/transactions/cmixpwgxy0001m2wanl538lub [32m200[0m 3ms
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj - Status: 200
+--> GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj [32m200[0m 2ms
 <-- GET /api/game/cmixrxwg00001m2rtdkb8snhj/summary
 📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrxwg00001m2rtdkb8snhj/summary
 📨 [REQUEST] Path: /api/game/cmixrxwg00001m2rtdkb8snhj/summary
@@ -142,11 +131,169 @@ Failed to find Response internal state key
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
 ✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrxwg00001m2rtdkb8snhj/summary - Status: 200
 --> GET /api/game/cmixrxwg00001m2rtdkb8snhj/summary [32m200[0m 2ms
-<-- GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
-📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj
-📨 [REQUEST] Path: /api/players/transactions/cmixrxwg00001m2rtdkb8snhj
+<-- GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] Path: /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+<-- GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] Path: /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
 🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmixrxwg00001m2rtdkb8snhj (user: lagornot77@gmail.com)
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmixrzjpt0001m23u6sw0j9di, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+🎮 [Game] Request method: GET
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmixrzjpt0001m23u6sw0j9di (user: lagornot77@gmail.com)
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary - Status: 200
+--> GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary [32m200[0m 4ms
 💰 [Players] Found 0 transactions
-✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrxwg00001m2rtdkb8snhj - Status: 200
---> GET /api/players/transactions/cmixrxwg00001m2rtdkb8snhj [32m200[0m 2ms
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di - Status: 200
+--> GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di [32m200[0m 5ms
+<-- GET /api/auth/get-session
+📨 [REQUEST] GET http://4.155.216.123:3000/api/auth/get-session
+📨 [REQUEST] Path: /api/auth/get-session
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/auth/get-session - Status: 200
+--> GET /api/auth/get-session [32m200[0m 15ms
+<-- GET /api/game/active
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmixrzjpt0001m23u6sw0j9di
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 5ms
+<-- GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] Path: /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmixrzjpt0001m23u6sw0j9di, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+🎮 [Game] Request method: GET
+<-- GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] Path: /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary - Status: 200
+--> GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary [32m200[0m 15ms
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmixrzjpt0001m23u6sw0j9di (user: lagornot77@gmail.com)
+💰 [Players] Found 0 transactions
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di - Status: 200
+--> GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di [32m200[0m 12ms
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-kqizhiuvxrbz.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-kqizhiuvxrbz.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+🔗 Mounting share routes at /api/share
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Failed to find Response internal state key
+✅ Environment variables validated successfully
+🔐 [Auth] Initializing Better Auth...
+✅ [Auth] Better Auth initialized
+🔗 [Auth] Base URL: https://preview-kqizhiuvxrbz.share.sandbox.dev
+🌐 [Auth] Trusted origins: vibecode://, http://localhost:3000, https://preview-kqizhiuvxrbz.share.sandbox.dev
+🔧 Initializing Hono application...
+🔐 Mounting Better Auth handler at /api/auth/*
+🎮 Mounting game routes at /api/game
+💰 Mounting player routes at /api/players
+🎲 Mounting dealer routes at /api/dealers
+💸 Mounting expense routes at /api/expenses
+🔗 Mounting share routes at /api/share
+⚙️  Starting server...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📍 Environment: development
+🚀 Server is running on port 3000
+🔗 Base URL: http://localhost:3000
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 Available endpoints:
+  🔐 Auth:     /api/auth/*
+  🎮 Game:     GET /api/game/active, POST /api/game/end, GET /api/game/:id/summary
+  💰 Players:  POST /api/players/transaction, GET /api/players/transactions/:sessionId
+  🎲 Dealers:  POST /api/dealers/down, GET /api/dealers/downs/:sessionId
+  💸 Expenses: POST /api/expenses, GET /api/expenses/:sessionId
+  💚 Health:   GET /health
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+<-- GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] Path: /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+<-- GET /api/game/active
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+<-- GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] Path: /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmixrzjpt0001m23u6sw0j9di, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+🎮 [Game] Request method: GET
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmixrzjpt0001m23u6sw0j9di (user: lagornot77@gmail.com)
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary - Status: 200
+--> GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary [32m200[0m 63ms
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmixrzjpt0001m23u6sw0j9di
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 59ms
+💰 [Players] Found 0 transactions
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di - Status: 200
+--> GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di [32m200[0m 58ms
+<-- GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+📨 [REQUEST] Path: /api/game/cmixrzjpt0001m23u6sw0j9di/summary
+<-- GET /api/game/active
+📨 [REQUEST] GET http://4.155.216.123:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmixrzjpt0001m23u6sw0j9di, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary
+🎮 [Game] Request method: GET
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00, Credit balance: $0.00
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/cmixrzjpt0001m23u6sw0j9di/summary - Status: 200
+--> GET /api/game/cmixrzjpt0001m23u6sw0j9di/summary [32m200[0m 15ms
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmixrzjpt0001m23u6sw0j9di
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 29ms
+<-- GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+📨 [REQUEST] Path: /api/players/transactions/cmixrzjpt0001m23u6sw0j9di
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmixrzjpt0001m23u6sw0j9di (user: lagornot77@gmail.com)
+💰 [Players] Found 0 transactions
+✅ [RESPONSE] GET http://4.155.216.123:3000/api/players/transactions/cmixrzjpt0001m23u6sw0j9di - Status: 200
+--> GET /api/players/transactions/cmixrzjpt0001m23u6sw0j9di [32m200[0m 20ms

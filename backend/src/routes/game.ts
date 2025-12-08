@@ -221,8 +221,8 @@ gameRouter.delete("/:sessionId", async (c) => {
 // ============================================
 gameRouter.post("/new", zValidator("json", startNewGameRequestSchema), async (c) => {
   const user = c.get("user")!;
-  const { currency } = c.req.valid("json");
-  console.log(`🎮 [Game] Creating new game session for user: ${user.email} with currency: ${currency}`);
+  const { currency, language } = c.req.valid("json");
+  console.log(`🎮 [Game] Creating new game session for user: ${user.email} with currency: ${currency}, language: ${language}`);
 
   // First, end any active sessions for this user
   await db.gameSession.updateMany({
@@ -241,10 +241,11 @@ gameRouter.post("/new", zValidator("json", startNewGameRequestSchema), async (c)
       isActive: true,
       userId: user.id,
       currency: currency || "USD",
+      language: language || "en",
     },
   });
 
-  console.log(`🎮 [Game] New session created: ${session.id} with currency ${session.currency}`);
+  console.log(`🎮 [Game] New session created: ${session.id} with currency ${session.currency} and language ${session.language}`);
 
   return c.json({
     session: {
