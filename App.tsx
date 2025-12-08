@@ -34,7 +34,7 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 // Deep linking configuration
 const linking = {
-  prefixes: [Linking.createURL("/"), "vibecode://"],
+  prefixes: [Linking.createURL("/"), "pokernightledger://"],
   config: {
     screens: {
       Tabs: {

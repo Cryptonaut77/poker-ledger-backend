@@ -192,7 +192,7 @@ const ShareGameScreen = ({ navigation, route }: Props) => {
                   {showQRCode && (
                     <View className="bg-white rounded-lg p-6 items-center mb-4">
                       <QRCode
-                        value={`vibecode://share?code=${shareData.shareCode}`}
+                        value={`pokernightledger://share?code=${shareData.shareCode}`}
                         size={200}
                         backgroundColor="white"
                         color="black"
