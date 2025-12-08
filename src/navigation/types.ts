@@ -13,6 +13,7 @@ export type RootStackParamList = {
   Tabs: NavigatorScreenParams<BottomTabParamList> | undefined;
   LoginModalScreen: undefined;
   ShareGameScreen: undefined;
+  PaywallScreen: undefined;
 };
 
 export type BottomTabParamList = {

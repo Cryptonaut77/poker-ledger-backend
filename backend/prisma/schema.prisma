@@ -9,19 +9,20 @@ datasource db {
 }
 
 model User {
-  id            String        @id
-  email         String        @unique
-  name          String?
-  initials      String?       // User's initials for tracking entries
-  emailVerified Boolean       @default(false)
-  image         String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @default(now()) @updatedAt
-  Profile       Profile?
-  accounts      Account[]
-  sessions      Session[]
-  gameSessions  GameSession[] // Games this user owns
-  sharedGames   GameSessionMember[] // Games shared with this user
+  id               String        @id
+  email            String        @unique
+  name             String?
+  initials         String?       // User's initials for tracking entries
+  emailVerified    Boolean       @default(false)
+  image            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  completedGames   Int           @default(0) // Track number of completed games for paywall
+  Profile          Profile?
+  accounts         Account[]
+  sessions         Session[]
+  gameSessions     GameSession[] // Games this user owns
+  sharedGames      GameSessionMember[] // Games shared with this user
 
   @@map("user")
 }

@@ -68,6 +68,7 @@ export type Expense = z.infer<typeof expenseSchema>;
 // GET /api/game/active - Get or create active game session
 export const getActiveGameResponseSchema = z.object({
   session: gameSessionSchema,
+  userCompletedGames: z.number(),
 });
 export type GetActiveGameResponse = z.infer<typeof getActiveGameResponseSchema>;
 

@@ -6,6 +6,7 @@ import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, Power, Tra
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
+import * as RevenueCat from "@/lib/revenuecatClient";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type { GetActiveGameResponse, GameSummary, GetPlayerTransactionsResponse } from "@/shared/contracts";
 
@@ -14,6 +15,7 @@ type Props = BottomTabScreenProps<"DashboardTab">;
 const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
+  const [hasCheckedPaywall, setHasCheckedPaywall] = React.useState(false);
 
   // Fetch active game session - with retry and refetch options
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
@@ -24,6 +26,31 @@ const DashboardScreen = ({ navigation }: Props) => {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
+
+  // Check paywall conditions when game data loads
+  React.useEffect(() => {
+    if (!gameData || hasCheckedPaywall) return;
+
+    const checkPaywall = async () => {
+      // Only show paywall if user has completed at least 1 game
+      if (gameData.userCompletedGames > 0) {
+        // Check if user has premium entitlement
+        const hasPremiumResult = await RevenueCat.hasEntitlement("premium");
+
+        // If RevenueCat is not configured or user doesn't have premium, show paywall
+        if (hasPremiumResult.ok && !hasPremiumResult.data) {
+          navigation.navigate("PaywallScreen");
+        } else if (!hasPremiumResult.ok && hasPremiumResult.reason === "not_configured") {
+          // RevenueCat not configured, allow access (dev/test mode)
+          console.log("[Paywall] RevenueCat not configured, allowing access");
+        }
+      }
+
+      setHasCheckedPaywall(true);
+    };
+
+    checkPaywall();
+  }, [gameData, hasCheckedPaywall, navigation]);
 
   // Safe session ID extraction with null check
   const sessionId = gameData?.session?.id;

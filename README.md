@@ -1,8 +1,16 @@
-# Poker Game Manager
+# Poker Night Ledger
 
 A beautiful, sophisticated mobile app for managing home poker games. Track player buy-ins, cashouts, dealer tips, rake, and expenses all in one place.
 
 ## Features
+
+### 💎 Premium Subscription
+- **Free first game** - Try the full app experience with your first poker game
+- **Premium required** - After your first completed game, subscribe to continue tracking unlimited games
+- **Monthly plan**: $19.99/month
+- **Yearly plan**: $158/year (save 34%)
+- **RevenueCat powered** - Seamless subscription management and restoration
+- **All features included** - Unlimited games, cloud sync, team collaboration, and priority support
 
 ### 🔐 User Authentication (Required)
 - Email and password sign up/sign in

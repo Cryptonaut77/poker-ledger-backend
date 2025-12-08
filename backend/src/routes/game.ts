@@ -41,6 +41,12 @@ gameRouter.get("/active", async (c) => {
       session = membership?.gameSession ?? null;
     }
 
+    // Get fresh user data to check completedGames count
+    const currentUser = await db.user.findUnique({
+      where: { id: user.id },
+      select: { completedGames: true },
+    });
+
     // Create new session if none exists
     if (!session) {
       console.log("🎮 [Game] No active session found, creating new one");
@@ -65,6 +71,7 @@ gameRouter.get("/active", async (c) => {
         createdAt: session.createdAt.toISOString(),
         updatedAt: session.updatedAt.toISOString(),
       },
+      userCompletedGames: currentUser?.completedGames ?? 0,
     } satisfies GetActiveGameResponse);
   } catch (error: any) {
     console.error("❌ [Game] Error getting active game:", error);
@@ -155,6 +162,14 @@ gameRouter.post("/end", zValidator("json", endGameRequestSchema), async (c) => {
     data: {
       isActive: false,
       endedAt: new Date(),
+    },
+  });
+
+  // Increment completed games counter for the user
+  await db.user.update({
+    where: { id: user.id },
+    data: {
+      completedGames: { increment: 1 },
     },
   });
 
