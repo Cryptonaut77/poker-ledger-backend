@@ -6,6 +6,7 @@ import {
   type EndGameResponse,
   type GameSummary,
   type DeleteGameResponse,
+  startNewGameRequestSchema,
   type StartNewGameResponse,
   type GetGameHistoryResponse,
 } from "@/shared/contracts";
@@ -218,9 +219,10 @@ gameRouter.delete("/:sessionId", async (c) => {
 // ============================================
 // POST /api/game/new - Start a new game session
 // ============================================
-gameRouter.post("/new", async (c) => {
+gameRouter.post("/new", zValidator("json", startNewGameRequestSchema), async (c) => {
   const user = c.get("user")!;
-  console.log(`🎮 [Game] Creating new game session for user: ${user.email}`);
+  const { currency } = c.req.valid("json");
+  console.log(`🎮 [Game] Creating new game session for user: ${user.email} with currency: ${currency}`);
 
   // First, end any active sessions for this user
   await db.gameSession.updateMany({
@@ -238,10 +240,11 @@ gameRouter.post("/new", async (c) => {
       tableName: "Main Table",
       isActive: true,
       userId: user.id,
+      currency: currency || "USD",
     },
   });
 
-  console.log(`🎮 [Game] New session created: ${session.id}`);
+  console.log(`🎮 [Game] New session created: ${session.id} with currency ${session.currency}`);
 
   return c.json({
     session: {

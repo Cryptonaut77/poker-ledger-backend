@@ -9,12 +9,16 @@ import { api } from "@/lib/api";
 import * as RevenueCat from "@/lib/revenuecatClient";
 import type { BottomTabScreenProps } from "@/navigation/types";
 import type { GetActiveGameResponse, GameSummary, GetPlayerTransactionsResponse } from "@/shared/contracts";
+import { CurrencySelectionModal, type Currency } from "@/components/CurrencySelectionModal";
+import { formatCurrency as formatCurrencyUtil } from "@/utils/currency";
 
 type Props = BottomTabScreenProps<"DashboardTab">;
 
 const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
+  const [currencyModalVisible, setCurrencyModalVisible] = React.useState(false);
+  const [selectedCurrency, setSelectedCurrency] = React.useState<string>("USD");
 
   // Fetch active game session - with retry and refetch options
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
@@ -150,7 +154,7 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   // Start new game mutation
   const startNewGameMutation = useMutation({
-    mutationFn: () => api.post("/api/game/new", {}),
+    mutationFn: (currency: string) => api.post("/api/game/new", { currency }),
     onMutate: async () => {
       // Cancel any outgoing queries for the old session
       await queryClient.cancelQueries({ queryKey: ["gameSummary", sessionId] });
@@ -167,16 +171,31 @@ const DashboardScreen = ({ navigation }: Props) => {
       // Invalidate to get fresh data
       queryClient.invalidateQueries({ queryKey: ["activeGame"] });
       setManageModalVisible(false);
+      setCurrencyModalVisible(false);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     },
   });
 
+  // Handle currency selection and start new game
+  const handleStartNewGame = () => {
+    setManageModalVisible(false);
+    setCurrencyModalVisible(true);
+  };
+
+  const handleCurrencySelect = (currency: Currency) => {
+    setSelectedCurrency(currency.code);
+    startNewGameMutation.mutate(currency.code);
+  };
+
   const isLoading = isLoadingGame || isLoadingSummary;
   const isRefreshing = isRefetching;
 
-  // Format currency
+  // Get current game currency
+  const gameCurrency = gameData?.session?.currency || "USD";
+
+  // Format currency using the game's currency
   const formatCurrency = (amount: number) => {
-    return `$${amount.toFixed(2)}`;
+    return formatCurrencyUtil(amount, gameCurrency);
   };
 
   // Format date
@@ -416,7 +435,7 @@ const DashboardScreen = ({ navigation }: Props) => {
               <Pressable
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  startNewGameMutation.mutate();
+                  handleStartNewGame();
                 }}
                 disabled={startNewGameMutation.isPending}
                 className={`bg-emerald-600 py-4 rounded-lg flex-row items-center justify-center gap-2 ${
@@ -476,6 +495,14 @@ const DashboardScreen = ({ navigation }: Props) => {
           </View>
         </View>
       </Modal>
+
+      {/* Currency Selection Modal */}
+      <CurrencySelectionModal
+        visible={currencyModalVisible}
+        onClose={() => setCurrencyModalVisible(false)}
+        onSelect={handleCurrencySelect}
+        selectedCurrency={selectedCurrency}
+      />
     </View>
   );
 };

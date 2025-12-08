@@ -195,6 +195,13 @@ To manage your poker game:
 ### Starting a Game
 The app automatically creates a game session when you first open it. All transactions, dealer downs, and expenses are tied to the active game.
 
+**Starting a new game:**
+1. Navigate to the Dashboard tab
+2. Tap "Manage" button
+3. Tap "Start New Game"
+4. Select your preferred currency from the list
+5. New game starts with your chosen currency - all amounts will be formatted accordingly
+
 ### Tracking Players
 1. Navigate to the Players tab
 2. Tap the green "+" button to add a buy-in
@@ -265,6 +272,16 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Currency Selection (Dec 8, 2024)
+Added ability to select local currency when starting a new game:
+- **24 currencies supported**: USD, EUR, GBP, JPY, CNY, AUD, CAD, CHF, INR, MXN, BRL, ZAR, SGD, HKD, SEK, NOK, DKK, NZD, KRW, THB, AED, SAR, PLN, TRY
+- **Currency modal**: Beautiful modal with searchable currency list when starting a new game
+- **Proper formatting**: All amounts automatically formatted with correct currency symbol and decimals
+- **Symbol positioning**: Respects currency conventions (e.g., "$100" for USD, "100 kr" for SEK)
+- **Per-game currency**: Each game session stores and uses its own currency
+- **Smart decimals**: Zero-decimal currencies like JPY and KRW display without cents
+- **How it works**: Click "Start New Game" → Select currency → Game starts with your chosen currency
 
 ### Paywall Trigger Fix (Dec 8, 2024)
 Fixed paywall not showing after completing first game:

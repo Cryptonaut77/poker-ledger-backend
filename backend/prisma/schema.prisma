@@ -87,6 +87,7 @@ model GameSession {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   tableName          String              @default("Main Table")
+  currency           String              @default("USD") // Currency code (USD, EUR, GBP, etc.)
   shareCode          String?             @unique // 6-character code for sharing
   shareCodeExpiresAt DateTime?           // When the share code expires
   userId             String
