@@ -86,18 +86,25 @@ const DashboardScreen = ({ navigation }: Props) => {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 
-  // Calculate buy-ins by payment method
+  // Calculate net balance by payment method (buy-ins minus cashouts)
   const paymentBreakdown = React.useMemo(() => {
     if (!transactionsData?.transactions) {
       return { cash: 0, electronic: 0, credit: 0 };
     }
 
     const buyIns = transactionsData.transactions.filter((t) => t.type === "buy-in");
+    const cashouts = transactionsData.transactions.filter((t) => t.type === "cashout");
 
     return {
-      cash: buyIns.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0),
-      electronic: buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0),
-      credit: buyIns.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0),
+      cash:
+        buyIns.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0) -
+        cashouts.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0),
+      electronic:
+        buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0) -
+        cashouts.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0),
+      credit:
+        buyIns.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0) -
+        cashouts.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0),
     };
   }, [transactionsData]);
 
@@ -287,7 +294,7 @@ const DashboardScreen = ({ navigation }: Props) => {
         <View className="px-4 gap-4">
           {/* Payment Method Breakdown */}
           <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
-            <Text className="text-white text-lg font-bold mb-4">Buy-in Payment Breakdown</Text>
+            <Text className="text-white text-lg font-bold mb-4">Payment Method Balances</Text>
             <View className="gap-3">
               <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
                 <View className="flex-row items-center gap-2">
@@ -319,9 +326,9 @@ const DashboardScreen = ({ navigation }: Props) => {
             </View>
             <View className="mt-4 pt-4 border-t border-slate-700">
               <View className="flex-row items-center justify-between">
-                <Text className="text-slate-400 font-medium">Total Buy-ins</Text>
+                <Text className="text-slate-400 font-medium">Total Net (Buy-ins - Cashouts)</Text>
                 <Text className="text-white text-2xl font-bold">
-                  {summary ? formatCurrency(summary.totalBuyIns) : "$0.00"}
+                  {summary ? formatCurrency(summary.totalBuyIns - summary.totalCashouts) : "$0.00"}
                 </Text>
               </View>
             </View>

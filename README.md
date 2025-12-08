@@ -241,7 +241,11 @@ The app automatically creates a game session when you first open it. All transac
 The Dashboard tab provides a real-time overview of:
 - **Till Balance**: Physical cash in the till (cash buy-ins - cashouts - paid tips - expenses)
 - **House Profit**: Business profit (paid rake - expenses)
-- Buy-in payment breakdown (cash in till, electronic, credit owed)
+- **Payment Method Balances**: Net balance (buy-ins minus cashouts) for each payment method
+  - Cash (In Till): Cash buy-ins minus cash cashouts
+  - Electronic: Electronic buy-ins minus electronic cashouts
+  - Credit (Owed): Credit buy-ins minus credit cashouts
+- Total net amount (total buy-ins - total cashouts)
 - Total buy-ins and cashouts
 - Total tips and rake collected (including unpaid)
 - Total expenses
@@ -261,6 +265,16 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Payment Method Balance Fix (Dec 8, 2024)
+Fixed dashboard payment breakdown to properly account for cashouts:
+- **Net balances**: Dashboard now shows net balance (buy-ins minus cashouts) for each payment method
+- **Electronic cashouts**: When a player cashes out electronically, it now correctly reduces the electronic balance
+- **Cash cashouts**: Cash cashouts reduce the cash balance displayed
+- **Credit cashouts**: Credit cashouts reduce the credit balance
+- **Updated labels**: Changed "Buy-in Payment Breakdown" to "Payment Method Balances" for clarity
+- **Total net calculation**: Shows "Total Net (Buy-ins - Cashouts)" instead of just "Total Buy-ins"
+- **Example**: If players buy in $1000 electronic and cash out $500 electronic, dashboard shows $500 electronic balance
 
 ### Automatic Credit Settlement (Dec 8, 2024)
 Added smart credit settlement for player cashouts:
