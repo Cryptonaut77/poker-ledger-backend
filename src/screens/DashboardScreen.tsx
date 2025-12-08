@@ -15,7 +15,6 @@ type Props = BottomTabScreenProps<"DashboardTab">;
 const DashboardScreen = ({ navigation }: Props) => {
   const queryClient = useQueryClient();
   const [manageModalVisible, setManageModalVisible] = React.useState(false);
-  const [hasCheckedPaywall, setHasCheckedPaywall] = React.useState(false);
 
   // Fetch active game session - with retry and refetch options
   const { data: gameData, isLoading: isLoadingGame } = useQuery({
@@ -27,30 +26,37 @@ const DashboardScreen = ({ navigation }: Props) => {
     refetchOnReconnect: true,
   });
 
-  // Check paywall conditions when game data loads
+  // Check paywall conditions when game data loads or completedGames count changes
   React.useEffect(() => {
-    if (!gameData || hasCheckedPaywall) return;
+    if (!gameData) return;
 
     const checkPaywall = async () => {
+      console.log(`[Paywall] Checking paywall eligibility - Completed games: ${gameData.userCompletedGames}`);
+
       // Only show paywall if user has completed at least 1 game
       if (gameData.userCompletedGames > 0) {
         // Check if user has premium entitlement
         const hasPremiumResult = await RevenueCat.hasEntitlement("premium");
 
+        console.log(`[Paywall] Has premium result:`, hasPremiumResult);
+
         // If RevenueCat is not configured or user doesn't have premium, show paywall
         if (hasPremiumResult.ok && !hasPremiumResult.data) {
+          console.log(`[Paywall] Showing paywall - User completed ${gameData.userCompletedGames} games and doesn't have premium`);
           navigation.navigate("PaywallScreen");
         } else if (!hasPremiumResult.ok && hasPremiumResult.reason === "not_configured") {
           // RevenueCat not configured, allow access (dev/test mode)
           console.log("[Paywall] RevenueCat not configured, allowing access");
+        } else if (hasPremiumResult.ok && hasPremiumResult.data) {
+          console.log("[Paywall] User has premium access");
         }
+      } else {
+        console.log("[Paywall] User on first game - no paywall needed");
       }
-
-      setHasCheckedPaywall(true);
     };
 
     checkPaywall();
-  }, [gameData, hasCheckedPaywall, navigation]);
+  }, [gameData?.userCompletedGames, navigation]);
 
   // Safe session ID extraction with null check
   const sessionId = gameData?.session?.id;

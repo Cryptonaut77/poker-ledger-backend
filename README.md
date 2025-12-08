@@ -266,6 +266,15 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Paywall Trigger Fix (Dec 8, 2024)
+Fixed paywall not showing after completing first game:
+- **Removed stale flag**: Removed `hasCheckedPaywall` flag that was preventing re-checks
+- **Dynamic checking**: Paywall now re-checks whenever `userCompletedGames` count changes
+- **Better logging**: Added detailed console logs to track paywall eligibility checks
+- **How it works**: After ending your first game, the paywall will automatically appear when you navigate to the dashboard
+- **Premium check**: System verifies RevenueCat premium entitlement on every completed game count change
+- **Backend logging**: Added logging to track user's completed games count
+
 ### Payment Method Balance Fix (Dec 8, 2024)
 Fixed dashboard payment breakdown to properly account for cashouts:
 - **Net balances**: Dashboard now shows net balance (buy-ins minus cashouts) for each payment method

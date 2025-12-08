@@ -47,6 +47,8 @@ gameRouter.get("/active", async (c) => {
       select: { completedGames: true },
     });
 
+    console.log(`🎮 [Game] User ${user.email} has completed ${currentUser?.completedGames ?? 0} games`);
+
     // Create new session if none exists
     if (!session) {
       console.log("🎮 [Game] No active session found, creating new one");
