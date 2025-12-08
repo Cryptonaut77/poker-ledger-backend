@@ -749,8 +749,9 @@ const PlayerCard = ({
     return maxMethod;
   }, [player.transactions]);
 
-  // Get the color for the net amount based on primary payment method
-  const netColor = paymentMethodColors[primaryPaymentMethod] || paymentMethodColors.cash;
+  // Determine net color: green if player won (negative net), red if player lost (positive net)
+  const isWinner = player.netAmount <= 0;
+  const netColor = isWinner ? "#10b981" : "#ef4444"; // green for winners, red for losers
 
   return (
     <View className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
