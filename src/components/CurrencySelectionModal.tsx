@@ -53,14 +53,21 @@ const CurrencySelectionModal = ({
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
-      <View className="flex-1 justify-end">
-        <Pressable className="flex-1 bg-black/50" onPress={onClose} />
-        <View className="bg-slate-900 rounded-t-3xl border-t border-slate-700 max-h-[80%]">
+      <View className="flex-1 justify-end bg-black/50">
+        <Pressable
+          className="flex-1"
+          onPress={() => {
+            console.log("[CurrencyModal] Background pressed - closing");
+            onClose();
+          }}
+        />
+        <View className="bg-slate-900 rounded-t-3xl border-t border-slate-700" style={{ maxHeight: '80%' }}>
           {/* Header */}
           <View className="flex-row items-center justify-between p-6 border-b border-slate-800">
             <Text className="text-white text-2xl font-bold">Select Currency</Text>
             <Pressable
               onPress={() => {
+                console.log("[CurrencyModal] Close button pressed");
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 onClose();
               }}
@@ -71,7 +78,11 @@ const CurrencySelectionModal = ({
           </View>
 
           {/* Currency List */}
-          <ScrollView className="flex-1" contentContainerStyle={{ padding: 24 }}>
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={{ padding: 24, paddingBottom: 40 }}
+            showsVerticalScrollIndicator={true}
+          >
             <View className="gap-2">
               {CURRENCIES.map((currency) => (
                 <Pressable
