@@ -108,16 +108,24 @@ export default function LoginWithEmailPassword() {
 
       if (result.error) {
         console.log("[Auth] Sign up error:", result.error);
-        Alert.alert("Sign Up Failed", result.error.message || "Please try again");
-      } else {
+        // Better Auth error messages are more descriptive
+        const errorMessage = result.error.message || "Please try again";
+        Alert.alert("Sign Up Failed", errorMessage);
+      } else if (result.data) {
+        // Successfully created account
         Alert.alert("Welcome!", "Your account has been created. You're now signed in.");
         setEmail("");
         setPassword("");
         setName("");
+      } else {
+        // Unexpected response
+        Alert.alert("Error", "Unexpected response from server. Please try again.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("[Auth] Sign up exception:", error);
-      Alert.alert("Error", "An unexpected error occurred. Check logs for details.");
+      // Try to get better error message from the exception
+      const errorMessage = error?.message || "An unexpected error occurred";
+      Alert.alert("Error", errorMessage);
     } finally {
       setIsLoading(false);
     }
