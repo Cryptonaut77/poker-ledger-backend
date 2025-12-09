@@ -846,6 +846,17 @@ const PlayerCard = ({
   // Check if player has unpaid credit
   const hasUnpaidCredit = player.creditBalance > 0;
 
+  // Check if player had credit transactions that are now all paid
+  const hadCreditNowPaid = React.useMemo(() => {
+    const hasCreditTransactions = player.transactions.some(
+      t => t.paymentMethod === "credit"
+    );
+    const hasUnpaidCreditTx = player.transactions.some(
+      t => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid
+    );
+    return hasCreditTransactions && !hasUnpaidCreditTx && player.creditBalance === 0;
+  }, [player.transactions, player.creditBalance]);
+
   // Function to mark all unpaid credit as paid
   const handleMarkAllPaid = () => {
     const unpaidCreditTransactions = player.transactions.filter(
@@ -912,6 +923,12 @@ const PlayerCard = ({
                 </Pressable>
               )}
             </View>
+            {/* Show PAID badge when credit has been settled */}
+            {hadCreditNowPaid && (
+              <View className="bg-emerald-600/20 px-2 py-0.5 rounded mt-1">
+                <Text className="text-emerald-400 text-[10px] font-bold">PAID</Text>
+              </View>
+            )}
           </View>
         </View>
 
