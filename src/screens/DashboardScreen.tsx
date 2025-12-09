@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, RefreshControl, Pressable, Modal, Alert } from "react-native";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { LinearGradient } from "expo-linear-gradient";
-import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, Power, Trash2, PlusCircle, UserPlus } from "lucide-react-native";
+import { TrendingUp, TrendingDown, DollarSign, Users, Dices, Receipt, Power, Trash2, PlusCircle, UserPlus, HelpCircle } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 
 import { api } from "@/lib/api";
@@ -238,6 +238,15 @@ const DashboardScreen = ({ navigation }: Props) => {
           <View className="flex-row items-center justify-between mb-2">
             <Text className="text-white text-3xl font-bold">Poker Game</Text>
             <View className="flex-row items-center gap-2">
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("HelpScreen");
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                }}
+                className="bg-slate-700 p-2 rounded-lg"
+              >
+                <HelpCircle size={20} color="#fff" />
+              </Pressable>
               <Pressable
                 onPress={() => {
                   navigation.navigate("ShareGameScreen");

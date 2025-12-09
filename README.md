@@ -273,6 +273,15 @@ Access your past saved games:
 
 ## Recent Updates
 
+### Help & Instructions (Dec 8, 2024)
+Added comprehensive in-app help section:
+- **Help button**: Question mark icon in the top right of the Dashboard
+- **12 expandable sections**: Covering all major features and workflows
+- **Getting Started guide**: Learn the basics of the app
+- **Feature walkthroughs**: Step-by-step instructions for each feature
+- **Tips & Best Practices**: Pro tips for running smooth poker games
+- **Easy access**: Tap any section to expand and read detailed instructions
+
 ### Currency Selection (Dec 8, 2024)
 Added ability to select local currency when starting a new game:
 - **24 currencies supported**: USD, EUR, GBP, JPY, CNY, AUD, CAD, CHF, INR, MXN, BRL, ZAR, SGD, HKD, SEK, NOK, DKK, NZD, KRW, THB, AED, SAR, PLN, TRY

@@ -13,6 +13,7 @@ import GameHistoryScreen from "@/screens/GameHistoryScreen";
 import LoginModalScreen from "@/screens/LoginModalScreen";
 import ShareGameScreen from "@/screens/ShareGameScreen";
 import PaywallScreen from "@/screens/PaywallScreen";
+import HelpScreen from "@/screens/HelpScreen";
 import { useSession } from "@/lib/useSession";
 
 /**
@@ -70,6 +71,11 @@ const RootNavigator = () => {
       <RootStack.Screen
         name="PaywallScreen"
         component={PaywallScreen}
+        options={{ headerShown: false, presentation: "modal" }}
+      />
+      <RootStack.Screen
+        name="HelpScreen"
+        component={HelpScreen}
         options={{ headerShown: false, presentation: "modal" }}
       />
     </RootStack.Navigator>

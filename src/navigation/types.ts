@@ -14,6 +14,7 @@ export type RootStackParamList = {
   LoginModalScreen: undefined;
   ShareGameScreen: undefined;
   PaywallScreen: undefined;
+  HelpScreen: undefined;
 };
 
 export type BottomTabParamList = {
