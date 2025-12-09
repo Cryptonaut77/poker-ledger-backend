@@ -340,17 +340,30 @@ const PlayersScreen = ({ navigation }: Props) => {
           // If partial settlement is needed, we keep it unpaid (they still owe the difference)
         }
 
-        // Create the cashout transaction (always paid, as it's money going out)
-        await api.post("/api/players/transaction", {
-          playerName: playerName.trim(),
-          type: "cashout",
-          amount: numAmount,
-          paymentMethod: cashToPay > 0 ? "cash" : "credit",
-          notes: creditToSettle > 0
-            ? `Cashout including $${creditToSettle.toFixed(2)} credit settlement${notes.trim() ? `. ${notes.trim()}` : ''}`
-            : notes.trim() || undefined,
-          gameSessionId: currentSessionId,
-        });
+        // Create TWO separate cashout transactions:
+        // 1. Credit cashout for the settlement portion
+        if (creditToSettle > 0) {
+          await api.post("/api/players/transaction", {
+            playerName: playerName.trim(),
+            type: "cashout",
+            amount: creditToSettle,
+            paymentMethod: "credit",
+            notes: `Credit settlement from total $${numAmount.toFixed(2)} cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            gameSessionId: currentSessionId,
+          });
+        }
+
+        // 2. Selected payment method cashout for the profit portion (if any)
+        if (cashToPay > 0) {
+          await api.post("/api/players/transaction", {
+            playerName: playerName.trim(),
+            type: "cashout",
+            amount: cashToPay,
+            paymentMethod: paymentMethod, // Use the selected payment method (cash/electronic)
+            notes: `Profit from total $${numAmount.toFixed(2)} cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            gameSessionId: currentSessionId,
+          });
+        }
 
         // Refresh data
         queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
