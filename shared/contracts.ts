@@ -32,6 +32,7 @@ export const playerTransactionSchema = z.object({
   amount: z.number(),
   paymentMethod: z.enum(["cash", "electronic", "credit"]),
   notes: z.string().nullable(),
+  isPaid: z.boolean().optional().default(true),
   timestamp: z.string(),
   gameSessionId: z.string(),
   createdByInitials: z.string().nullable().optional(),

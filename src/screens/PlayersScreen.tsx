@@ -116,6 +116,40 @@ const PlayersScreen = ({ navigation }: Props) => {
     },
   });
 
+  // Mark transaction as paid mutation
+  const markPaidMutation = useMutation({
+    mutationFn: (id: string) => api.put(`/api/players/transaction/${id}/mark-paid`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error: Error) => {
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to mark transaction as paid.";
+      Alert.alert("Error", errorMessage);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
+  });
+
+  // Mark transaction as unpaid mutation
+  const markUnpaidMutation = useMutation({
+    mutationFn: (id: string) => api.put(`/api/players/transaction/${id}/mark-unpaid`, {}),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    },
+    onError: (error: Error) => {
+      const errorMessage = error instanceof ApiError
+        ? error.getUserMessage()
+        : "Failed to mark transaction as unpaid.";
+      Alert.alert("Error", errorMessage);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+    },
+  });
+
   // Group transactions by player
   const playerSummaries: PlayerSummary[] = React.useMemo(() => {
     if (!transactionsData?.transactions) return [];
@@ -130,21 +164,21 @@ const PlayersScreen = ({ navigation }: Props) => {
         existing.transactionCount++;
         if (transaction.type === "buy-in") {
           existing.totalBuyIns += transaction.amount;
-          // Track credit buy-ins
-          if (transaction.paymentMethod === "credit") {
+          // Track credit buy-ins (only unpaid)
+          if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
             existing.creditBalance += transaction.amount;
           }
         } else {
           existing.totalCashouts += transaction.amount;
-          // Credit cashouts reduce the credit balance
-          if (transaction.paymentMethod === "credit") {
+          // Credit cashouts reduce the credit balance (only unpaid)
+          if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
             existing.creditBalance -= transaction.amount;
           }
         }
         existing.netAmount = existing.totalBuyIns - existing.totalCashouts;
       } else {
-        const isBuyInCredit = transaction.type === "buy-in" && transaction.paymentMethod === "credit";
-        const isCashoutCredit = transaction.type === "cashout" && transaction.paymentMethod === "credit";
+        const isBuyInCredit = transaction.type === "buy-in" && transaction.paymentMethod === "credit" && !transaction.isPaid;
+        const isCashoutCredit = transaction.type === "cashout" && transaction.paymentMethod === "credit" && !transaction.isPaid;
         const initialCredit = isBuyInCredit ? transaction.amount : (isCashoutCredit ? -transaction.amount : 0);
 
         playerMap.set(transaction.playerName, {
@@ -282,6 +316,43 @@ const PlayersScreen = ({ navigation }: Props) => {
         Alert.alert("Error", errorMessage);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
+    } else if (transactionType === "cashout" && paymentMethod === "credit") {
+      // Player cashing out on credit (still owes money) - mark as unpaid
+      console.log("[Players] Submitting unpaid credit cashout", { playerName: playerName.trim(), type: transactionType, amount: numAmount });
+
+      try {
+        await api.post("/api/players/transaction", {
+          playerName: playerName.trim(),
+          type: transactionType,
+          amount: numAmount,
+          paymentMethod,
+          notes: notes.trim() || undefined,
+          gameSessionId: currentSessionId,
+        });
+
+        // Now mark it as unpaid
+        const response = await api.get<GetPlayerTransactionsResponse>(`/api/players/transactions/${currentSessionId}`);
+        const latestTransaction = response.transactions.find(
+          t => t.playerName === playerName.trim() && t.type === "cashout" && t.paymentMethod === "credit"
+        );
+
+        if (latestTransaction) {
+          await api.put(`/api/players/transaction/${latestTransaction.id}/mark-unpaid`, {});
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+        setModalVisible(false);
+        resetForm();
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (error) {
+        const errorMessage = error instanceof ApiError
+          ? error.getUserMessage()
+          : "Failed to process unpaid credit cashout.";
+        console.error("[Players] Error with unpaid credit cashout:", errorMessage);
+        Alert.alert("Error", errorMessage);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
     } else {
       // Normal transaction (no credit settlement)
       console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
@@ -365,6 +436,8 @@ const PlayersScreen = ({ navigation }: Props) => {
               isExpanded={expandedPlayers.has(player.name)}
               onToggle={() => togglePlayerExpanded(player.name)}
               onEditTransaction={handleEditTransaction}
+              onMarkPaid={(id) => markPaidMutation.mutate(id)}
+              onMarkUnpaid={(id) => markUnpaidMutation.mutate(id)}
               formatCurrency={formatCurrency}
               formatTime={formatTime}
               formatDate={formatDate}
@@ -704,6 +777,8 @@ const PlayerCard = ({
   isExpanded,
   onToggle,
   onEditTransaction,
+  onMarkPaid,
+  onMarkUnpaid,
   formatCurrency,
   formatTime,
   formatDate,
@@ -713,6 +788,8 @@ const PlayerCard = ({
   isExpanded: boolean;
   onToggle: () => void;
   onEditTransaction: (transaction: PlayerTransaction) => void;
+  onMarkPaid: (id: string) => void;
+  onMarkUnpaid: (id: string) => void;
   formatCurrency: (amount: number) => string;
   formatTime: (dateString: string) => string;
   formatDate: (dateString: string) => string;
@@ -840,7 +917,7 @@ const PlayerCard = ({
             >
               <View className="flex-row items-start justify-between mb-2">
                 <View className="flex-1">
-                  <View className="flex-row items-center gap-2 mb-1">
+                  <View className="flex-row items-center gap-2 mb-1 flex-wrap">
                     <View
                       className="px-2 py-1 rounded"
                       style={{
@@ -866,6 +943,17 @@ const PlayerCard = ({
                         {transaction.paymentMethod === "credit" ? (transaction.type === "cashout" ? "IOU" : "Credit") : transaction.paymentMethod === "electronic" ? "Electronic" : "Cash"}
                       </Text>
                     </View>
+                    {/* Show unpaid badge for credit transactions */}
+                    {transaction.paymentMethod === "credit" && transaction.isPaid === false && (
+                      <View
+                        className="px-2 py-1 rounded"
+                        style={{ backgroundColor: "rgba(245, 158, 11, 0.2)" }}
+                      >
+                        <Text className="text-[10px] font-bold text-amber-400">
+                          UNPAID
+                        </Text>
+                      </View>
+                    )}
                   </View>
                   <Text className="text-slate-500 text-xs">
                     {formatDate(transaction.timestamp)} • {formatTime(transaction.timestamp)}
@@ -873,6 +961,30 @@ const PlayerCard = ({
                   </Text>
                   {transaction.notes && (
                     <Text className="text-slate-500 text-xs mt-1">{transaction.notes}</Text>
+                  )}
+                  {/* Mark as Paid button for unpaid credit transactions */}
+                  {transaction.paymentMethod === "credit" && transaction.isPaid === false && (
+                    <Pressable
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        onMarkPaid(transaction.id);
+                      }}
+                      className="bg-emerald-600 px-3 py-1.5 rounded mt-2 self-start"
+                    >
+                      <Text className="text-white text-xs font-bold">Mark as Paid</Text>
+                    </Pressable>
+                  )}
+                  {/* Mark as Unpaid button for paid credit transactions */}
+                  {transaction.paymentMethod === "credit" && transaction.isPaid === true && (
+                    <Pressable
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        onMarkUnpaid(transaction.id);
+                      }}
+                      className="bg-amber-600 px-3 py-1.5 rounded mt-2 self-start"
+                    >
+                      <Text className="text-white text-xs font-bold">Mark as Unpaid</Text>
+                    </Pressable>
                   )}
                 </View>
                 <View className="flex-row items-center gap-2">

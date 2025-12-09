@@ -68,6 +68,7 @@ playersRouter.post(
         amount: transaction.amount,
         paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
         notes: transaction.notes,
+        isPaid: transaction.isPaid,
         timestamp: transaction.timestamp.toISOString(),
         gameSessionId: transaction.gameSessionId,
         createdByInitials: transaction.createdByInitials,
@@ -114,6 +115,7 @@ playersRouter.get("/transactions/:sessionId", async (c) => {
       amount: t.amount,
       paymentMethod: t.paymentMethod as "cash" | "electronic" | "credit",
       notes: t.notes,
+      isPaid: t.isPaid,
       timestamp: t.timestamp.toISOString(),
       gameSessionId: t.gameSessionId,
       createdByInitials: t.createdByInitials,
@@ -189,11 +191,92 @@ playersRouter.put(
         amount: transaction.amount,
         paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
         notes: transaction.notes,
+        isPaid: transaction.isPaid,
         timestamp: transaction.timestamp.toISOString(),
         gameSessionId: transaction.gameSessionId,
       },
     } satisfies UpdatePlayerTransactionResponse);
   },
 );
+
+// ============================================
+// PUT /api/players/transaction/:id/mark-paid - Mark a credit transaction as paid
+// ============================================
+playersRouter.put("/transaction/:id/mark-paid", async (c) => {
+  const user = c.get("user")!;
+  const id = c.req.param("id");
+  console.log(`💰 [Players] Marking transaction as paid: ${id} (user: ${user.email})`);
+
+  // Verify the transaction belongs to a session owned by this user
+  const existingTransaction = await db.playerTransaction.findUnique({
+    where: { id },
+    include: { gameSession: true },
+  });
+
+  if (!existingTransaction || existingTransaction.gameSession.userId !== user.id) {
+    return c.json({ error: "Transaction not found" }, 404);
+  }
+
+  const transaction = await db.playerTransaction.update({
+    where: { id },
+    data: { isPaid: true },
+  });
+
+  console.log(`💰 [Players] Transaction marked as paid: ${transaction.id}`);
+
+  return c.json({
+    transaction: {
+      id: transaction.id,
+      playerName: transaction.playerName,
+      type: transaction.type as "buy-in" | "cashout",
+      amount: transaction.amount,
+      paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
+      notes: transaction.notes,
+      isPaid: transaction.isPaid,
+      timestamp: transaction.timestamp.toISOString(),
+      gameSessionId: transaction.gameSessionId,
+    },
+  });
+});
+
+// ============================================
+// PUT /api/players/transaction/:id/mark-unpaid - Mark a credit transaction as unpaid
+// ============================================
+playersRouter.put("/transaction/:id/mark-unpaid", async (c) => {
+  const user = c.get("user")!;
+  const id = c.req.param("id");
+  console.log(`💰 [Players] Marking transaction as unpaid: ${id} (user: ${user.email})`);
+
+  // Verify the transaction belongs to a session owned by this user
+  const existingTransaction = await db.playerTransaction.findUnique({
+    where: { id },
+    include: { gameSession: true },
+  });
+
+  if (!existingTransaction || existingTransaction.gameSession.userId !== user.id) {
+    return c.json({ error: "Transaction not found" }, 404);
+  }
+
+  const transaction = await db.playerTransaction.update({
+    where: { id },
+    data: { isPaid: false },
+  });
+
+  console.log(`💰 [Players] Transaction marked as unpaid: ${transaction.id}`);
+
+  return c.json({
+    transaction: {
+      id: transaction.id,
+      playerName: transaction.playerName,
+      type: transaction.type as "buy-in" | "cashout",
+      amount: transaction.amount,
+      paymentMethod: transaction.paymentMethod as "cash" | "electronic" | "credit",
+      notes: transaction.notes,
+      isPaid: transaction.isPaid,
+      timestamp: transaction.timestamp.toISOString(),
+      gameSessionId: transaction.gameSessionId,
+    },
+  });
+});
 
 export { playersRouter };

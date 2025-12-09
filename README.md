@@ -49,6 +49,12 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - Calculates actual cash to pay after credit settlement
   - Creates separate transactions for credit settlement and cash payment
   - Credit balance tracked per player and updates automatically
+- **Unpaid credit tracking**: When players cash out for less than they owe
+  - Visual "UNPAID" badge on credit transactions that haven't been paid
+  - Outstanding credit balance shown per player (only unpaid amounts)
+  - "Mark as Paid" button to track when players pay back what they owe
+  - "Mark as Unpaid" button to toggle payment status if needed
+  - Net balance calculation reflects actual money owed
 - Track cashouts
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
@@ -272,6 +278,21 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### Unpaid Credit Tracking (Dec 9, 2024)
+Added comprehensive tracking for unpaid credit balances:
+- **isPaid field**: New database field to track whether credit transactions have been paid back
+- **Visual indicators**: Unpaid credit transactions display an amber "UNPAID" badge
+- **Outstanding balance**: Player credit balance only includes unpaid amounts
+- **Mark as Paid**: Button to mark credit transactions as paid when player settles debt
+- **Mark as Unpaid**: Toggle button to mark transactions as unpaid if needed
+- **Smart cashout handling**: When cashing out on credit/IOU, transaction is automatically marked as unpaid
+- **Backend endpoints**: New `/mark-paid` and `/mark-unpaid` endpoints for toggling payment status
+- **How it works**:
+  - Player buys in $500 on credit → Shows $500 unpaid credit
+  - Player cashes out $300 on IOU → Shows $200 ($500-$300) unpaid credit owed
+  - Once paid, tap "Mark as Paid" → Credit balance updates to $0
+  - Transaction history shows paid vs unpaid status clearly
 
 ### Help & Instructions (Dec 8, 2024)
 Added comprehensive in-app help section:

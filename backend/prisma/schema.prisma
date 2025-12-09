@@ -122,6 +122,7 @@ model PlayerTransaction {
   amount        Float
   paymentMethod String
   notes         String?
+  isPaid        Boolean     @default(true)  // Track if credit has been paid back
   timestamp     DateTime    @default(now())
   createdById   String?     // User who created this entry
   createdByInitials String? // Initials of user who created this entry
