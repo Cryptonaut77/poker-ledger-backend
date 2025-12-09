@@ -20,6 +20,7 @@ import type {
   GetActiveGameResponse,
   GetPlayerTransactionsResponse,
   AddPlayerTransactionRequest,
+  AddPlayerTransactionResponse,
   PlayerTransaction,
 } from "@/shared/contracts";
 
@@ -266,8 +267,41 @@ const PlayersScreen = ({ navigation }: Props) => {
       return;
     }
 
-    // Handle credit settlement for cashouts
-    if (transactionType === "cashout" && selectedPlayerCredit > 0) {
+    // Handle credit buy-ins that need to be marked as unpaid initially
+    if (transactionType === "buy-in" && paymentMethod === "credit") {
+      // Credit buy-ins should be marked as unpaid initially (they owe this money)
+      console.log("[Players] Submitting unpaid credit buy-in", { playerName: playerName.trim(), amount: numAmount });
+
+      try {
+        const response = await api.post<AddPlayerTransactionResponse>("/api/players/transaction", {
+          playerName: playerName.trim(),
+          type: transactionType,
+          amount: numAmount,
+          paymentMethod,
+          notes: notes.trim() || undefined,
+          gameSessionId: currentSessionId,
+        });
+
+        // Mark it as unpaid
+        if (response?.transaction) {
+          await api.put(`/api/players/transaction/${response.transaction.id}/mark-unpaid`, {});
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+        setModalVisible(false);
+        resetForm();
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (error) {
+        const errorMessage = error instanceof ApiError
+          ? error.getUserMessage()
+          : "Failed to add credit buy-in.";
+        console.error("[Players] Error with credit buy-in:", errorMessage);
+        Alert.alert("Error", errorMessage);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
+    } else if (transactionType === "cashout" && selectedPlayerCredit > 0) {
+      // Handle credit settlement for cashouts
       const creditToSettle = Math.min(numAmount, selectedPlayerCredit);
       const cashToPay = Math.max(0, numAmount - selectedPlayerCredit);
 
@@ -278,29 +312,38 @@ const PlayersScreen = ({ navigation }: Props) => {
       });
 
       try {
-        // First, create a credit cashout to settle the credit
-        if (creditToSettle > 0) {
-          await api.post("/api/players/transaction", {
-            playerName: playerName.trim(),
-            type: "cashout",
-            amount: creditToSettle,
-            paymentMethod: "credit",
-            notes: `Credit paid back from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
-            gameSessionId: currentSessionId,
-          });
+        // Find the unpaid credit buy-in(s) to mark as paid
+        const unpaidCreditTransactions = transactionsData?.transactions.filter(
+          t => t.playerName.toLowerCase() === playerName.trim().toLowerCase()
+            && t.type === "buy-in"
+            && t.paymentMethod === "credit"
+            && !t.isPaid
+        ) || [];
+
+        // Mark credit buy-ins as paid up to the cashout amount
+        let remainingToSettle = creditToSettle;
+        for (const creditTx of unpaidCreditTransactions) {
+          if (remainingToSettle <= 0) break;
+
+          if (creditTx.amount <= remainingToSettle) {
+            // Fully settle this credit transaction
+            await api.put(`/api/players/transaction/${creditTx.id}/mark-paid`, {});
+            remainingToSettle -= creditTx.amount;
+          }
+          // If partial settlement is needed, we keep it unpaid (they still owe the difference)
         }
 
-        // Then, create the cash cashout for the remaining amount (if any)
-        if (cashToPay > 0) {
-          await api.post("/api/players/transaction", {
-            playerName: playerName.trim(),
-            type: "cashout",
-            amount: cashToPay,
-            paymentMethod: "cash",
-            notes: `Cash profit from $${numAmount.toFixed(2)} total cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
-            gameSessionId: currentSessionId,
-          });
-        }
+        // Create the cashout transaction (always paid, as it's money going out)
+        await api.post("/api/players/transaction", {
+          playerName: playerName.trim(),
+          type: "cashout",
+          amount: numAmount,
+          paymentMethod: cashToPay > 0 ? "cash" : "credit",
+          notes: creditToSettle > 0
+            ? `Cashout including $${creditToSettle.toFixed(2)} credit settlement${notes.trim() ? `. ${notes.trim()}` : ''}`
+            : notes.trim() || undefined,
+          gameSessionId: currentSessionId,
+        });
 
         // Refresh data
         queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
@@ -313,43 +356,6 @@ const PlayersScreen = ({ navigation }: Props) => {
           ? error.getUserMessage()
           : "Failed to process cashout with credit settlement.";
         console.error("[Players] Error with credit settlement:", errorMessage);
-        Alert.alert("Error", errorMessage);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      }
-    } else if (transactionType === "cashout" && paymentMethod === "credit") {
-      // Player cashing out on credit (still owes money) - mark as unpaid
-      console.log("[Players] Submitting unpaid credit cashout", { playerName: playerName.trim(), type: transactionType, amount: numAmount });
-
-      try {
-        await api.post("/api/players/transaction", {
-          playerName: playerName.trim(),
-          type: transactionType,
-          amount: numAmount,
-          paymentMethod,
-          notes: notes.trim() || undefined,
-          gameSessionId: currentSessionId,
-        });
-
-        // Now mark it as unpaid
-        const response = await api.get<GetPlayerTransactionsResponse>(`/api/players/transactions/${currentSessionId}`);
-        const latestTransaction = response.transactions.find(
-          t => t.playerName === playerName.trim() && t.type === "cashout" && t.paymentMethod === "credit"
-        );
-
-        if (latestTransaction) {
-          await api.put(`/api/players/transaction/${latestTransaction.id}/mark-unpaid`, {});
-        }
-
-        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
-        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
-        setModalVisible(false);
-        resetForm();
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch (error) {
-        const errorMessage = error instanceof ApiError
-          ? error.getUserMessage()
-          : "Failed to process unpaid credit cashout.";
-        console.error("[Players] Error with unpaid credit cashout:", errorMessage);
         Alert.alert("Error", errorMessage);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
@@ -962,8 +968,8 @@ const PlayerCard = ({
                   {transaction.notes && (
                     <Text className="text-slate-500 text-xs mt-1">{transaction.notes}</Text>
                   )}
-                  {/* Mark as Paid button for unpaid credit transactions */}
-                  {transaction.paymentMethod === "credit" && transaction.isPaid === false && (
+                  {/* Mark as Paid button for unpaid credit BUY-IN transactions only */}
+                  {transaction.type === "buy-in" && transaction.paymentMethod === "credit" && transaction.isPaid === false && (
                     <Pressable
                       onPress={() => {
                         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -974,8 +980,8 @@ const PlayerCard = ({
                       <Text className="text-white text-xs font-bold">Mark as Paid</Text>
                     </Pressable>
                   )}
-                  {/* Mark as Unpaid button for paid credit transactions */}
-                  {transaction.paymentMethod === "credit" && transaction.isPaid === true && (
+                  {/* Mark as Unpaid button for paid credit BUY-IN transactions only */}
+                  {transaction.type === "buy-in" && transaction.paymentMethod === "credit" && transaction.isPaid === true && (
                     <Pressable
                       onPress={() => {
                         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
