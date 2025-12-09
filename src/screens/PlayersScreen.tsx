@@ -165,22 +165,29 @@ const PlayersScreen = ({ navigation }: Props) => {
         existing.transactionCount++;
         if (transaction.type === "buy-in") {
           existing.totalBuyIns += transaction.amount;
-          // Track credit buy-ins (only unpaid)
+          // Track unpaid credit buy-ins
           if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
             existing.creditBalance += transaction.amount;
           }
         } else {
           existing.totalCashouts += transaction.amount;
-          // Credit cashouts reduce the credit balance (only unpaid)
-          if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
+          // Credit cashouts reduce what they owe (they're returning chips)
+          if (transaction.paymentMethod === "credit") {
             existing.creditBalance -= transaction.amount;
           }
         }
+        // Ensure credit balance is never negative (you can't owe negative money)
+        existing.creditBalance = Math.max(0, existing.creditBalance);
         existing.netAmount = existing.totalBuyIns - existing.totalCashouts;
       } else {
-        const isBuyInCredit = transaction.type === "buy-in" && transaction.paymentMethod === "credit" && !transaction.isPaid;
-        const isCashoutCredit = transaction.type === "cashout" && transaction.paymentMethod === "credit" && !transaction.isPaid;
-        const initialCredit = isBuyInCredit ? transaction.amount : (isCashoutCredit ? -transaction.amount : 0);
+        let initialCredit = 0;
+        if (transaction.type === "buy-in" && transaction.paymentMethod === "credit" && !transaction.isPaid) {
+          initialCredit = transaction.amount;
+        } else if (transaction.type === "cashout" && transaction.paymentMethod === "credit") {
+          initialCredit = -transaction.amount;
+        }
+        // Ensure credit balance is never negative
+        initialCredit = Math.max(0, initialCredit);
 
         playerMap.set(transaction.playerName, {
           name: transaction.playerName,

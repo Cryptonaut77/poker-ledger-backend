@@ -333,14 +333,33 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .reduce((sum, t) => sum + t.amount, 0);
   const tillBalance = cashBuyIns - cashCashouts - totalPaidTips - totalExpenses;
 
-  // Calculate total credit balance (only unpaid credit buy-ins - credit cashouts)
-  const creditBuyIns = session.playerTransactions
-    .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid)
-    .reduce((sum, t) => sum + t.amount, 0);
-  const creditCashouts = session.playerTransactions
-    .filter((t) => t.type === "cashout" && t.paymentMethod === "credit")
-    .reduce((sum, t) => sum + t.amount, 0);
-  const creditBalance = creditBuyIns - creditCashouts;
+  // Calculate total credit balance
+  // Credit balance = unpaid credit buy-ins minus any cash that was taken out when they cashed out
+  // When a player buys in $500 on credit and cashes out $300, they still owe $200
+  // The $200 is the net of their credit transactions: $500 buy-in - $300 cashout = $200
+  // We need to calculate per-player credit balances and sum them up
+  const playerCreditMap = new Map<string, { buyIns: number; cashouts: number }>();
+
+  session.playerTransactions.forEach((t) => {
+    // Only track credit transactions that are unpaid
+    if (t.paymentMethod === "credit") {
+      const existing = playerCreditMap.get(t.playerName) || { buyIns: 0, cashouts: 0 };
+      if (t.type === "buy-in" && !t.isPaid) {
+        existing.buyIns += t.amount;
+      } else if (t.type === "cashout") {
+        // Cashouts reduce what they owe (they're returning chips)
+        existing.cashouts += t.amount;
+      }
+      playerCreditMap.set(t.playerName, existing);
+    }
+  });
+
+  // Sum up the net credit owed by each player (buy-ins - cashouts, but never negative)
+  let creditBalance = 0;
+  playerCreditMap.forEach(({ buyIns, cashouts }) => {
+    const netOwed = Math.max(0, buyIns - cashouts);
+    creditBalance += netOwed;
+  });
 
   // Count unique players
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
