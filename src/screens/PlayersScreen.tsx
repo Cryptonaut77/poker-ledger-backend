@@ -836,6 +836,21 @@ const PlayerCard = ({
   const isWinner = player.netAmount <= 0;
   const netColor = isWinner ? "#10b981" : "#ef4444"; // green for winners, red for losers
 
+  // Check if player has unpaid credit
+  const hasUnpaidCredit = player.creditBalance > 0;
+
+  // Function to mark all unpaid credit as paid
+  const handleMarkAllPaid = () => {
+    const unpaidCreditTransactions = player.transactions.filter(
+      t => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid
+    );
+
+    // Mark all unpaid credit buy-ins as paid
+    unpaidCreditTransactions.forEach(tx => {
+      onMarkPaid(tx.id);
+    });
+  };
+
   return (
     <View className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden">
       {/* Player Summary (always visible) */}
@@ -863,12 +878,33 @@ const PlayerCard = ({
           </View>
           <View className="items-end">
             <Text className="text-slate-400 text-xs mb-1">Net</Text>
-            <Text
-              className="text-2xl font-bold"
-              style={{ color: netColor }}
-            >
-              {formatCurrency(Math.abs(player.netAmount))}
-            </Text>
+            <View className="flex-row items-center gap-2">
+              <Text
+                className="text-2xl font-bold"
+                style={{ color: netColor }}
+              >
+                {formatCurrency(Math.abs(player.netAmount))}
+              </Text>
+              {/* Mark as Paid button when player owes money (has unpaid credit) */}
+              {hasUnpaidCredit && (
+                <Pressable
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                    handleMarkAllPaid();
+                  }}
+                  className="bg-emerald-600 px-2 py-1 rounded"
+                  style={{
+                    shadowColor: "#000",
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                  }}
+                >
+                  <Text className="text-white text-[10px] font-bold">MARK PAID</Text>
+                </Pressable>
+              )}
+            </View>
           </View>
         </View>
 

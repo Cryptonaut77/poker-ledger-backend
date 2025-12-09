@@ -333,9 +333,9 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .reduce((sum, t) => sum + t.amount, 0);
   const tillBalance = cashBuyIns - cashCashouts - totalPaidTips - totalExpenses;
 
-  // Calculate total credit balance (credit buy-ins - credit cashouts)
+  // Calculate total credit balance (only unpaid credit buy-ins - credit cashouts)
   const creditBuyIns = session.playerTransactions
-    .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit")
+    .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid)
     .reduce((sum, t) => sum + t.amount, 0);
   const creditCashouts = session.playerTransactions
     .filter((t) => t.type === "cashout" && t.paymentMethod === "credit")
