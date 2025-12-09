@@ -97,6 +97,7 @@ const DashboardScreen = ({ navigation }: Props) => {
   });
 
   // Calculate net balance by payment method (buy-ins minus cashouts)
+  // This represents what's physically in each payment method bucket
   const paymentBreakdown = React.useMemo(() => {
     if (!transactionsData?.transactions) {
       return { cash: 0, electronic: 0, credit: 0 };
@@ -105,16 +106,34 @@ const DashboardScreen = ({ navigation }: Props) => {
     const buyIns = transactionsData.transactions.filter((t) => t.type === "buy-in");
     const cashouts = transactionsData.transactions.filter((t) => t.type === "cashout");
 
+    // Cash balance: Cash buy-ins add to till, cash cashouts remove from till
+    const cashBalance =
+      buyIns.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0) -
+      cashouts.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0);
+
+    // Electronic balance: Electronic buy-ins mean we receive electronic payment,
+    // Electronic cashouts mean we owe electronic payment
+    const electronicBalance =
+      buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0) -
+      cashouts.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0);
+
+    // Credit balance: Only count UNPAID credit buy-ins (isPaid === false or isPaid === undefined for legacy)
+    // When credit is marked as PAID, it should no longer show as owed
+    const unpaidCreditBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "credit" && t.isPaid === false)
+      .reduce((sum, t) => sum + t.amount, 0);
+    const creditCashouts = cashouts
+      .filter((t) => t.paymentMethod === "credit")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Credit owed = unpaid credit buy-ins minus credit cashouts (when they return chips via credit)
+    // Can't be negative (if they cash out more than they owe, they don't owe anything)
+    const creditBalance = Math.max(0, unpaidCreditBuyIns - creditCashouts);
+
     return {
-      cash:
-        buyIns.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0) -
-        cashouts.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0),
-      electronic:
-        buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0) -
-        cashouts.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0),
-      credit:
-        buyIns.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0) -
-        cashouts.filter((t) => t.paymentMethod === "credit").reduce((sum, t) => sum + t.amount, 0),
+      cash: cashBalance,
+      electronic: electronicBalance,
+      credit: creditBalance,
     };
   }, [transactionsData]);
 
@@ -356,7 +375,7 @@ const DashboardScreen = ({ navigation }: Props) => {
                   <Text className="text-slate-300 font-medium">Credit (Owed)</Text>
                 </View>
                 <Text className="text-red-400 text-xl font-bold">
-                  {summary ? formatCurrency(summary.creditBalance) : "$0.00"}
+                  {formatCurrency(paymentBreakdown.credit)}
                 </Text>
               </View>
             </View>

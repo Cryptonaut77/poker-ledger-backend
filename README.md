@@ -322,15 +322,16 @@ Fixed paywall not showing after completing first game:
 - **Premium check**: System verifies RevenueCat premium entitlement on every completed game count change
 - **Backend logging**: Added logging to track user's completed games count
 
-### Payment Method Balance Fix (Dec 8, 2024)
-Fixed dashboard payment breakdown to properly account for cashouts:
+### Payment Method Balance Fix (Dec 9, 2024)
+Fixed dashboard payment breakdown to properly account for cashouts and paid credits:
 - **Net balances**: Dashboard now shows net balance (buy-ins minus cashouts) for each payment method
 - **Electronic cashouts**: When a player cashes out electronically, it now correctly reduces the electronic balance
 - **Cash cashouts**: Cash cashouts reduce the cash balance displayed
-- **Credit cashouts**: Credit cashouts reduce the credit balance
+- **Credit shows only owed**: Credit balance only shows UNPAID credit buy-ins
+- **Paid credit excluded**: When credit is marked as PAID, it no longer appears in the Credit (Owed) balance
 - **Updated labels**: Changed "Buy-in Payment Breakdown" to "Payment Method Balances" for clarity
 - **Total net calculation**: Shows "Total Net (Buy-ins - Cashouts)" instead of just "Total Buy-ins"
-- **Example**: If players buy in $1000 electronic and cash out $500 electronic, dashboard shows $500 electronic balance
+- **Example**: Player P buys in $500 credit, marked as PAID → Credit (Owed) shows $0
 
 ### Automatic Credit Settlement (Dec 8, 2024)
 Added smart credit settlement for player cashouts:
