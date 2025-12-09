@@ -328,10 +328,10 @@ Fixed dashboard payment breakdown to properly account for cashouts and paid cred
 - **Electronic cashouts**: When a player cashes out electronically, it now correctly reduces the electronic balance
 - **Cash cashouts**: Cash cashouts reduce the cash balance displayed
 - **Credit shows only owed**: Credit balance only shows UNPAID credit buy-ins
-- **Paid credit excluded**: When credit is marked as PAID, it no longer appears in the Credit (Owed) balance
+- **Paid credit adds to cash**: When credit is marked as PAID, that cash goes into the Cash (In Till) balance
 - **Updated labels**: Changed "Buy-in Payment Breakdown" to "Payment Method Balances" for clarity
 - **Total net calculation**: Shows "Total Net (Buy-ins - Cashouts)" instead of just "Total Buy-ins"
-- **Example**: Player P buys in $500 credit, marked as PAID → Credit (Owed) shows $0
+- **Example**: Player P buys in $500 credit, marked as PAID → Credit (Owed) shows $0, Cash (In Till) includes $500
 
 ### Automatic Credit Settlement (Dec 8, 2024)
 Added smart credit settlement for player cashouts:

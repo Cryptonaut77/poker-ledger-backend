@@ -106,10 +106,23 @@ const DashboardScreen = ({ navigation }: Props) => {
     const buyIns = transactionsData.transactions.filter((t) => t.type === "buy-in");
     const cashouts = transactionsData.transactions.filter((t) => t.type === "cashout");
 
-    // Cash balance: Cash buy-ins add to till, cash cashouts remove from till
-    const cashBalance =
-      buyIns.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0) -
-      cashouts.filter((t) => t.paymentMethod === "cash").reduce((sum, t) => sum + t.amount, 0);
+    // Cash buy-ins add to till
+    const cashBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "cash")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Cash cashouts remove from till
+    const cashCashouts = cashouts
+      .filter((t) => t.paymentMethod === "cash")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // PAID credit buy-ins add cash to till (player paid their debt in cash)
+    const paidCreditBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "credit" && t.isPaid === true)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    // Cash balance = cash buy-ins + paid credit (cash received) - cash cashouts
+    const cashBalance = cashBuyIns + paidCreditBuyIns - cashCashouts;
 
     // Electronic balance: Electronic buy-ins mean we receive electronic payment,
     // Electronic cashouts mean we owe electronic payment
@@ -117,8 +130,8 @@ const DashboardScreen = ({ navigation }: Props) => {
       buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0) -
       cashouts.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0);
 
-    // Credit balance: Only count UNPAID credit buy-ins (isPaid === false or isPaid === undefined for legacy)
-    // When credit is marked as PAID, it should no longer show as owed
+    // Credit balance: Only count UNPAID credit buy-ins
+    // When credit is marked as PAID, the cash goes to till, not credit
     const unpaidCreditBuyIns = buyIns
       .filter((t) => t.paymentMethod === "credit" && t.isPaid === false)
       .reduce((sum, t) => sum + t.amount, 0);
@@ -126,7 +139,7 @@ const DashboardScreen = ({ navigation }: Props) => {
       .filter((t) => t.paymentMethod === "credit")
       .reduce((sum, t) => sum + t.amount, 0);
 
-    // Credit owed = unpaid credit buy-ins minus credit cashouts (when they return chips via credit)
+    // Credit owed = unpaid credit buy-ins minus credit cashouts
     // Can't be negative (if they cash out more than they owe, they don't owe anything)
     const creditBalance = Math.max(0, unpaidCreditBuyIns - creditCashouts);
 
