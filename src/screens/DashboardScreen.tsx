@@ -122,18 +122,25 @@ const DashboardScreen = ({ navigation }: Props) => {
     // Helper to check if a cashout has auto-settled credit
     const hasAutoSettledCredit = (transaction: typeof cashouts[0]): boolean => {
       if (transaction.notes) {
-        return transaction.notes.includes("credit settled:");
+        return transaction.notes.includes("credit settled:") || transaction.notes.includes("toward credit");
       }
       return false;
     };
 
     // Get total credit that was auto-settled (not manually paid)
     // This should NOT be added to the till
+    // Supports both old format "credit settled: $X" and new format "paid $X toward credit"
     const autoSettledCredit = cashouts
       .filter((t) => hasAutoSettledCredit(t))
       .reduce((sum, t) => {
-        const match = t.notes?.match(/credit settled: \$(\d+(?:\.\d{2})?)/);
-        return sum + (match ? parseFloat(match[1]) : 0);
+        // Try old format first: "credit settled: $400.00"
+        const oldMatch = t.notes?.match(/credit settled: \$(\d+(?:\.\d{2})?)/);
+        if (oldMatch) {
+          return sum + parseFloat(oldMatch[1]);
+        }
+        // Try new format: "paid $400.00 toward credit"
+        const newMatch = t.notes?.match(/paid \$(\d+(?:\.\d{2})?) toward credit/);
+        return sum + (newMatch ? parseFloat(newMatch[1]) : 0);
       }, 0);
 
     // Cash buy-ins add to till

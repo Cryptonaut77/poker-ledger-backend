@@ -336,11 +336,13 @@ const PlayersScreen = ({ navigation }: Props) => {
         // Auto-settle credit from cashout
         const creditToSettle = Math.min(numAmount, playerCreditBalance);
         const actualPayout = Math.max(0, numAmount - playerCreditBalance);
+        const remainingCreditOwed = playerCreditBalance - creditToSettle;
 
         console.log("[Players] Auto-settling credit from cashout", {
           totalCashout: numAmount,
           creditSettled: creditToSettle,
           actualPayout: actualPayout,
+          remainingCreditOwed: remainingCreditOwed,
           paymentMethod
         });
 
@@ -365,6 +367,11 @@ const PlayersScreen = ({ navigation }: Props) => {
             }
           }
 
+          // Build the note with credit paid and remaining owed info
+          const notesString = remainingCreditOwed > 0
+            ? `Cashout $${numAmount.toFixed(2)} (paid $${creditToSettle.toFixed(2)} toward credit, owes $${remainingCreditOwed.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`
+            : `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`;
+
           // Record the FULL cashout amount for accurate net calculation
           // The payment method reflects what was actually paid out (electronic/cash)
           // but the amount is the total cashout value
@@ -373,7 +380,7 @@ const PlayersScreen = ({ navigation }: Props) => {
             type: "cashout",
             amount: numAmount, // Full cashout amount for correct net calculation
             paymentMethod: paymentMethod,
-            notes: `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            notes: notesString,
             gameSessionId: currentSessionId,
           });
 
