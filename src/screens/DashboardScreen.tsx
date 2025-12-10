@@ -119,6 +119,23 @@ const DashboardScreen = ({ navigation }: Props) => {
       return transaction.amount;
     };
 
+    // Helper to check if a cashout has auto-settled credit
+    const hasAutoSettledCredit = (transaction: typeof cashouts[0]): boolean => {
+      if (transaction.notes) {
+        return transaction.notes.includes("credit settled:");
+      }
+      return false;
+    };
+
+    // Get total credit that was auto-settled (not manually paid)
+    // This should NOT be added to the till
+    const autoSettledCredit = cashouts
+      .filter((t) => hasAutoSettledCredit(t))
+      .reduce((sum, t) => {
+        const match = t.notes?.match(/credit settled: \$(\d+(?:\.\d{2})?)/);
+        return sum + (match ? parseFloat(match[1]) : 0);
+      }, 0);
+
     // Cash buy-ins add to till
     const cashBuyIns = buyIns
       .filter((t) => t.paymentMethod === "cash")
@@ -129,13 +146,17 @@ const DashboardScreen = ({ navigation }: Props) => {
       .filter((t) => t.paymentMethod === "cash")
       .reduce((sum, t) => sum + getActualPayout(t), 0);
 
-    // PAID credit buy-ins add cash to till (player paid their debt in cash)
+    // PAID credit buy-ins - only add to till if manually paid (not auto-settled)
+    // Auto-settled credit just wipes the debt, no cash changes hands
     const paidCreditBuyIns = buyIns
       .filter((t) => t.paymentMethod === "credit" && t.isPaid === true)
       .reduce((sum, t) => sum + t.amount, 0);
 
-    // Cash balance = cash buy-ins + paid credit (cash received) - cash cashouts
-    const cashBalance = cashBuyIns + paidCreditBuyIns - cashCashouts;
+    // Subtract auto-settled credit since that doesn't add actual cash
+    const manuallyPaidCredit = Math.max(0, paidCreditBuyIns - autoSettledCredit);
+
+    // Cash balance = cash buy-ins + manually paid credit - cash cashouts
+    const cashBalance = cashBuyIns + manuallyPaidCredit - cashCashouts;
 
     // Electronic balance: Electronic buy-ins mean we receive electronic payment,
     // Electronic cashouts mean we owe electronic payment - use actual payout for auto-settled
@@ -148,7 +169,7 @@ const DashboardScreen = ({ navigation }: Props) => {
     const electronicBalance = electronicBuyIns - electronicCashouts;
 
     // Credit balance: Only count UNPAID credit buy-ins
-    // When credit is marked as PAID, the cash goes to till, not credit
+    // When credit is marked as PAID, it's either settled or manually paid
     const unpaidCreditBuyIns = buyIns
       .filter((t) => t.paymentMethod === "credit" && t.isPaid === false)
       .reduce((sum, t) => sum + t.amount, 0);
