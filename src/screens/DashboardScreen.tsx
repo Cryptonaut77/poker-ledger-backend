@@ -106,15 +106,28 @@ const DashboardScreen = ({ navigation }: Props) => {
     const buyIns = transactionsData.transactions.filter((t) => t.type === "buy-in");
     const cashouts = transactionsData.transactions.filter((t) => t.type === "cashout");
 
+    // Helper function to extract actual payout from auto-settled cashout notes
+    // Notes format: "Cashout $1000.00 (credit settled: $500.00, electronic paid: $500.00)"
+    const getActualPayout = (transaction: typeof cashouts[0]): number => {
+      if (transaction.notes) {
+        // Check for auto-settlement pattern
+        const match = transaction.notes.match(/(\w+) paid: \$(\d+(?:\.\d{2})?)\)/);
+        if (match) {
+          return parseFloat(match[2]);
+        }
+      }
+      return transaction.amount;
+    };
+
     // Cash buy-ins add to till
     const cashBuyIns = buyIns
       .filter((t) => t.paymentMethod === "cash")
       .reduce((sum, t) => sum + t.amount, 0);
 
-    // Cash cashouts remove from till
+    // Cash cashouts remove from till - use actual payout for auto-settled
     const cashCashouts = cashouts
       .filter((t) => t.paymentMethod === "cash")
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + getActualPayout(t), 0);
 
     // PAID credit buy-ins add cash to till (player paid their debt in cash)
     const paidCreditBuyIns = buyIns
@@ -125,10 +138,14 @@ const DashboardScreen = ({ navigation }: Props) => {
     const cashBalance = cashBuyIns + paidCreditBuyIns - cashCashouts;
 
     // Electronic balance: Electronic buy-ins mean we receive electronic payment,
-    // Electronic cashouts mean we owe electronic payment
-    const electronicBalance =
-      buyIns.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0) -
-      cashouts.filter((t) => t.paymentMethod === "electronic").reduce((sum, t) => sum + t.amount, 0);
+    // Electronic cashouts mean we owe electronic payment - use actual payout for auto-settled
+    const electronicBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "electronic")
+      .reduce((sum, t) => sum + t.amount, 0);
+    const electronicCashouts = cashouts
+      .filter((t) => t.paymentMethod === "electronic")
+      .reduce((sum, t) => sum + getActualPayout(t), 0);
+    const electronicBalance = electronicBuyIns - electronicCashouts;
 
     // Credit balance: Only count UNPAID credit buy-ins
     // When credit is marked as PAID, the cash goes to till, not credit

@@ -365,20 +365,17 @@ const PlayersScreen = ({ navigation }: Props) => {
             }
           }
 
-          // Only create cashout transaction for the actual payout amount (after credit settlement)
-          if (actualPayout > 0) {
-            await api.post("/api/players/transaction", {
-              playerName: playerName.trim(),
-              type: "cashout",
-              amount: actualPayout,
-              paymentMethod: paymentMethod,
-              notes: `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`,
-              gameSessionId: currentSessionId,
-            });
-          } else {
-            // Entire cashout was covered by credit settlement - no actual money leaves
-            console.log("[Players] Entire cashout covered by credit settlement, no payout needed");
-          }
+          // Record the FULL cashout amount for accurate net calculation
+          // The payment method reflects what was actually paid out (electronic/cash)
+          // but the amount is the total cashout value
+          await api.post("/api/players/transaction", {
+            playerName: playerName.trim(),
+            type: "cashout",
+            amount: numAmount, // Full cashout amount for correct net calculation
+            paymentMethod: paymentMethod,
+            notes: `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`,
+            gameSessionId: currentSessionId,
+          });
 
           // Refresh data
           queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
