@@ -324,14 +324,19 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   // Cash cashouts remove money (paying players OUT)
   // Paid tips remove money (paying dealers OUT from player buy-ins)
   // Expenses remove money (paying for costs OUT)
-  // Credit transactions don't affect till (no physical cash movement)
+  // PAID credit buy-ins add money (player paid their debt in cash, money IN)
+  // Unpaid credit transactions don't affect till (no physical cash movement)
   const cashBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
   const cashCashouts = session.playerTransactions
     .filter((t) => t.type === "cashout" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
-  const tillBalance = cashBuyIns - cashCashouts - totalPaidTips - totalExpenses;
+  // PAID credit buy-ins = player paid their credit debt, so that cash goes into the till
+  const paidCreditBuyIns = session.playerTransactions
+    .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit" && t.isPaid === true)
+    .reduce((sum, t) => sum + t.amount, 0);
+  const tillBalance = cashBuyIns + paidCreditBuyIns - cashCashouts - totalPaidTips - totalExpenses;
 
   // Calculate total credit balance
   // Credit balance = unpaid credit buy-ins minus any cash that was taken out when they cashed out
@@ -365,7 +370,7 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
   const playerCount = uniquePlayers.size;
 
-  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)}, Credit balance: $${creditBalance.toFixed(2)}`);
+  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)} (cash: $${cashBuyIns}, paid credit: $${paidCreditBuyIns}, cashouts: $${cashCashouts}), Credit balance: $${creditBalance.toFixed(2)}`);
 
   // Return clean session object without nested relations to match contract
   return c.json({
