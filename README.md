@@ -7,8 +7,8 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 ### 💎 Premium Subscription
 - **Free first game** - Try the full app experience with your first poker game
 - **Premium required** - After your first completed game, subscribe to continue tracking unlimited games
-- **Monthly plan**: $19.99/month
-- **Yearly plan**: $158/year (save 34%)
+- **Monthly plan**: $9.99/month
+- **Yearly plan**: $72/year (save 40%)
 - **RevenueCat powered** - Seamless subscription management and restoration
 - **All features included** - Unlimited games, cloud sync, team collaboration, and priority support
 
