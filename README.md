@@ -45,11 +45,6 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 - Log cashouts with multiple payment methods (cash, electronic, IOU)
 - Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit/IOU)
 - **Context-aware labels**: Buy-ins show "Credit" while cashouts show "IOU" for the same payment method
-- **Automatic credit settlement**: When a player who bought in on credit cashes out, the credit is automatically settled
-  - Shows credit settlement breakdown in cashout modal
-  - Calculates actual cash to pay after credit settlement
-  - Creates separate transactions for credit settlement and cash payment
-  - Credit balance tracked per player and updates automatically
 - **Unpaid credit/IOU tracking**: Track money owed both ways
   - **Player owes house** (credit buy-ins): When players buy in on credit, credit balance tracks what they owe
   - **House owes player** (IOU cashouts): When players cash out on IOU, IOU balance tracks what house owes them
@@ -61,6 +56,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - When credit buy-in is marked as paid, cash goes into the till
   - When IOU cashout is marked as paid, that obligation is settled
   - Net balance calculation reflects actual money owed in both directions
+  - **No automatic settlement**: Credit and IOU transactions are tracked separately - you manually mark them as paid when money actually changes hands
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
 - Edit or delete transactions with intuitive modal interface
@@ -289,19 +285,24 @@ Access your past saved games:
 
 ### IOU Cashout Tracking (Dec 10, 2024)
 Fixed IOU cashout tracking to properly show when house owes players money:
-- **Two-way tracking**: System now tracks both directions of debt
+- **Removed automatic credit settlement**: Credit and IOU transactions are now tracked independently
+  - When a player cashes out, no automatic settlement happens
+  - Credit buy-ins and IOU cashouts remain separate until manually marked as paid
+- **Two-way tracking**: System tracks both directions of debt
   - `creditBalance`: Tracks money player owes house (from unpaid credit buy-ins)
   - `iouBalance`: Tracks money house owes player (from unpaid IOU cashouts)
 - **IOU badge on net**: When house owes player money (unpaid IOU cashouts), net amount displays red "IOU" badge
 - **Proper calculation**: Net amount correctly reflects the debt direction
   - Player buys in $500 credit, cashes out $1000 IOU → Net $500 shows IOU badge (house owes player)
-  - Player buys in $500 credit, cashes out $300 → Net -$200 shows credit balance (player owes house)
-- **Mark as Paid buttons**: Added for both credit buy-ins and IOU cashouts
+  - Player buys in $500 credit, cashes out $300 cash → Net -$200 (player owes house $200)
+- **Mark as Paid buttons**: Works for both credit buy-ins and IOU cashouts
 - **Transaction list**: Both credit buy-ins and IOU cashouts show UNPAID badge and Mark as Paid buttons
+- **No money in till from credit**: Credit buy-ins don't add money to till until marked as paid. IOU cashouts don't take money from till.
 - **Example scenario**:
-  - Player buys in $500 on credit (unpaid) → creditBalance: $500, net: -$500
+  - Player buys in $500 on credit (unpaid) → creditBalance: $500, till: $0
   - Player cashes out $1000 on IOU (unpaid) → iouBalance: $1000, net: $500 with IOU badge
   - House owes player $500 until IOU is marked as paid
+  - No money moved in or out of till - all on credit
 
 ### Unpaid Credit Tracking (Dec 9, 2024)
 Added comprehensive tracking for unpaid credit balances:
@@ -363,20 +364,6 @@ Fixed dashboard payment breakdown and till balance calculation to properly handl
   - Player P's credit marked as PAID → Till: $500, Credit: $0
   - Player O cashes out $1500 ($500 cash + $500 electronic + $500 from P's paid credit) → Till: $0
 - **Help section updated**: Added detailed explanation of credit/IOU system and cashout payment methods
-
-### Automatic Credit Settlement (Dec 8, 2024)
-Added smart credit settlement for player cashouts:
-- **Automatic calculation**: When a player with credit balance cashes out, credit is automatically settled first
-- **Visual breakdown**: Cashout modal shows detailed settlement calculation
-  - Original cashout amount
-  - Credit owed
-  - Actual cash to pay
-- **Dual transactions**: System creates two clear transactions
-  - IOU cashout: Credit paid back (e.g., $500 credit cleared)
-  - Cash cashout: Profit paid in cash (e.g., $300 profit)
-- **Dashboard updates**: Credit balance automatically resets to zero after settlement
-- **Till Balance accuracy**: Only actual cash paid affects Till Balance
-- **Example**: Player buys in $500 on credit, cashes out $800 → IOU $500 (credit paid), Cash $300 (profit)
 
 ### QR Code Sharing (Dec 8, 2024)
 Added QR code generation for easy game sharing:

@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 137ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 147ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1428.00ms]
+Checked 761 installs across 703 packages (no changes) [1372.00ms]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -29,7 +29,7 @@ The database is already in sync with the Prisma schema.
 
 Running generate... (Use --skip-generate to skip the generators)
 [2K[1A[2K[GRunning generate... - Prisma Client
-[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 174ms
+[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 211ms
 
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
@@ -66,483 +66,7 @@ Failed to find Response internal state key
 📨 [REQUEST] GET http://4.155.21.208:3000/api/auth/get-session
 📨 [REQUEST] Path: /api/auth/get-session
 ✅ [RESPONSE] GET http://4.155.21.208:3000/api/auth/get-session - Status: 200
---> GET /api/auth/get-session [32m200[0m 11ms
-<-- GET /api/game/active
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/active
-📨 [REQUEST] Path: /api/game/active
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] Getting active game session for user: lagornot77@gmail.com
-🎮 [Game] User lagornot77@gmail.com has completed 1 games
-🎮 [Game] Found active session: cmiyn6ug30005m2yy6d61wypf
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/active - Status: 200
---> GET /api/game/active [32m200[0m 4ms
-<-- GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] Path: /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmiyn6ug30005m2yy6d61wypf, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00 (cash: $1000, paid credit: $500, cashouts: $1500), Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary - Status: 200
---> GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary [32m200[0m 4ms
-<-- GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] Path: /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmiyn6ug30005m2yy6d61wypf (user: lagornot77@gmail.com)
-💰 [Players] Found 4 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf - Status: 200
---> GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf [32m200[0m 4ms
-<-- GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] Path: /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmiyn6ug30005m2yy6d61wypf (user: lagornot77@gmail.com)
-💰 [Players] Found 4 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf - Status: 200
---> GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf [32m200[0m 4ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding buy-in for Y: $300 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizmw8460001m2o9945flgf7 by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 17ms
-<-- PUT /api/players/transaction/cmizmw8460001m2o9945flgf7/mark-unpaid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmw8460001m2o9945flgf7/mark-unpaid
-📨 [REQUEST] Path: /api/players/transaction/cmizmw8460001m2o9945flgf7/mark-unpaid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as unpaid: cmizmw8460001m2o9945flgf7 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as unpaid: cmizmw8460001m2o9945flgf7
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmw8460001m2o9945flgf7/mark-unpaid - Status: 200
---> PUT /api/players/transaction/cmizmw8460001m2o9945flgf7/mark-unpaid [32m200[0m 7ms
-<-- GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] Path: /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-<-- GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] Path: /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmiyn6ug30005m2yy6d61wypf, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00 (cash: $1000, paid credit: $500, cashouts: $1500), Credit balance: $300.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary - Status: 200
---> GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary [32m200[0m 6ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmiyn6ug30005m2yy6d61wypf (user: lagornot77@gmail.com)
-💰 [Players] Found 5 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf - Status: 200
---> GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf [32m200[0m 5ms
-<-- DELETE /api/game/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] DELETE http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] Path: /api/game/cmiyn6ug30005m2yy6d61wypf
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] Deleting session: cmiyn6ug30005m2yy6d61wypf for user: lagornot77@gmail.com
-🎮 [Game] Session deleted: cmiyn6ug30005m2yy6d61wypf
-✅ [RESPONSE] DELETE http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf - Status: 200
---> DELETE /api/game/cmiyn6ug30005m2yy6d61wypf [32m200[0m 8ms
-<-- GET /api/game/active
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/active
-📨 [REQUEST] Path: /api/game/active
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] Getting active game session for user: lagornot77@gmail.com
-🎮 [Game] User lagornot77@gmail.com has completed 1 games
-🎮 [Game] No active session found, creating new one
-🎮 [Game] Created new session: cmizmxd9q0003m2o9u5ma0oh7
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/active - Status: 200
---> GET /api/game/active [32m200[0m 8ms
-<-- GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-📨 [REQUEST] Path: /api/game/cmiyn6ug30005m2yy6d61wypf/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmiyn6ug30005m2yy6d61wypf, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary
-🎮 [Game] Request method: GET
-❌ [Game] Session not found: cmiyn6ug30005m2yy6d61wypf
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmiyn6ug30005m2yy6d61wypf/summary - Status: 404
---> GET /api/game/cmiyn6ug30005m2yy6d61wypf/summary [33m404[0m 2ms
-<-- GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-📨 [REQUEST] Path: /api/players/transactions/cmiyn6ug30005m2yy6d61wypf
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmiyn6ug30005m2yy6d61wypf (user: lagornot77@gmail.com)
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmiyn6ug30005m2yy6d61wypf - Status: 404
---> GET /api/players/transactions/cmiyn6ug30005m2yy6d61wypf [33m404[0m 3ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $0.00 (cash: $0, paid credit: $0, cashouts: $0), Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 4ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 0 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 3ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding buy-in for P: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizmxua10005m2o9vvwvzhlr by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 9ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $0, cashouts: $0), Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 4ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 1 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding buy-in for O: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizmy1dd0007m2o9zwu2lquv by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 10ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-💰 [Players] Found 2 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 2ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $0, cashouts: $0), Credit balance: $0.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 2ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding buy-in for I: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizmy8d50009m2o9yhz774j4 by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 9ms
-<-- PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-📨 [REQUEST] Path: /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as unpaid: cmizmy8d50009m2o9yhz774j4 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as unpaid: cmizmy8d50009m2o9yhz774j4
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid - Status: 200
---> PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid [32m200[0m 6ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-💰 [Players] Found 3 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 3ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $0, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding buy-in for U: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizmyq5x000bm2o9aay8jhd7 by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 6ms
-<-- PUT /api/players/transaction/cmizmyq5x000bm2o9aay8jhd7/mark-unpaid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmyq5x000bm2o9aay8jhd7/mark-unpaid
-📨 [REQUEST] Path: /api/players/transaction/cmizmyq5x000bm2o9aay8jhd7/mark-unpaid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as unpaid: cmizmyq5x000bm2o9aay8jhd7 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as unpaid: cmizmyq5x000bm2o9aay8jhd7
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmyq5x000bm2o9aay8jhd7/mark-unpaid - Status: 200
---> PUT /api/players/transaction/cmizmyq5x000bm2o9aay8jhd7/mark-unpaid [32m200[0m 5ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-💰 [Players] Found 4 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $0, cashouts: $0), Credit balance: $1000.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
-<-- PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-📨 [REQUEST] Path: /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as paid: cmizmy8d50009m2o9yhz774j4 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as paid: cmizmy8d50009m2o9yhz774j4
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid - Status: 200
---> PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid [32m200[0m 7ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding cashout for I: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizn12uy000dm2o9wnmqbsfx by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 10ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding cashout for I: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizn12z3000fm2o9t6jm54g0 by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 6ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 6 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 3ms
-<-- DELETE /api/players/transaction/cmizn12z3000fm2o9t6jm54g0
-📨 [REQUEST] DELETE http://4.155.21.208:3000/api/players/transaction/cmizn12z3000fm2o9t6jm54g0
-📨 [REQUEST] Path: /api/players/transaction/cmizn12z3000fm2o9t6jm54g0
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Deleting transaction: cmizn12z3000fm2o9t6jm54g0 (user: lagornot77@gmail.com)
-💰 [Players] Transaction deleted: cmizn12z3000fm2o9t6jm54g0
-✅ [RESPONSE] DELETE http://4.155.21.208:3000/api/players/transaction/cmizn12z3000fm2o9t6jm54g0 - Status: 200
---> DELETE /api/players/transaction/cmizn12z3000fm2o9t6jm54g0 [32m200[0m 6ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 5 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 2ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 2ms
-<-- DELETE /api/players/transaction/cmizn12uy000dm2o9wnmqbsfx
-📨 [REQUEST] DELETE http://4.155.21.208:3000/api/players/transaction/cmizn12uy000dm2o9wnmqbsfx
-📨 [REQUEST] Path: /api/players/transaction/cmizn12uy000dm2o9wnmqbsfx
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Deleting transaction: cmizn12uy000dm2o9wnmqbsfx (user: lagornot77@gmail.com)
-💰 [Players] Transaction deleted: cmizn12uy000dm2o9wnmqbsfx
-✅ [RESPONSE] DELETE http://4.155.21.208:3000/api/players/transaction/cmizn12uy000dm2o9wnmqbsfx - Status: 200
---> DELETE /api/players/transaction/cmizn12uy000dm2o9wnmqbsfx [32m200[0m 6ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 4ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 4 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
-<-- PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-📨 [REQUEST] Path: /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as unpaid: cmizmy8d50009m2o9yhz774j4 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as unpaid: cmizmy8d50009m2o9yhz774j4
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid - Status: 200
---> PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-unpaid [32m200[0m 5ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-💰 [Players] Found 4 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $0, cashouts: $0), Credit balance: $1000.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 4ms
-<-- PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-📨 [REQUEST] Path: /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Marking transaction as paid: cmizmy8d50009m2o9yhz774j4 (user: lagornot77@gmail.com)
-💰 [Players] Transaction marked as paid: cmizmy8d50009m2o9yhz774j4
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid - Status: 200
---> PUT /api/players/transaction/cmizmy8d50009m2o9yhz774j4/mark-paid [32m200[0m 10ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding cashout for I: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizn8fcq000hm2o9l803hpeb by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 6ms
-<-- POST /api/players/transaction
-📨 [REQUEST] POST http://4.155.21.208:3000/api/players/transaction
-📨 [REQUEST] Path: /api/players/transaction
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Adding cashout for I: $500 (user: lagornot77@gmail.com)
-💰 [Players] Transaction created: cmizn8fgr000jm2o9vhla7nd3 by A
-✅ [RESPONSE] POST http://4.155.21.208:3000/api/players/transaction - Status: 200
---> POST /api/players/transaction [32m200[0m 5ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 6 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
-<-- PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-📨 [REQUEST] Path: /api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Updating transaction: cmizn8fcq000hm2o9l803hpeb (user: lagornot77@gmail.com)
-💰 [Players] Transaction updated: cmizn8fcq000hm2o9l803hpeb
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb - Status: 200
---> PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb [32m200[0m 5ms
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $500.00 (cash: $500, paid credit: $500, cashouts: $500), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-💰 [Players] Found 6 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 2ms
-<-- PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-📨 [REQUEST] Path: /api/players/transaction/cmizn8fcq000hm2o9l803hpeb
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Updating transaction: cmizn8fcq000hm2o9l803hpeb (user: lagornot77@gmail.com)
-💰 [Players] Transaction updated: cmizn8fcq000hm2o9l803hpeb
-✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb - Status: 200
---> PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb [32m200[0m 6ms
-<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
-<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-💰 [Players] Found 6 transactions
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 3ms
-🔓 [Auth] Authenticated user: lagornot77@gmail.com
-🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
-🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
-🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
-🎮 [Game] Request method: GET
-🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
---> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 2ms
-<-- GET /api/auth/get-session
-📨 [REQUEST] GET http://4.155.21.208:3000/api/auth/get-session
-📨 [REQUEST] Path: /api/auth/get-session
-✅ [RESPONSE] GET http://4.155.21.208:3000/api/auth/get-session - Status: 200
---> GET /api/auth/get-session [32m200[0m 4ms
+--> GET /api/auth/get-session [32m200[0m 10ms
 <-- GET /api/game/active
 📨 [REQUEST] GET http://4.155.21.208:3000/api/game/active
 📨 [REQUEST] Path: /api/game/active
@@ -551,7 +75,18 @@ Failed to find Response internal state key
 🎮 [Game] User lagornot77@gmail.com has completed 1 games
 🎮 [Game] Found active session: cmizmxd9q0003m2o9u5ma0oh7
 ✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/active - Status: 200
---> GET /api/game/active [32m200[0m 2ms
+--> GET /api/game/active [32m200[0m 4ms
+<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🎮 [Game] Request method: GET
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
+--> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 4ms
 <-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
 📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
 📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
@@ -559,7 +94,69 @@ Failed to find Response internal state key
 💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
 💰 [Players] Found 6 transactions
 ✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
---> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 2ms
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
+<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🎮 [Game] Request method: GET
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
+--> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
+<-- PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb/mark-unpaid
+📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb/mark-unpaid
+📨 [REQUEST] Path: /api/players/transaction/cmizn8fcq000hm2o9l803hpeb/mark-unpaid
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Marking transaction as unpaid: cmizn8fcq000hm2o9l803hpeb (user: lagornot77@gmail.com)
+💰 [Players] Transaction marked as unpaid: cmizn8fcq000hm2o9l803hpeb
+✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fcq000hm2o9l803hpeb/mark-unpaid - Status: 200
+--> PUT /api/players/transaction/cmizn8fcq000hm2o9l803hpeb/mark-unpaid [32m200[0m 15ms
+<-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmizmxd9q0003m2o9u5ma0oh7, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
+🎮 [Game] Request method: GET
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
+--> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 3ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
+<-- PUT /api/players/transaction/cmizn8fgr000jm2o9vhla7nd3/mark-unpaid
+📨 [REQUEST] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fgr000jm2o9vhla7nd3/mark-unpaid
+📨 [REQUEST] Path: /api/players/transaction/cmizn8fgr000jm2o9vhla7nd3/mark-unpaid
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Marking transaction as unpaid: cmizn8fgr000jm2o9vhla7nd3 (user: lagornot77@gmail.com)
+💰 [Players] Transaction marked as unpaid: cmizn8fgr000jm2o9vhla7nd3
+✅ [RESPONSE] PUT http://4.155.21.208:3000/api/players/transaction/cmizn8fgr000jm2o9vhla7nd3/mark-unpaid - Status: 200
+--> PUT /api/players/transaction/cmizn8fgr000jm2o9vhla7nd3/mark-unpaid [32m200[0m 8ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 4ms
 <-- GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
 📨 [REQUEST] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
 📨 [REQUEST] Path: /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary
@@ -571,3 +168,53 @@ Failed to find Response internal state key
 🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $1000.00 (cash: $500, paid credit: $500, cashouts: $0), Credit balance: $500.00
 ✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/cmizmxd9q0003m2o9u5ma0oh7/summary - Status: 200
 --> GET /api/game/cmizmxd9q0003m2o9u5ma0oh7/summary [32m200[0m 2ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+<-- GET /api/game/active
+📨 [REQUEST] GET http://4.155.21.208:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 8ms
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmizmxd9q0003m2o9u5ma0oh7
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 9ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 8ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+<-- GET /api/game/active
+📨 [REQUEST] GET http://4.155.21.208:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmizmxd9q0003m2o9u5ma0oh7
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 13ms
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 15ms
+<-- GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+📨 [REQUEST] Path: /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizmxd9q0003m2o9u5ma0oh7 (user: lagornot77@gmail.com)
+💰 [Players] Found 6 transactions
+✅ [RESPONSE] GET http://4.155.21.208:3000/api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 - Status: 200
+--> GET /api/players/transactions/cmizmxd9q0003m2o9u5ma0oh7 [32m200[0m 24ms

@@ -49,7 +49,6 @@ const PlayersScreen = ({ navigation }: Props) => {
   const [expandedPlayers, setExpandedPlayers] = useState<Set<string>>(new Set());
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<PlayerTransaction | null>(null);
-  const [selectedPlayerCredit, setSelectedPlayerCredit] = useState<number>(0);
 
   // Fetch active game session - refetch frequently to prevent stale data
   const { data: gameData, refetch: refetchGame } = useQuery({
@@ -218,21 +217,10 @@ const PlayersScreen = ({ navigation }: Props) => {
     setAmount("");
     setPaymentMethod("cash");
     setNotes("");
-    setSelectedPlayerCredit(0);
   };
 
   const handlePlayerNameChange = (text: string) => {
     setPlayerName(text);
-
-    // If this is a cashout, check if the player has credit balance
-    if (transactionType === "cashout") {
-      const player = playerSummaries.find(p => p.name.toLowerCase() === text.trim().toLowerCase());
-      if (player) {
-        setSelectedPlayerCredit(player.creditBalance);
-      } else {
-        setSelectedPlayerCredit(0);
-      }
-    }
   };
 
   const handleSubmit = async () => {
@@ -307,79 +295,6 @@ const PlayersScreen = ({ navigation }: Props) => {
         Alert.alert("Error", errorMessage);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-    } else if (transactionType === "cashout" && selectedPlayerCredit > 0) {
-      // Handle credit settlement for cashouts
-      const creditToSettle = Math.min(numAmount, selectedPlayerCredit);
-      const cashToPay = Math.max(0, numAmount - selectedPlayerCredit);
-
-      console.log("[Players] Credit settlement", {
-        totalCashout: numAmount,
-        creditSettled: creditToSettle,
-        cashPaid: cashToPay
-      });
-
-      try {
-        // Find the unpaid credit buy-in(s) to mark as paid
-        const unpaidCreditTransactions = transactionsData?.transactions.filter(
-          t => t.playerName.toLowerCase() === playerName.trim().toLowerCase()
-            && t.type === "buy-in"
-            && t.paymentMethod === "credit"
-            && !t.isPaid
-        ) || [];
-
-        // Mark credit buy-ins as paid up to the cashout amount
-        let remainingToSettle = creditToSettle;
-        for (const creditTx of unpaidCreditTransactions) {
-          if (remainingToSettle <= 0) break;
-
-          if (creditTx.amount <= remainingToSettle) {
-            // Fully settle this credit transaction
-            await api.put(`/api/players/transaction/${creditTx.id}/mark-paid`, {});
-            remainingToSettle -= creditTx.amount;
-          }
-          // If partial settlement is needed, we keep it unpaid (they still owe the difference)
-        }
-
-        // Create TWO separate cashout transactions:
-        // 1. Credit cashout for the settlement portion
-        if (creditToSettle > 0) {
-          await api.post("/api/players/transaction", {
-            playerName: playerName.trim(),
-            type: "cashout",
-            amount: creditToSettle,
-            paymentMethod: "credit",
-            notes: `Credit settlement from total $${numAmount.toFixed(2)} cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
-            gameSessionId: currentSessionId,
-          });
-        }
-
-        // 2. Selected payment method cashout for the profit portion (if any)
-        if (cashToPay > 0) {
-          await api.post("/api/players/transaction", {
-            playerName: playerName.trim(),
-            type: "cashout",
-            amount: cashToPay,
-            paymentMethod: paymentMethod, // Use the selected payment method (cash/electronic)
-            notes: `Profit from total $${numAmount.toFixed(2)} cashout${notes.trim() ? `. ${notes.trim()}` : ''}`,
-            gameSessionId: currentSessionId,
-          });
-        }
-
-        // Refresh data
-        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
-        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
-        setModalVisible(false);
-        resetForm();
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch (error) {
-        const errorMessage = error instanceof ApiError
-          ? error.getUserMessage()
-          : "Failed to process cashout with credit settlement.";
-        console.error("[Players] Error with credit settlement:", errorMessage);
-        Alert.alert("Error", errorMessage);
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      }
-    } else {
       // Normal transaction (no credit settlement)
       console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
 
@@ -569,35 +484,6 @@ const PlayersScreen = ({ navigation }: Props) => {
                   style={{ minHeight: 48 }}
                 />
               </View>
-
-              {/* Credit Settlement Info for Cashouts */}
-              {transactionType === "cashout" && selectedPlayerCredit > 0 && amount && parseFloat(amount) > 0 && (
-                <View className="bg-amber-900/20 border border-amber-700/50 rounded-lg p-4">
-                  <Text className="text-amber-400 text-sm font-bold mb-2">Credit Settlement</Text>
-                  <View className="gap-2">
-                    <View className="flex-row justify-between">
-                      <Text className="text-slate-300 text-sm">Cashout Amount:</Text>
-                      <Text className="text-white text-sm font-semibold">{formatCurrency(parseFloat(amount))}</Text>
-                    </View>
-                    <View className="flex-row justify-between">
-                      <Text className="text-slate-300 text-sm">Credit Owed:</Text>
-                      <Text className="text-amber-400 text-sm font-semibold">-{formatCurrency(selectedPlayerCredit)}</Text>
-                    </View>
-                    <View className="border-t border-amber-700/30 my-1" />
-                    <View className="flex-row justify-between">
-                      <Text className="text-white text-sm font-bold">Cash to Pay:</Text>
-                      <Text className="text-emerald-400 text-base font-bold">
-                        {formatCurrency(Math.max(0, parseFloat(amount) - selectedPlayerCredit))}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text className="text-slate-400 text-xs mt-2">
-                    {parseFloat(amount) <= selectedPlayerCredit
-                      ? "Credit will be reduced. No cash payment needed."
-                      : "Credit will be cleared and remaining paid in cash."}
-                  </Text>
-                </View>
-              )}
 
               <View>
                 <Text className="text-slate-400 text-sm mb-2 font-medium">Payment Method</Text>
