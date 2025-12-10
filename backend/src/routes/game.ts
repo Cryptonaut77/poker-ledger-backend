@@ -334,10 +334,19 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .filter((t) => t.type === "cashout" && t.paymentMethod === "cash")
     .reduce((sum, t) => {
       // Check if this is an auto-settled cashout - use actual payout amount
+      // Supports formats:
+      // - Old: "cash paid: $X)"
+      // - New: "received $X cash"
       if (t.notes) {
-        const match = t.notes.match(/cash paid: \$(\d+(?:\.\d{2})?)\)/);
-        if (match) {
-          return sum + parseFloat(match[1]);
+        // Try new format first
+        const newMatch = t.notes.match(/received \$(\d+(?:\.\d{2})?) cash/);
+        if (newMatch) {
+          return sum + parseFloat(newMatch[1]);
+        }
+        // Try old format
+        const oldMatch = t.notes.match(/cash paid: \$(\d+(?:\.\d{2})?)\)/);
+        if (oldMatch) {
+          return sum + parseFloat(oldMatch[1]);
         }
       }
       return sum + t.amount;

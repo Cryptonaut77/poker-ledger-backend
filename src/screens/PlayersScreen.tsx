@@ -368,16 +368,16 @@ const PlayersScreen = ({ navigation }: Props) => {
           }
 
           // Build a simple, clear note
-          // If they still owe money: "paid $400 credit, owes $600"
-          // If fully settled: "paid $400 credit"
-          // If they got cash back: "paid $400 credit, received $200 cash"
+          // Always include actual payout amount for parsing consistency
+          // Examples:
+          // - "paid $400 credit, owes $600, received $0 cash"
+          // - "paid $500 credit, received $0 cash" (fully settled)
+          // - "paid $500 credit, received $200 cash" (got cash back)
           let notesString = `paid $${creditToSettle.toFixed(2)} credit`;
           if (remainingCreditOwed > 0) {
             notesString += `, owes $${remainingCreditOwed.toFixed(2)}`;
           }
-          if (actualPayout > 0) {
-            notesString += `, received $${actualPayout.toFixed(2)} ${paymentMethod}`;
-          }
+          notesString += `, received $${actualPayout.toFixed(2)} ${paymentMethod}`;
           if (notes.trim()) {
             notesString += `. ${notes.trim()}`;
           }

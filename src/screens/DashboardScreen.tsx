@@ -107,13 +107,20 @@ const DashboardScreen = ({ navigation }: Props) => {
     const cashouts = transactionsData.transactions.filter((t) => t.type === "cashout");
 
     // Helper function to extract actual payout from auto-settled cashout notes
-    // Notes format: "Cashout $1000.00 (credit settled: $500.00, electronic paid: $500.00)"
+    // Supports formats:
+    // - Old: "Cashout $1000.00 (credit settled: $500.00, electronic paid: $500.00)"
+    // - New: "paid $500 credit, received $500 cash"
     const getActualPayout = (transaction: typeof cashouts[0]): number => {
       if (transaction.notes) {
-        // Check for auto-settlement pattern
-        const match = transaction.notes.match(/(\w+) paid: \$(\d+(?:\.\d{2})?)\)/);
-        if (match) {
-          return parseFloat(match[2]);
+        // Try new format first: "received $X cash/electronic"
+        const newMatch = transaction.notes.match(/received \$(\d+(?:\.\d{2})?)/);
+        if (newMatch) {
+          return parseFloat(newMatch[1]);
+        }
+        // Try old format: "cash/electronic paid: $X"
+        const oldMatch = transaction.notes.match(/(\w+) paid: \$(\d+(?:\.\d{2})?)\)/);
+        if (oldMatch) {
+          return parseFloat(oldMatch[2]);
         }
       }
       return transaction.amount;
