@@ -97,9 +97,9 @@ export default function PaywallScreen() {
 
   const getPackageSavings = (pkg: PurchasesPackage) => {
     if (pkg.identifier === "$rc_annual") {
-      // Yearly is $72, monthly is $9.99 * 12 = $119.88
-      // Savings: $47.88 (~40% off)
-      return "Save 40%";
+      // Yearly is $69.99, monthly is $9.99 * 12 = $119.88
+      // Savings: $49.89 (~42% off)
+      return "Save 42%";
     }
     return null;
   };
