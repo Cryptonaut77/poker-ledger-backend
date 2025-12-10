@@ -123,10 +123,14 @@ export const isRevenueCatEnabled = (): boolean => {
  *   // Display packages from offeringsResult.data.current.availablePackages
  * }
  */
-export const getOfferings = (): Promise<
+export const getOfferings = async (): Promise<
   RevenueCatResult<PurchasesOfferings>
 > => {
-  return guardRevenueCatUsage("getOfferings", () => Purchases.getOfferings());
+  return guardRevenueCatUsage("getOfferings", async () => {
+    // Sync with RevenueCat to get the latest offerings
+    await Purchases.syncPurchases();
+    return Purchases.getOfferings();
+  });
 };
 
 /**
