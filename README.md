@@ -56,7 +56,11 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - When credit buy-in is marked as paid, cash goes into the till
   - When IOU cashout is marked as paid, that obligation is settled
   - Net balance calculation reflects actual money owed in both directions
-  - **No automatic settlement**: Credit and IOU transactions are tracked separately - you manually mark them as paid when money actually changes hands
+  - **Smart credit settlement**: When a player with outstanding credit cashes out, the system automatically applies their cashout toward their credit balance
+    - Cashout note shows exactly what was paid: `"paid $400 credit, owes $600, received $0 cash"`
+    - If they cash out more than they owe: `"paid $500 credit, received $200 cash"` (they get the difference)
+    - Till balance only increases when you manually mark the remaining credit as paid
+    - Credit balance correctly reflects what's still owed after partial payments
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
 - Edit or delete transactions with intuitive modal interface
