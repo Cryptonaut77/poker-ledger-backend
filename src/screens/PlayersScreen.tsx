@@ -295,7 +295,40 @@ const PlayersScreen = ({ navigation }: Props) => {
         Alert.alert("Error", errorMessage);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
-      // Normal transaction (no credit settlement)
+    } else if (transactionType === "cashout" && paymentMethod === "credit") {
+      // IOU cashouts should be marked as unpaid initially (house owes this money)
+      console.log("[Players] Submitting unpaid IOU cashout", { playerName: playerName.trim(), amount: numAmount });
+
+      try {
+        const response = await api.post<AddPlayerTransactionResponse>("/api/players/transaction", {
+          playerName: playerName.trim(),
+          type: transactionType,
+          amount: numAmount,
+          paymentMethod,
+          notes: notes.trim() || undefined,
+          gameSessionId: currentSessionId,
+        });
+
+        // Mark it as unpaid
+        if (response?.transaction) {
+          await api.put(`/api/players/transaction/${response.transaction.id}/mark-unpaid`, {});
+        }
+
+        queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+        queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+        setModalVisible(false);
+        resetForm();
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch (error) {
+        const errorMessage = error instanceof ApiError
+          ? error.getUserMessage()
+          : "Failed to add IOU cashout.";
+        console.error("[Players] Error with IOU cashout:", errorMessage);
+        Alert.alert("Error", errorMessage);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      }
+    } else {
+      // Normal transaction (cash or electronic)
       console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
 
       addTransactionMutation.mutate({
