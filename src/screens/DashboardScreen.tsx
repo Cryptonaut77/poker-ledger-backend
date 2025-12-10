@@ -150,6 +150,34 @@ const DashboardScreen = ({ navigation }: Props) => {
     };
   }, [transactionsData]);
 
+  // Calculate total buy-ins by payment method
+  const buyInBreakdown = React.useMemo(() => {
+    if (!transactionsData?.transactions) {
+      return { cash: 0, electronic: 0, credit: 0, total: 0 };
+    }
+
+    const buyIns = transactionsData.transactions.filter((t) => t.type === "buy-in");
+
+    const cashBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "cash")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const electronicBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "electronic")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const creditBuyIns = buyIns
+      .filter((t) => t.paymentMethod === "credit")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      cash: cashBuyIns,
+      electronic: electronicBuyIns,
+      credit: creditBuyIns,
+      total: cashBuyIns + electronicBuyIns + creditBuyIns,
+    };
+  }, [transactionsData]);
+
   // End game mutation
   const endGameMutation = useMutation({
     mutationFn: () => api.post("/api/game/end", { sessionId }),
@@ -360,9 +388,51 @@ const DashboardScreen = ({ navigation }: Props) => {
 
         {/* Stats Grid */}
         <View className="px-4 gap-4">
-          {/* Payment Method Breakdown */}
+          {/* Total Buy-ins Breakdown */}
           <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
-            <Text className="text-white text-lg font-bold mb-4">Payment Method Balances</Text>
+            <Text className="text-white text-lg font-bold mb-4">Total Buy-ins by Payment Method</Text>
+            <View className="gap-3">
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-blue-500" />
+                  <Text className="text-slate-300 font-medium">Cash</Text>
+                </View>
+                <Text className="text-blue-400 text-xl font-bold">
+                  {formatCurrency(buyInBreakdown.cash)}
+                </Text>
+              </View>
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-amber-500" />
+                  <Text className="text-slate-300 font-medium">Electronic</Text>
+                </View>
+                <Text className="text-amber-400 text-xl font-bold">
+                  {formatCurrency(buyInBreakdown.electronic)}
+                </Text>
+              </View>
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-red-500" />
+                  <Text className="text-slate-300 font-medium">Credit</Text>
+                </View>
+                <Text className="text-red-400 text-xl font-bold">
+                  {formatCurrency(buyInBreakdown.credit)}
+                </Text>
+              </View>
+            </View>
+            <View className="mt-4 pt-4 border-t border-slate-700">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-slate-400 font-medium">Total Buy-ins</Text>
+                <Text className="text-white text-2xl font-bold">
+                  {formatCurrency(buyInBreakdown.total)}
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Active Chips in Play */}
+          <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
+            <Text className="text-white text-lg font-bold mb-4">Active Chips in Play</Text>
             <View className="gap-3">
               <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
                 <View className="flex-row items-center gap-2">
@@ -394,7 +464,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             </View>
             <View className="mt-4 pt-4 border-t border-slate-700">
               <View className="flex-row items-center justify-between">
-                <Text className="text-slate-400 font-medium">Total Net (Buy-ins - Cashouts)</Text>
+                <Text className="text-slate-400 font-medium">Chips in Play (Buy-ins - Cashouts)</Text>
                 <Text className="text-white text-2xl font-bold">
                   {summary ? formatCurrency(summary.totalBuyIns - summary.totalCashouts) : "$0.00"}
                 </Text>
