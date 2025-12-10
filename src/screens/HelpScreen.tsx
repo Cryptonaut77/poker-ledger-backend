@@ -114,7 +114,7 @@ const HELP_SECTIONS: HelpSection[] = [
       "• System creates IOU settlement + Cash payment transactions",
       "• Credit balance updates automatically",
       "",
-      "IOU Cashouts (Player leaves without paying):",
+      "IOU Cashouts (Player leaves without being paid):",
       "• Select 'IOU' as payment method when cashing them out",
       "• This means YOU now owe THEM money (reverse credit)",
       "• Does not affect Till Balance (no cash paid out yet)",
