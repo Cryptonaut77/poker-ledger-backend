@@ -514,6 +514,7 @@ const PlayersScreen = ({ navigation }: Props) => {
         <Pressable
           onPress={() => {
             console.log("[Players] Cash-out button pressed");
+            resetForm(); // Reset form when opening modal
             setTransactionType("cashout");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -533,6 +534,7 @@ const PlayersScreen = ({ navigation }: Props) => {
         <Pressable
           onPress={() => {
             console.log("[Players] Buy-in button pressed");
+            resetForm(); // Reset form when opening modal
             setTransactionType("buy-in");
             setModalVisible(true);
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -556,14 +558,20 @@ const PlayersScreen = ({ navigation }: Props) => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1 justify-end"
         >
-          <Pressable className="flex-1 bg-black/50" onPress={() => setModalVisible(false)} />
+          <Pressable className="flex-1 bg-black/50" onPress={() => {
+            setModalVisible(false);
+            resetForm();
+          }} />
           <View className="bg-slate-900 rounded-t-3xl p-6 border-t border-slate-700">
             <View className="flex-row items-center justify-between mb-6">
               <Text className="text-white text-2xl font-bold">
                 {transactionType === "buy-in" ? "Buy-in" : "Cashout"}
               </Text>
               <Pressable
-                onPress={() => setModalVisible(false)}
+                onPress={() => {
+                  setModalVisible(false);
+                  resetForm();
+                }}
                 className="w-10 h-10 items-center justify-center"
               >
                 <X size={24} color="#94a3b8" />
