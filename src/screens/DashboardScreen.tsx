@@ -388,6 +388,48 @@ const DashboardScreen = ({ navigation }: Props) => {
 
         {/* Stats Grid */}
         <View className="px-4 gap-4">
+          {/* Active Balances */}
+          <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
+            <Text className="text-white text-lg font-bold mb-4">Active Balances</Text>
+            <View className="gap-3">
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-blue-500" />
+                  <Text className="text-slate-300 font-medium">Cash (In Till)</Text>
+                </View>
+                <Text className="text-blue-400 text-xl font-bold">
+                  {formatCurrency(paymentBreakdown.cash)}
+                </Text>
+              </View>
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-amber-500" />
+                  <Text className="text-slate-300 font-medium">Electronic</Text>
+                </View>
+                <Text className="text-amber-400 text-xl font-bold">
+                  {formatCurrency(paymentBreakdown.electronic)}
+                </Text>
+              </View>
+              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
+                <View className="flex-row items-center gap-2">
+                  <View className="w-3 h-3 rounded-full bg-red-500" />
+                  <Text className="text-slate-300 font-medium">Credit (Owed)</Text>
+                </View>
+                <Text className="text-red-400 text-xl font-bold">
+                  {formatCurrency(paymentBreakdown.credit)}
+                </Text>
+              </View>
+            </View>
+            <View className="mt-4 pt-4 border-t border-slate-700">
+              <View className="flex-row items-center justify-between">
+                <Text className="text-slate-400 font-medium">Net Balance (Buy-ins - Cashouts)</Text>
+                <Text className="text-white text-2xl font-bold">
+                  {summary ? formatCurrency(summary.totalBuyIns - summary.totalCashouts) : "$0.00"}
+                </Text>
+              </View>
+            </View>
+          </View>
+
           {/* Total Buy-ins Breakdown */}
           <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
             <Text className="text-white text-lg font-bold mb-4">Total Buy-ins by Payment Method</Text>
@@ -425,48 +467,6 @@ const DashboardScreen = ({ navigation }: Props) => {
                 <Text className="text-slate-400 font-medium">Total Buy-ins</Text>
                 <Text className="text-white text-2xl font-bold">
                   {formatCurrency(buyInBreakdown.total)}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Active Chips in Play */}
-          <View className="bg-slate-900 rounded-xl p-4 border border-slate-800">
-            <Text className="text-white text-lg font-bold mb-4">Active Chips in Play</Text>
-            <View className="gap-3">
-              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
-                <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-blue-500" />
-                  <Text className="text-slate-300 font-medium">Cash (In Till)</Text>
-                </View>
-                <Text className="text-blue-400 text-xl font-bold">
-                  {formatCurrency(paymentBreakdown.cash)}
-                </Text>
-              </View>
-              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
-                <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-amber-500" />
-                  <Text className="text-slate-300 font-medium">Electronic</Text>
-                </View>
-                <Text className="text-amber-400 text-xl font-bold">
-                  {formatCurrency(paymentBreakdown.electronic)}
-                </Text>
-              </View>
-              <View className="flex-row items-center justify-between bg-slate-800 p-3 rounded-lg">
-                <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-red-500" />
-                  <Text className="text-slate-300 font-medium">Credit (Owed)</Text>
-                </View>
-                <Text className="text-red-400 text-xl font-bold">
-                  {formatCurrency(paymentBreakdown.credit)}
-                </Text>
-              </View>
-            </View>
-            <View className="mt-4 pt-4 border-t border-slate-700">
-              <View className="flex-row items-center justify-between">
-                <Text className="text-slate-400 font-medium">Chips in Play (Buy-ins - Cashouts)</Text>
-                <Text className="text-white text-2xl font-bold">
-                  {summary ? formatCurrency(summary.totalBuyIns - summary.totalCashouts) : "$0.00"}
                 </Text>
               </View>
             </View>
