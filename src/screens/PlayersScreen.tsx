@@ -327,8 +327,88 @@ const PlayersScreen = ({ navigation }: Props) => {
         Alert.alert("Error", errorMessage);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       }
+    } else if (transactionType === "cashout" && (paymentMethod === "cash" || paymentMethod === "electronic")) {
+      // Check if player has outstanding credit that should be auto-settled
+      const player = playerSummaries.find(p => p.name.toLowerCase() === playerName.trim().toLowerCase());
+      const playerCreditBalance = player?.creditBalance || 0;
+
+      if (playerCreditBalance > 0) {
+        // Auto-settle credit from cashout
+        const creditToSettle = Math.min(numAmount, playerCreditBalance);
+        const actualPayout = Math.max(0, numAmount - playerCreditBalance);
+
+        console.log("[Players] Auto-settling credit from cashout", {
+          totalCashout: numAmount,
+          creditSettled: creditToSettle,
+          actualPayout: actualPayout,
+          paymentMethod
+        });
+
+        try {
+          // Find the unpaid credit buy-in(s) to mark as paid
+          const unpaidCreditTransactions = transactionsData?.transactions.filter(
+            t => t.playerName.toLowerCase() === playerName.trim().toLowerCase()
+              && t.type === "buy-in"
+              && t.paymentMethod === "credit"
+              && !t.isPaid
+          ) || [];
+
+          // Mark credit buy-ins as paid up to the settlement amount
+          let remainingToSettle = creditToSettle;
+          for (const creditTx of unpaidCreditTransactions) {
+            if (remainingToSettle <= 0) break;
+
+            if (creditTx.amount <= remainingToSettle) {
+              // Fully settle this credit transaction
+              await api.put(`/api/players/transaction/${creditTx.id}/mark-paid`, {});
+              remainingToSettle -= creditTx.amount;
+            }
+          }
+
+          // Only create cashout transaction for the actual payout amount (after credit settlement)
+          if (actualPayout > 0) {
+            await api.post("/api/players/transaction", {
+              playerName: playerName.trim(),
+              type: "cashout",
+              amount: actualPayout,
+              paymentMethod: paymentMethod,
+              notes: `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`,
+              gameSessionId: currentSessionId,
+            });
+          } else {
+            // Entire cashout was covered by credit settlement - no actual money leaves
+            console.log("[Players] Entire cashout covered by credit settlement, no payout needed");
+          }
+
+          // Refresh data
+          queryClient.invalidateQueries({ queryKey: ["playerTransactions"] });
+          queryClient.invalidateQueries({ queryKey: ["gameSummary"] });
+          setModalVisible(false);
+          resetForm();
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } catch (error) {
+          const errorMessage = error instanceof ApiError
+            ? error.getUserMessage()
+            : "Failed to process cashout with credit settlement.";
+          console.error("[Players] Error with credit settlement:", errorMessage);
+          Alert.alert("Error", errorMessage);
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        }
+      } else {
+        // Normal cashout (no credit to settle)
+        console.log("[Players] Submitting normal cashout", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
+
+        addTransactionMutation.mutate({
+          playerName: playerName.trim(),
+          type: transactionType,
+          amount: numAmount,
+          paymentMethod,
+          notes: notes.trim() || undefined,
+          gameSessionId: currentSessionId,
+        });
+      }
     } else {
-      // Normal transaction (buy-in or cashout with cash/electronic)
+      // Normal transaction (buy-in with cash/electronic)
       console.log("[Players] Submitting transaction", { playerName: playerName.trim(), type: transactionType, amount: numAmount, paymentMethod });
 
       addTransactionMutation.mutate({
