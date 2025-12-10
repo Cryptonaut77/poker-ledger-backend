@@ -42,6 +42,7 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
 
 ### 💰 Player Tracking
 - Log player buy-ins with multiple payment methods (cash, electronic, credit)
+- Log cashouts with multiple payment methods (cash, electronic, IOU)
 - Visual payment method indicators with colored dots (green=cash, blue=electronic, yellow=credit/IOU)
 - **Context-aware labels**: Buy-ins show "Credit" while cashouts show "IOU" for the same payment method
 - **Automatic credit settlement**: When a player who bought in on credit cashes out, the credit is automatically settled
@@ -49,13 +50,13 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - Calculates actual cash to pay after credit settlement
   - Creates separate transactions for credit settlement and cash payment
   - Credit balance tracked per player and updates automatically
-- **Unpaid credit tracking**: When players cash out for less than they owe
+- **Unpaid credit tracking**: When players buy in on credit or cash out on IOU
   - Visual "UNPAID" badge on credit transactions that haven't been paid
   - Outstanding credit balance shown per player (only unpaid amounts)
   - "Mark as Paid" button to track when players pay back what they owe
   - "Mark as Unpaid" button to toggle payment status if needed
+  - When credit buy-in is marked as paid, cash goes into the till
   - Net balance calculation reflects actual money owed
-- Track cashouts
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
 - Edit or delete transactions with intuitive modal interface
@@ -252,19 +253,22 @@ The app automatically creates a game session when you first open it. All transac
 
 ### Viewing Summary
 The Dashboard tab provides a real-time overview of:
-- **Till Balance**: Physical cash in the till (cash buy-ins - cashouts - paid tips - expenses)
-- **House Profit**: Business profit (paid rake - expenses)
+- **Till Balance**: Physical cash in the till (cash buy-ins + paid credit debts - cash cashouts - paid tips - expenses)
+- **House Profit**: Business profit (claimed rake - expenses)
 - **Payment Method Balances**: Net balance (buy-ins minus cashouts) for each payment method
-  - Cash (In Till): Cash buy-ins minus cash cashouts
-  - Electronic: Electronic buy-ins minus electronic cashouts
-  - Credit (Owed): Credit buy-ins minus credit cashouts
+  - Cash (In Till): Cash buy-ins + paid credit debts - cash cashouts
+  - Electronic: Electronic buy-ins - electronic cashouts
+  - Credit (Owed): Unpaid credit buy-ins - credit cashouts (never negative)
 - Total net amount (total buy-ins - total cashouts)
 - Total buy-ins and cashouts
 - Total tips and rake collected (including unpaid)
 - Total expenses
 - Number of unique players
 
-**Important**: Tips and rake are only included in Till Balance and House Profit calculations once marked as paid. This ensures accurate tracking of actual cash on hand.
+**Important**:
+- Tips and rake are only included in Till Balance and House Profit calculations once marked as paid/claimed
+- When a credit buy-in is marked as "Paid", that cash payment goes into the Till Balance
+- IOU cashouts don't affect Till Balance (no cash paid out yet)
 
 ### Viewing Game History
 Access your past saved games:
@@ -323,15 +327,22 @@ Fixed paywall not showing after completing first game:
 - **Backend logging**: Added logging to track user's completed games count
 
 ### Payment Method Balance Fix (Dec 9, 2024)
-Fixed dashboard payment breakdown to properly account for cashouts and paid credits:
-- **Net balances**: Dashboard now shows net balance (buy-ins minus cashouts) for each payment method
-- **Electronic cashouts**: When a player cashes out electronically, it now correctly reduces the electronic balance
+Fixed dashboard payment breakdown and till balance calculation to properly handle paid credit debts:
+- **Till Balance fix**: When credit buy-in is marked as PAID, that cash now correctly adds to Till Balance
+- **Backend calculation**: `tillBalance = cashBuyIns + paidCreditBuyIns - cashCashouts - paidTips - expenses`
+- **Frontend alignment**: Dashboard Cash (In Till) balance matches backend calculation
+- **Net balances**: Dashboard shows net balance (buy-ins minus cashouts) for each payment method
+- **Electronic cashouts**: When a player cashes out electronically, it correctly reduces the electronic balance
 - **Cash cashouts**: Cash cashouts reduce the cash balance displayed
 - **Credit shows only owed**: Credit balance only shows UNPAID credit buy-ins
 - **Paid credit adds to cash**: When credit is marked as PAID, that cash goes into the Cash (In Till) balance
 - **Updated labels**: Changed "Buy-in Payment Breakdown" to "Payment Method Balances" for clarity
 - **Total net calculation**: Shows "Total Net (Buy-ins - Cashouts)" instead of just "Total Buy-ins"
-- **Example**: Player P buys in $500 credit, marked as PAID → Credit (Owed) shows $0, Cash (In Till) includes $500
+- **Example scenarios**:
+  - Player P buys in $500 credit (unpaid) → Till: $0, Credit: $500
+  - Player P's credit marked as PAID → Till: $500, Credit: $0
+  - Player O cashes out $1500 ($500 cash + $500 electronic + $500 from P's paid credit) → Till: $0
+- **Help section updated**: Added detailed explanation of credit/IOU system and cashout payment methods
 
 ### Automatic Credit Settlement (Dec 8, 2024)
 Added smart credit settlement for player cashouts:
