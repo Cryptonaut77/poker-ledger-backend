@@ -367,10 +367,20 @@ const PlayersScreen = ({ navigation }: Props) => {
             }
           }
 
-          // Build the note with credit paid and remaining owed info
-          const notesString = remainingCreditOwed > 0
-            ? `Cashout $${numAmount.toFixed(2)} (paid $${creditToSettle.toFixed(2)} toward credit, owes $${remainingCreditOwed.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`
-            : `Cashout $${numAmount.toFixed(2)} (credit settled: $${creditToSettle.toFixed(2)}, ${paymentMethod} paid: $${actualPayout.toFixed(2)})${notes.trim() ? `. ${notes.trim()}` : ''}`;
+          // Build a simple, clear note
+          // If they still owe money: "paid $400 credit, owes $600"
+          // If fully settled: "paid $400 credit"
+          // If they got cash back: "paid $400 credit, received $200 cash"
+          let notesString = `paid $${creditToSettle.toFixed(2)} credit`;
+          if (remainingCreditOwed > 0) {
+            notesString += `, owes $${remainingCreditOwed.toFixed(2)}`;
+          }
+          if (actualPayout > 0) {
+            notesString += `, received $${actualPayout.toFixed(2)} ${paymentMethod}`;
+          }
+          if (notes.trim()) {
+            notesString += `. ${notes.trim()}`;
+          }
 
           // Record the FULL cashout amount for accurate net calculation
           // The payment method reflects what was actually paid out (electronic/cash)

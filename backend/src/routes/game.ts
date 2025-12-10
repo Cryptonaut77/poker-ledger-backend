@@ -345,17 +345,17 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   // Calculate auto-settled credit from cashout notes
   // These should NOT be added to the till
-  // Supports both old format "credit settled: $X" and new format "paid $X toward credit"
+  // Supports formats: "credit settled: $X", "paid $X toward credit", "paid $X credit"
   const autoSettledCredit = session.playerTransactions
-    .filter((t) => t.type === "cashout" && (t.notes?.includes("credit settled:") || t.notes?.includes("toward credit")))
+    .filter((t) => t.type === "cashout" && (t.notes?.includes("credit settled:") || t.notes?.includes("paid $")))
     .reduce((sum, t) => {
-      // Try old format first: "credit settled: $400.00"
+      // Try old format: "credit settled: $400.00"
       const oldMatch = t.notes?.match(/credit settled: \$(\d+(?:\.\d{2})?)/);
       if (oldMatch) {
         return sum + parseFloat(oldMatch[1]);
       }
-      // Try new format: "paid $400.00 toward credit"
-      const newMatch = t.notes?.match(/paid \$(\d+(?:\.\d{2})?) toward credit/);
+      // Try new simple format: "paid $400.00 credit"
+      const newMatch = t.notes?.match(/paid \$(\d+(?:\.\d{2})?) credit/);
       return sum + (newMatch ? parseFloat(newMatch[1]) : 0);
     }, 0);
 
