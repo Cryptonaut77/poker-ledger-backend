@@ -50,13 +50,17 @@ A beautiful, sophisticated mobile app for managing home poker games. Track playe
   - Calculates actual cash to pay after credit settlement
   - Creates separate transactions for credit settlement and cash payment
   - Credit balance tracked per player and updates automatically
-- **Unpaid credit tracking**: When players buy in on credit or cash out on IOU
-  - Visual "UNPAID" badge on credit transactions that haven't been paid
-  - Outstanding credit balance shown per player (only unpaid amounts)
-  - "Mark as Paid" button to track when players pay back what they owe
+- **Unpaid credit/IOU tracking**: Track money owed both ways
+  - **Player owes house** (credit buy-ins): When players buy in on credit, credit balance tracks what they owe
+  - **House owes player** (IOU cashouts): When players cash out on IOU, IOU balance tracks what house owes them
+  - Visual "UNPAID" badge on credit/IOU transactions that haven't been paid
+  - Visual "IOU" badge on net amount when house owes player money
+  - Outstanding balances shown per player (only unpaid amounts)
+  - "Mark as Paid" button to track when debts are settled (works for both credit buy-ins and IOU cashouts)
   - "Mark as Unpaid" button to toggle payment status if needed
   - When credit buy-in is marked as paid, cash goes into the till
-  - Net balance calculation reflects actual money owed
+  - When IOU cashout is marked as paid, that obligation is settled
+  - Net balance calculation reflects actual money owed in both directions
 - Voice-to-text support with automatic duplicate prevention
 - View complete transaction history
 - Edit or delete transactions with intuitive modal interface
@@ -282,6 +286,22 @@ Access your past saved games:
 4. Delete any saved game permanently by tapping "Delete Game" in the expanded view
 
 ## Recent Updates
+
+### IOU Cashout Tracking (Dec 10, 2024)
+Fixed IOU cashout tracking to properly show when house owes players money:
+- **Two-way tracking**: System now tracks both directions of debt
+  - `creditBalance`: Tracks money player owes house (from unpaid credit buy-ins)
+  - `iouBalance`: Tracks money house owes player (from unpaid IOU cashouts)
+- **IOU badge on net**: When house owes player money (unpaid IOU cashouts), net amount displays red "IOU" badge
+- **Proper calculation**: Net amount correctly reflects the debt direction
+  - Player buys in $500 credit, cashes out $1000 IOU → Net $500 shows IOU badge (house owes player)
+  - Player buys in $500 credit, cashes out $300 → Net -$200 shows credit balance (player owes house)
+- **Mark as Paid buttons**: Added for both credit buy-ins and IOU cashouts
+- **Transaction list**: Both credit buy-ins and IOU cashouts show UNPAID badge and Mark as Paid buttons
+- **Example scenario**:
+  - Player buys in $500 on credit (unpaid) → creditBalance: $500, net: -$500
+  - Player cashes out $1000 on IOU (unpaid) → iouBalance: $1000, net: $500 with IOU badge
+  - House owes player $500 until IOU is marked as paid
 
 ### Unpaid Credit Tracking (Dec 9, 2024)
 Added comprehensive tracking for unpaid credit balances:

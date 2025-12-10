@@ -33,6 +33,7 @@ type PlayerSummary = {
   totalCashouts: number;
   netAmount: number;
   creditBalance: number; // Amount owed by player (from credit buy-ins)
+  iouBalance: number; // Amount owed to player (from IOU cashouts)
   transactionCount: number;
   transactions: PlayerTransaction[];
 };
@@ -165,29 +166,27 @@ const PlayersScreen = ({ navigation }: Props) => {
         existing.transactionCount++;
         if (transaction.type === "buy-in") {
           existing.totalBuyIns += transaction.amount;
-          // Track unpaid credit buy-ins
+          // Track unpaid credit buy-ins (player owes house)
           if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
             existing.creditBalance += transaction.amount;
           }
         } else {
           existing.totalCashouts += transaction.amount;
-          // Credit cashouts reduce what they owe (they're returning chips)
-          if (transaction.paymentMethod === "credit") {
-            existing.creditBalance -= transaction.amount;
+          // Track unpaid IOU cashouts (house owes player)
+          if (transaction.paymentMethod === "credit" && !transaction.isPaid) {
+            existing.iouBalance += transaction.amount;
           }
         }
-        // Ensure credit balance is never negative (you can't owe negative money)
-        existing.creditBalance = Math.max(0, existing.creditBalance);
         existing.netAmount = existing.totalBuyIns - existing.totalCashouts;
       } else {
         let initialCredit = 0;
+        let initialIou = 0;
+
         if (transaction.type === "buy-in" && transaction.paymentMethod === "credit" && !transaction.isPaid) {
           initialCredit = transaction.amount;
-        } else if (transaction.type === "cashout" && transaction.paymentMethod === "credit") {
-          initialCredit = -transaction.amount;
+        } else if (transaction.type === "cashout" && transaction.paymentMethod === "credit" && !transaction.isPaid) {
+          initialIou = transaction.amount;
         }
-        // Ensure credit balance is never negative
-        initialCredit = Math.max(0, initialCredit);
 
         playerMap.set(transaction.playerName, {
           name: transaction.playerName,
@@ -196,6 +195,7 @@ const PlayersScreen = ({ navigation }: Props) => {
           netAmount:
             transaction.type === "buy-in" ? transaction.amount : -transaction.amount,
           creditBalance: initialCredit,
+          iouBalance: initialIou,
           transactionCount: 1,
           transactions: [transaction],
         });
@@ -856,8 +856,11 @@ const PlayerCard = ({
   const isWinner = player.netAmount <= 0;
   const netColor = isWinner ? "#10b981" : "#ef4444"; // green for winners, red for losers
 
-  // Check if player has unpaid credit
+  // Check if player has unpaid credit (player owes house)
   const hasUnpaidCredit = player.creditBalance > 0;
+
+  // Check if house owes player (unpaid IOU cashouts)
+  const hasUnpaidIou = player.iouBalance > 0;
 
   // Check if player had credit transactions that are now all paid
   const hadCreditNowPaid = React.useMemo(() => {
@@ -865,12 +868,12 @@ const PlayerCard = ({
       t => t.paymentMethod === "credit"
     );
     const hasUnpaidCreditTx = player.transactions.some(
-      t => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid
+      t => t.paymentMethod === "credit" && !t.isPaid
     );
-    return hasCreditTransactions && !hasUnpaidCreditTx && player.creditBalance === 0;
-  }, [player.transactions, player.creditBalance]);
+    return hasCreditTransactions && !hasUnpaidCreditTx && player.creditBalance === 0 && player.iouBalance === 0;
+  }, [player.transactions, player.creditBalance, player.iouBalance]);
 
-  // Function to mark all unpaid credit as paid
+  // Function to mark all unpaid credit buy-ins as paid
   const handleMarkAllPaid = () => {
     const unpaidCreditTransactions = player.transactions.filter(
       t => t.type === "buy-in" && t.paymentMethod === "credit" && !t.isPaid
@@ -878,6 +881,18 @@ const PlayerCard = ({
 
     // Mark all unpaid credit buy-ins as paid
     unpaidCreditTransactions.forEach(tx => {
+      onMarkPaid(tx.id);
+    });
+  };
+
+  // Function to mark all unpaid IOU cashouts as paid
+  const handleMarkAllIouPaid = () => {
+    const unpaidIouTransactions = player.transactions.filter(
+      t => t.type === "cashout" && t.paymentMethod === "credit" && !t.isPaid
+    );
+
+    // Mark all unpaid IOU cashouts as paid
+    unpaidIouTransactions.forEach(tx => {
       onMarkPaid(tx.id);
     });
   };
@@ -916,7 +931,13 @@ const PlayerCard = ({
               >
                 {formatCurrency(Math.abs(player.netAmount))}
               </Text>
-              {/* Mark as Paid button when player owes money (has unpaid credit) */}
+              {/* Show IOU badge when house owes player */}
+              {hasUnpaidIou && (
+                <View className="bg-red-600/20 px-2 py-1 rounded">
+                  <Text className="text-red-400 text-[10px] font-bold">IOU</Text>
+                </View>
+              )}
+              {/* Mark as Paid button when player owes house (has unpaid credit) */}
               {hasUnpaidCredit && (
                 <Pressable
                   onPress={() => {
@@ -936,7 +957,7 @@ const PlayerCard = ({
                 </Pressable>
               )}
             </View>
-            {/* Show PAID badge when credit has been settled */}
+            {/* Show PAID badge when all credit transactions have been settled */}
             {hadCreditNowPaid && (
               <View className="bg-emerald-600/20 px-2 py-0.5 rounded mt-1">
                 <Text className="text-emerald-400 text-[10px] font-bold">PAID</Text>
@@ -1041,7 +1062,7 @@ const PlayerCard = ({
                   {transaction.notes && (
                     <Text className="text-slate-500 text-xs mt-1">{transaction.notes}</Text>
                   )}
-                  {/* Mark as Paid button for unpaid credit BUY-IN transactions only */}
+                  {/* Mark as Paid button for unpaid credit BUY-IN transactions (player owes house) */}
                   {transaction.type === "buy-in" && transaction.paymentMethod === "credit" && transaction.isPaid === false && (
                     <Pressable
                       onPress={() => {
@@ -1053,8 +1074,32 @@ const PlayerCard = ({
                       <Text className="text-white text-xs font-bold">Mark as Paid</Text>
                     </Pressable>
                   )}
-                  {/* Mark as Unpaid button for paid credit BUY-IN transactions only */}
+                  {/* Mark as Unpaid button for paid credit BUY-IN transactions */}
                   {transaction.type === "buy-in" && transaction.paymentMethod === "credit" && transaction.isPaid === true && (
+                    <Pressable
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        onMarkUnpaid(transaction.id);
+                      }}
+                      className="bg-amber-600 px-3 py-1.5 rounded mt-2 self-start"
+                    >
+                      <Text className="text-white text-xs font-bold">Mark as Unpaid</Text>
+                    </Pressable>
+                  )}
+                  {/* Mark as Paid button for unpaid IOU CASHOUT transactions (house owes player) */}
+                  {transaction.type === "cashout" && transaction.paymentMethod === "credit" && transaction.isPaid === false && (
+                    <Pressable
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        onMarkPaid(transaction.id);
+                      }}
+                      className="bg-emerald-600 px-3 py-1.5 rounded mt-2 self-start"
+                    >
+                      <Text className="text-white text-xs font-bold">Mark as Paid</Text>
+                    </Pressable>
+                  )}
+                  {/* Mark as Unpaid button for paid IOU CASHOUT transactions */}
+                  {transaction.type === "cashout" && transaction.paymentMethod === "credit" && transaction.isPaid === true && (
                     <Pressable
                       onPress={() => {
                         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
