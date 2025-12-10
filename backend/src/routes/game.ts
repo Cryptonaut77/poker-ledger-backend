@@ -324,19 +324,44 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   // Cash cashouts remove money (paying players OUT)
   // Paid tips remove money (paying dealers OUT from player buy-ins)
   // Expenses remove money (paying for costs OUT)
-  // PAID credit buy-ins add money (player paid their debt in cash, money IN)
+  // PAID credit buy-ins add money ONLY if manually paid (player paid their debt in cash, money IN)
+  // Auto-settled credit does NOT add to till (just wipes the debt, no cash changes hands)
   // Unpaid credit transactions don't affect till (no physical cash movement)
   const cashBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "cash")
     .reduce((sum, t) => sum + t.amount, 0);
   const cashCashouts = session.playerTransactions
     .filter((t) => t.type === "cashout" && t.paymentMethod === "cash")
-    .reduce((sum, t) => sum + t.amount, 0);
-  // PAID credit buy-ins = player paid their credit debt, so that cash goes into the till
+    .reduce((sum, t) => {
+      // Check if this is an auto-settled cashout - use actual payout amount
+      if (t.notes) {
+        const match = t.notes.match(/cash paid: \$(\d+(?:\.\d{2})?)\)/);
+        if (match) {
+          return sum + parseFloat(match[1]);
+        }
+      }
+      return sum + t.amount;
+    }, 0);
+
+  // Calculate auto-settled credit from cashout notes
+  // These should NOT be added to the till
+  const autoSettledCredit = session.playerTransactions
+    .filter((t) => t.type === "cashout" && t.notes?.includes("credit settled:"))
+    .reduce((sum, t) => {
+      const match = t.notes?.match(/credit settled: \$(\d+(?:\.\d{2})?)/);
+      return sum + (match ? parseFloat(match[1]) : 0);
+    }, 0);
+
+  // PAID credit buy-ins = player paid their credit debt
+  // But we need to subtract auto-settled credit since that doesn't add actual cash
   const paidCreditBuyIns = session.playerTransactions
     .filter((t) => t.type === "buy-in" && t.paymentMethod === "credit" && t.isPaid === true)
     .reduce((sum, t) => sum + t.amount, 0);
-  const tillBalance = cashBuyIns + paidCreditBuyIns - cashCashouts - totalPaidTips - totalExpenses;
+
+  // Only manually paid credit adds to till (not auto-settled)
+  const manuallyPaidCredit = Math.max(0, paidCreditBuyIns - autoSettledCredit);
+
+  const tillBalance = cashBuyIns + manuallyPaidCredit - cashCashouts - totalPaidTips - totalExpenses;
 
   // Calculate total credit balance
   // Credit balance = unpaid credit buy-ins minus any cash that was taken out when they cashed out
@@ -370,7 +395,7 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   const uniquePlayers = new Set(session.playerTransactions.map((t) => t.playerName));
   const playerCount = uniquePlayers.size;
 
-  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)} (cash: $${cashBuyIns}, paid credit: $${paidCreditBuyIns}, cashouts: $${cashCashouts}), Credit balance: $${creditBalance.toFixed(2)}`);
+  console.log(`🎮 [Game] Summary calculated - Net profit: $${netProfit.toFixed(2)}, Till balance: $${tillBalance.toFixed(2)} (cash: $${cashBuyIns}, manually paid credit: $${manuallyPaidCredit}, auto-settled: $${autoSettledCredit}, cashouts: $${cashCashouts}), Credit balance: $${creditBalance.toFixed(2)}`);
 
   // Return clean session object without nested relations to match contract
   return c.json({
