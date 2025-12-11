@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pokernightledger.app"
+      "bundleIdentifier": "com.vibecode.pokernightledger.9s1zcw"
     },
     "android": {
       "edgeToEdgeEnabled": true,
