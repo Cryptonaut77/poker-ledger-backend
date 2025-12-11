@@ -91,6 +91,28 @@ export default function PaywallScreen() {
     }
   };
 
+  const handleResetSubscription = async () => {
+    try {
+      setPurchasing(true);
+      const logoutResult = await RevenueCat.logoutUser();
+
+      if (logoutResult.ok) {
+        Alert.alert(
+          "Success!",
+          "Subscription reset. You can now test purchases again.",
+          [{ text: "OK", onPress: () => loadPackages() }]
+        );
+      } else {
+        Alert.alert("Reset Failed", "Could not reset subscription. Please try again.");
+      }
+    } catch (error) {
+      console.error("Reset error:", error);
+      Alert.alert("Reset Failed", "There was an error resetting your subscription.");
+    } finally {
+      setPurchasing(false);
+    }
+  };
+
   const getPackagePrice = (pkg: PurchasesPackage) => {
     return pkg.product.priceString;
   };
@@ -271,6 +293,21 @@ export default function PaywallScreen() {
               </Text>
             </TouchableOpacity>
           </View>
+
+          {/* Reset Subscription Button (Test Store Only) */}
+          {__DEV__ && (
+            <View className="px-6 mb-4">
+              <TouchableOpacity
+                onPress={handleResetSubscription}
+                disabled={purchasing}
+                className="py-3 items-center"
+              >
+                <Text className="text-red-400 text-base font-semibold">
+                  Reset Subscription (Test Only)
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {/* Terms */}
           <View className="px-6 mt-4">
