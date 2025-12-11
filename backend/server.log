@@ -7,14 +7,14 @@ $ prisma generate
 Environment variables loaded from .env
 Prisma schema loaded from prisma/schema.prisma
 
-✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 148ms
+✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 150ms
 
 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
 
-Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
 
 
-Checked 761 installs across 703 packages (no changes) [1455.00ms]
+Checked 761 installs across 703 packages (no changes) [1388.00ms]
 Applying database migrations...
 Prisma schema loaded from prisma/schema.prisma
 Datasource "db": SQLite database "dev.db" at "file:dev.db"
@@ -29,7 +29,7 @@ The database is already in sync with the Prisma schema.
 
 Running generate... (Use --skip-generate to skip the generators)
 [2K[1A[2K[GRunning generate... - Prisma Client
-[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 206ms
+[2K[1A[2K[G✔ Generated Prisma Client (v6.17.1) to ./generated/prisma in 163ms
 
 Starting server in dev mode with hot reload...
 $ NODE_ENV=development bun run --hot src/index.ts
@@ -62,3 +62,36 @@ Failed to find Response internal state key
   💚 Health:   GET /health
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+<-- GET /api/auth/get-session
+📨 [REQUEST] GET http://172.171.122.11:3000/api/auth/get-session
+📨 [REQUEST] Path: /api/auth/get-session
+✅ [RESPONSE] GET http://172.171.122.11:3000/api/auth/get-session - Status: 200
+--> GET /api/auth/get-session [32m200[0m 12ms
+<-- GET /api/game/active
+📨 [REQUEST] GET http://172.171.122.11:3000/api/game/active
+📨 [REQUEST] Path: /api/game/active
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] Getting active game session for user: lagornot77@gmail.com
+🎮 [Game] User lagornot77@gmail.com has completed 1 games
+🎮 [Game] Found active session: cmizsl9br0003m2l7u2k6jg5e
+✅ [RESPONSE] GET http://172.171.122.11:3000/api/game/active - Status: 200
+--> GET /api/game/active [32m200[0m 4ms
+<-- GET /api/game/cmizsl9br0003m2l7u2k6jg5e/summary
+📨 [REQUEST] GET http://172.171.122.11:3000/api/game/cmizsl9br0003m2l7u2k6jg5e/summary
+📨 [REQUEST] Path: /api/game/cmizsl9br0003m2l7u2k6jg5e/summary
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+🎮 [Game] ============ SUMMARY REQUEST RECEIVED ============
+🎮 [Game] Getting summary for session: cmizsl9br0003m2l7u2k6jg5e, user: lagornot77@gmail.com
+🎮 [Game] Request URL: http://172.171.122.11:3000/api/game/cmizsl9br0003m2l7u2k6jg5e/summary
+🎮 [Game] Request method: GET
+🎮 [Game] Summary calculated - Net profit: $0.00, Till balance: $100.00 (cash: $500, manually paid credit: $700, auto-settled: $300, cashouts: $1100), Credit balance: $0.00
+✅ [RESPONSE] GET http://172.171.122.11:3000/api/game/cmizsl9br0003m2l7u2k6jg5e/summary - Status: 200
+--> GET /api/game/cmizsl9br0003m2l7u2k6jg5e/summary [32m200[0m 4ms
+<-- GET /api/players/transactions/cmizsl9br0003m2l7u2k6jg5e
+📨 [REQUEST] GET http://172.171.122.11:3000/api/players/transactions/cmizsl9br0003m2l7u2k6jg5e
+📨 [REQUEST] Path: /api/players/transactions/cmizsl9br0003m2l7u2k6jg5e
+🔓 [Auth] Authenticated user: lagornot77@gmail.com
+💰 [Players] Getting transactions for session: cmizsl9br0003m2l7u2k6jg5e (user: lagornot77@gmail.com)
+💰 [Players] Found 7 transactions
+✅ [RESPONSE] GET http://172.171.122.11:3000/api/players/transactions/cmizsl9br0003m2l7u2k6jg5e - Status: 200
+--> GET /api/players/transactions/cmizsl9br0003m2l7u2k6jg5e [32m200[0m 3ms
