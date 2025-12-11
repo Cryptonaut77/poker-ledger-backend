@@ -66,10 +66,13 @@ export class ApiError extends Error {
  * The backend URL is dynamically set by the Vibecode environment at runtime.
  * Format: https://[UNIQUE_ID].share.sandbox.dev/
  * This allows the app to connect to different backend instances without code changes.
+ *
+ * In production builds (TestFlight/App Store), if no backend URL is set,
+ * API requests will fail gracefully allowing the app to still load.
  */
-const BACKEND_URL = process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL;
+const BACKEND_URL = process.env.EXPO_PUBLIC_VIBECODE_BACKEND_URL || "";
 if (!BACKEND_URL) {
-  throw new Error("Backend URL setup has failed. Please contact support@vibecodeapp.com for help.");
+  console.warn("[API] Backend URL not configured. Backend features will not work.");
 }
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
