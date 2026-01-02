@@ -1,0 +1,35 @@
+#! /bin/bash
+set -e
+
+# Check if --hot flag is passed
+if [[ "$*" == *"--hot"* ]]; then
+  echo "Installing dependencies and generating Prisma client..."
+  bun install
+
+  echo "Applying database migrations..."
+  # Use timeout to prevent hanging on locked database
+  # If migrations fail due to lock, the schema should already be in sync from db push
+  timeout 10 bunx prisma migrate deploy 2>/dev/null || {
+    echo "Migration deploy skipped (database may be locked or already in sync)"
+    # Ensure schema is in sync even if migrations table is out of date
+    timeout 10 bunx prisma db push --accept-data-loss 2>/dev/null || true
+  }
+
+  echo "Starting server in dev mode with hot reload..."
+  exec bun run dev
+else
+  echo "Installing dependencies and generating Prisma client..."
+  bun install
+
+  echo "Applying database migrations..."
+  bunx prisma migrate deploy || {
+    echo "Migration deploy failed, trying db push..."
+    bunx prisma db push --accept-data-loss
+  }
+
+  echo "Building server..."
+  bun run build
+
+  echo "Starting server..."
+  exec bun run start
+fi

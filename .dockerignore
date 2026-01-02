@@ -1,0 +1,13 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore development files
+*.log
+.env.local
+
+# Ignore generated files that will be regenerated
+generated/
+
+# Ignore SQLite database (Railway should use a different DB in production)
+*.db
+*.db-journal

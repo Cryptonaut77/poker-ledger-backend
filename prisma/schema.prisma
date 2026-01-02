@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String        @id
+  email            String        @unique
+  name             String?
+  initials         String?       // User's initials for tracking entries
+  emailVerified    Boolean       @default(false)
+  image            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+  completedGames   Int           @default(0) // Track number of completed games for paywall
+  Profile          Profile?
+  accounts         Account[]
+  sessions         Session[]
+  gameSessions     GameSession[] // Games this user owns
+  sharedGames      GameSessionMember[] // Games shared with this user
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Profile {
+  id     Int    @id @default(autoincrement())
+  handle String @unique
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model GameSession {
+  id                 String              @id @default(cuid())
+  name               String              @default("Poker Game")
+  startedAt          DateTime            @default(now())
+  endedAt            DateTime?
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  tableName          String              @default("Main Table")
+  currency           String              @default("USD") // Currency code (USD, EUR, GBP, etc.)
+  language           String              @default("en") // Language code (en, es, fr, etc.)
+  shareCode          String?             @unique // 6-character code for sharing
+  shareCodeExpiresAt DateTime?           // When the share code expires
+  userId             String
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members            GameSessionMember[] // Users who have access to this game
+  dealerDowns        DealerDown[]
+  expenses           Expense[]
+  playerTransactions PlayerTransaction[]
+
+  @@map("game_session")
+}
+
+// Join table for users who have access to a game session
+model GameSessionMember {
+  id            String      @id @default(cuid())
+  role          String      @default("editor") // "owner" or "editor"
+  joinedAt      DateTime    @default(now())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameSessionId])
+  @@map("game_session_member")
+}
+
+model PlayerTransaction {
+  id            String      @id @default(cuid())
+  playerName    String
+  type          String
+  amount        Float
+  paymentMethod String
+  notes         String?
+  isPaid        Boolean     @default(true)  // Track if credit has been paid back
+  timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("player_transaction")
+}
+
+model DealerDown {
+  id            String      @id @default(cuid())
+  dealerName    String
+  tips          Float       @default(0)
+  rake          Float       @default(0)
+  tipsPaid      Boolean     @default(false)
+  rakeClaimed   Boolean     @default(false)
+  timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("dealer_down")
+}
+
+model Expense {
+  id            String      @id @default(cuid())
+  description   String
+  amount        Float
+  category      String
+  paymentMethod String      @default("cash")
+  paidOut       Boolean     @default(false)
+  notes         String?
+  timestamp     DateTime    @default(now())
+  createdById   String?     // User who created this entry
+  createdByInitials String? // Initials of user who created this entry
+  gameSessionId String
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+
+  @@map("expense")
+}
