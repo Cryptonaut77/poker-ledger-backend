@@ -21,6 +21,7 @@ export const gameSessionSchema = z.object({
   updatedAt: z.string(),
   currency: z.string().default("USD"),
   language: z.string().default("en"),
+  totalRake: z.number().default(0),
 });
 export type GameSession = z.infer<typeof gameSessionSchema>;
 
@@ -201,6 +202,44 @@ export const markDealerTipsPaidResponseSchema = z.object({
   dealerDown: dealerDownSchema,
 });
 export type MarkDealerTipsPaidResponse = z.infer<typeof markDealerTipsPaidResponseSchema>;
+
+// POST /api/dealers/claim-tips-by-dealer - Claim all tips for a specific dealer
+export const claimTipsByDealerRequestSchema = z.object({
+  dealerName: z.string().min(1),
+  gameSessionId: z.string(),
+  percentage: z.number().min(0).max(100).default(100), // Percentage of tips to claim (for owner's cut)
+});
+export type ClaimTipsByDealerRequest = z.infer<typeof claimTipsByDealerRequestSchema>;
+export const claimTipsByDealerResponseSchema = z.object({
+  updatedCount: z.number(),
+  totalTipsClaimed: z.number(),
+  ownerCut: z.number(), // Amount kept by owner (100% - percentage)
+  dealerPayout: z.number(), // Amount paid to dealer
+});
+export type ClaimTipsByDealerResponse = z.infer<typeof claimTipsByDealerResponseSchema>;
+
+// POST /api/dealers/claim-all-rake - Claim all rake from all dealers
+export const claimAllRakeRequestSchema = z.object({
+  gameSessionId: z.string(),
+});
+export type ClaimAllRakeRequest = z.infer<typeof claimAllRakeRequestSchema>;
+export const claimAllRakeResponseSchema = z.object({
+  updatedCount: z.number(),
+  totalRakeClaimed: z.number(),
+});
+export type ClaimAllRakeResponse = z.infer<typeof claimAllRakeResponseSchema>;
+
+// PUT /api/dealers/total-rake - Update total rake for session
+export const updateTotalRakeRequestSchema = z.object({
+  gameSessionId: z.string(),
+  totalRake: z.number().min(0),
+});
+export type UpdateTotalRakeRequest = z.infer<typeof updateTotalRakeRequestSchema>;
+export const updateTotalRakeResponseSchema = z.object({
+  session: gameSessionSchema,
+  totalRake: z.number(),
+});
+export type UpdateTotalRakeResponse = z.infer<typeof updateTotalRakeResponseSchema>;
 
 // POST /api/expenses - Add expense
 export const addExpenseRequestSchema = z.object({
