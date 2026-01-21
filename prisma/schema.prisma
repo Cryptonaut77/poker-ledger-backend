@@ -91,6 +91,7 @@ model GameSession {
   language           String              @default("en") // Language code (en, es, fr, etc.)
   shareCode          String?             @unique // 6-character code for sharing
   shareCodeExpiresAt DateTime?           // When the share code expires
+  totalRake          Float               @default(0) @map("totalrake") // Total rake for the session
   userId             String
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   members            GameSessionMember[] // Users who have access to this game
