@@ -24,7 +24,7 @@ gameRouter.use("*", requireAuth);
 // ============================================
 gameRouter.get("/active", async (c) => {
   const user = c.get("user")!;
-  console.log(`🎮 [Game] Getting active game session for user: ${user.email}`);
+  console.log(`🎮 [Game] Getting active game session for user: ${user.email}, userId: ${user.id}`);
 
   try {
     // First, check if user owns an active game
@@ -52,7 +52,7 @@ gameRouter.get("/active", async (c) => {
 
     // Create new session if none exists
     if (!session) {
-      console.log("🎮 [Game] No active session found, creating new one");
+      console.log(`🎮 [Game] No active session found, creating new one for userId: ${user.id}`);
       session = await db.gameSession.create({
         data: {
           name: "Poker Game",
@@ -61,9 +61,9 @@ gameRouter.get("/active", async (c) => {
           userId: user.id,
         },
       });
-      console.log(`🎮 [Game] Created new session: ${session.id}`);
+      console.log(`🎮 [Game] Created new session: ${session.id} with owner userId: ${session.userId}`);
     } else {
-      console.log(`🎮 [Game] Found active session: ${session.id}`);
+      console.log(`🎮 [Game] Found active session: ${session.id}, owner userId: ${session.userId}, current userId: ${user.id}`);
     }
 
     return c.json({
@@ -301,7 +301,8 @@ gameRouter.get("/:sessionId/summary", async (c) => {
 
   const totalTips = session.dealerDowns.reduce((sum, d) => sum + d.tips, 0);
 
-  const totalRake = session.dealerDowns.reduce((sum, d) => sum + d.rake, 0);
+  // Use totalRake from session (logged via dropbox count), fallback to dealer downs sum
+  const totalRake = session.totalRake > 0 ? session.totalRake : session.dealerDowns.reduce((sum, d) => sum + d.rake, 0);
 
   const totalExpenses = session.expenses.reduce((sum, e) => sum + e.amount, 0);
 
@@ -310,14 +311,9 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .filter((d) => d.tipsPaid)
     .reduce((sum, d) => sum + d.tips, 0);
 
-  // Only count rake that has been claimed (separate from tips paid)
-  const totalClaimedRake = session.dealerDowns
-    .filter((d) => d.rakeClaimed)
-    .reduce((sum, d) => sum + d.rake, 0);
-
-  // House profit = Claimed Rake - Expenses
-  // Only count rake that has been claimed
-  const netProfit = totalClaimedRake - totalExpenses;
+  // House profit = Total Rake - Expenses
+  // Rake is now entered as a lump sum at the end of the night
+  const netProfit = totalRake - totalExpenses;
 
   // Till balance = Physical cash in the till
   // Cash buy-ins add money (money IN)
