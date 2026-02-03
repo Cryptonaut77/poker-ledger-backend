@@ -311,14 +311,30 @@ gameRouter.get("/:sessionId/summary", async (c) => {
     .filter((d) => d.tipsPaid)
     .reduce((sum, d) => sum + d.tips, 0);
 
-  // House profit = Total Rake - Expenses
-  // Rake is now entered as a lump sum at the end of the night
-  const netProfit = totalRake - totalExpenses;
+  // Only count claimed rake for calculations
+  const totalClaimedRake = session.dealerDowns
+    .filter((d) => d.rakeClaimed)
+    .reduce((sum, d) => sum + d.rake, 0);
+
+  console.log(`🎮 [Game] Summary calculation - Dealer downs:`, session.dealerDowns.map(d => ({
+    id: d.id,
+    dealer: d.dealerName,
+    tips: d.tips,
+    rake: d.rake,
+    tipsPaid: d.tipsPaid,
+    rakeClaimed: d.rakeClaimed,
+  })));
+  console.log(`🎮 [Game] totalPaidTips: $${totalPaidTips}, totalClaimedRake: $${totalClaimedRake}`);
+
+  // House profit = Claimed Rake - Expenses
+  // Only claimed rake counts as realized profit
+  const netProfit = totalClaimedRake - totalExpenses;
 
   // Till balance = Physical cash in the till
   // Cash buy-ins add money (money IN)
   // Cash cashouts remove money (paying players OUT)
-  // Paid tips remove money (paying dealers OUT from player buy-ins)
+  // Paid tips remove money (paying dealers OUT - tips collected from pots go into till, then paid out)
+  // Claimed rake removes money (rake collected from pots goes into till, then taken as house profit)
   // Expenses remove money (paying for costs OUT)
   // PAID credit buy-ins add money ONLY if manually paid (player paid their debt in cash, money IN)
   // Auto-settled credit does NOT add to till (just wipes the debt, no cash changes hands)
@@ -373,7 +389,9 @@ gameRouter.get("/:sessionId/summary", async (c) => {
   // Only manually paid credit adds to till (not auto-settled)
   const manuallyPaidCredit = Math.max(0, paidCreditBuyIns - autoSettledCredit);
 
-  const tillBalance = cashBuyIns + manuallyPaidCredit - cashCashouts - totalPaidTips - totalExpenses;
+  // Till balance: what's physically left in the cash box
+  // Tips and rake collected from pots go INTO the till, then OUT when paid/claimed
+  const tillBalance = cashBuyIns + manuallyPaidCredit - cashCashouts - totalPaidTips - totalClaimedRake - totalExpenses;
 
   // Calculate total credit balance
   // Credit balance = unpaid credit buy-ins minus any cash that was taken out when they cashed out
