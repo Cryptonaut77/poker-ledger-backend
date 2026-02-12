@@ -275,3 +275,44 @@ export const updateExpenseResponseSchema = z.object({
   expense: expenseSchema,
 });
 export type UpdateExpenseResponse = z.infer<typeof updateExpenseResponseSchema>;
+
+// ============================================
+// AI TILL ANALYST CONTRACTS
+// ============================================
+
+// POST /api/ai/analyze-till - AI analysis of till discrepancy
+export const analyzeTillRequestSchema = z.object({
+  sessionId: z.string(),
+  actualTillAmount: z.number(),
+});
+export type AnalyzeTillRequest = z.infer<typeof analyzeTillRequestSchema>;
+
+export const tillAnalysisCauseSchema = z.object({
+  description: z.string(),
+  likelihood: z.enum(["high", "medium", "low"]),
+  amount: z.number().optional(),
+  transactionIds: z.array(z.string()).optional(),
+});
+export type TillAnalysisCause = z.infer<typeof tillAnalysisCauseSchema>;
+
+export const transactionToReviewSchema = z.object({
+  id: z.string(),
+  playerName: z.string(),
+  type: z.string(),
+  amount: z.number(),
+  paymentMethod: z.string(),
+  notes: z.string().nullable(),
+  reason: z.string(),
+});
+export type TransactionToReview = z.infer<typeof transactionToReviewSchema>;
+
+export const analyzeTillResponseSchema = z.object({
+  discrepancyAmount: z.number(),
+  expectedTill: z.number(),
+  actualTill: z.number(),
+  summary: z.string(),
+  possibleCauses: z.array(tillAnalysisCauseSchema),
+  transactionsToReview: z.array(transactionToReviewSchema),
+  recommendations: z.array(z.string()),
+});
+export type AnalyzeTillResponse = z.infer<typeof analyzeTillResponseSchema>;
