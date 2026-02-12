@@ -1,3 +1,13 @@
+// MUST LOAD FIRST: Load environment variables from .env file before anything else
+import { config } from "dotenv";
+import path from "path";
+
+const envPath = path.resolve(import.meta.dir, "../.env");
+console.log(`[dotenv] Loading from: ${envPath}`);
+const result = config({ path: envPath, override: true });
+console.log(`[dotenv] Loaded vars: ${Object.keys(result.parsed || {}).length}`);
+console.log(`[dotenv] DATABASE_URL after load: ${process.env.DATABASE_URL}`);
+
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -10,6 +20,7 @@ import { playersRouter } from "./routes/players";
 import { dealersRouter } from "./routes/dealers";
 import { expensesRouter } from "./routes/expenses";
 import { shareRouter } from "./routes/share";
+import { aiRouter } from "./routes/ai";
 import { type AppType } from "./types";
 
 // AppType context adds user and session to the context, will be null if the user or session is null
@@ -82,6 +93,9 @@ app.route("/api/expenses", expensesRouter);
 
 console.log("🔗 Mounting share routes at /api/share");
 app.route("/api/share", shareRouter);
+
+console.log("🤖 Mounting AI routes at /api/ai");
+app.route("/api/ai", aiRouter);
 
 // Health check endpoint
 // Used by load balancers and monitoring tools to verify service is running
