@@ -30,7 +30,15 @@ export const requireAuth = createMiddleware<AppType>(async (c, next) => {
       console.log("🔧 [Auth] Created dev user for development mode");
     }
 
-    c.set("user", devUser);
+    c.set("user", {
+      id: devUser.id,
+      email: devUser.email,
+      name: devUser.name ?? "Dev User",
+      emailVerified: devUser.emailVerified,
+      image: devUser.image,
+      createdAt: devUser.createdAt,
+      updatedAt: devUser.updatedAt,
+    });
     console.log(`🔧 [Auth] Dev mode - using dev user: ${devUser.email}`);
     await next();
     return;
