@@ -30,10 +30,12 @@ export const auth = betterAuth({
   baseURL: env.BACKEND_URL,
   plugins: [expo()],
   trustedOrigins: [
-    "vibecode://", // Expo app scheme (IMPORTANT: Update if you change app.json scheme)
+    "pokernightledger://", // Expo app scheme (must match app.json scheme)
     "http://localhost:3000",
     env.BACKEND_URL,
-  ],
+    "https://absently-hence.vibecode.run", // Deployed backend URL
+    "https://preview-tpruwzrnjlrm.dev.vibecode.run", // Dev preview URL
+ ],
   emailAndPassword: {
     enabled: true,
   },
